@@ -4,13 +4,36 @@
     {
       "name": "frontend",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "frontend", "run", "dev"],
+      "runtimeArgs": [
+        "--prefix",
+        "frontend",
+        "run",
+        "dev"
+      ],
       "port": 5173
     },
     {
       "name": "frontend-mock",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "frontend", "run", "dev:mock"],
+      "runtimeArgs": [
+        "--prefix",
+        "frontend",
+        "run",
+        "dev:mock"
+      ],
+      "port": 5173
+    },
+    {
+      "name": "frontend-8010",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "VITE_PROXY_TARGET=http://localhost:8010",
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "dev"
+      ],
       "port": 5173
     }
   ]

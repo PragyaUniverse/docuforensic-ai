@@ -35,10 +35,28 @@ export function shortHash(h: string | null | undefined, n = 12): string {
   return h.length > n ? `${h.slice(0, n)}…` : h;
 }
 
+const ACRONYMS: Record<string, string> = {
+  hra: "HRA",
+  pan: "PAN",
+  dob: "DOB",
+  ifsc: "IFSC",
+  id: "ID",
+  ela: "ELA",
+  pdf: "PDF",
+  ocr: "OCR",
+  llm: "LLM",
+  exif: "EXIF",
+};
+
 export function humanize(s: string | null | undefined): string {
   if (!s) return "";
-  const t = s.replace(/[_.]+/g, " ").trim();
-  return t.charAt(0).toUpperCase() + t.slice(1);
+  const words = s
+    .replace(/[_.]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .map((w) => ACRONYMS[w.toLowerCase()] ?? w);
+  const out = words.join(" ");
+  return out.charAt(0).toUpperCase() + out.slice(1);
 }
 
 export function fmtBBox(b: { x0: number; y0: number; x1: number; y1: number } | null | undefined) {

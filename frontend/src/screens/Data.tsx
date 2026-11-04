@@ -51,8 +51,8 @@ export function DataScreen() {
     setTarget({ docId: f.doc_id, page: f.page, bbox: f.bbox, key: f.id, label: `${f.label_raw ?? f.name}: ${f.value_raw}` });
 
   return (
-    <div className="grid h-full min-h-[560px] grid-cols-[minmax(0,1fr)_minmax(300px,38%)]">
-      <div className="flex min-h-0 min-w-0 flex-col border-r border-line">
+    <div className="grid h-full min-h-[560px] grid-rows-[minmax(0,1fr)_minmax(0,38%)] lg:grid-cols-[minmax(0,1fr)_minmax(300px,38%)] lg:grid-rows-1">
+      <div className="flex min-h-0 min-w-0 flex-col border-b border-line lg:border-b-0 lg:border-r">
         <div className="shrink-0 border-b border-line px-4 pt-3">
           <div className="eyebrow">Steps 3 and 4 · Extraction and structure</div>
           <div className="mt-2 flex gap-1" role="tablist" aria-label="Extracted data views">

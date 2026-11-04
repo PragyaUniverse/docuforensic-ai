@@ -92,7 +92,7 @@ function CaseHeader({ caseId }: { caseId: string | null }) {
     <div className="flex min-w-0 flex-1 items-center gap-3">
       <div className="min-w-0">
         <div className="display truncate text-[14px] leading-tight">{cs.name}</div>
-        <div className="truncate font-mono text-[11px] text-ink-3">
+        <div className="hidden truncate font-mono text-[11px] text-ink-3 md:block">
           {cs.id} · {documents.length} document{documents.length === 1 ? "" : "s"}
         </div>
       </div>

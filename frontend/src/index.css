@@ -36,6 +36,8 @@ html,
 body,
 #root {
   height: 100%;
+  /* The shell scrolls its own panes. Clip stops scrollIntoView from shifting the whole page. */
+  overflow: clip;
 }
 
 body {

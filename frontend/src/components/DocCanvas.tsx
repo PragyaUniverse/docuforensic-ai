@@ -288,8 +288,9 @@ export function DocCanvas({
                   width={Math.max(1, r.bbox.x1 - r.bbox.x0)}
                   height={Math.max(1, r.bbox.y1 - r.bbox.y0)}
                   fill={m.stroke}
-                  fillOpacity={sel ? 0.16 : 0.07}
+                  fillOpacity={sel ? 0.16 : r.finding.status === "OBSERVATION" ? 0.03 : 0.07}
                   stroke={m.stroke}
+                  strokeOpacity={sel || r.finding.status !== "OBSERVATION" ? 1 : 0.55}
                   strokeWidth={sel ? 2.5 : 1.5}
                   strokeDasharray={r.primary ? undefined : "5 4"}
                   vectorEffect="non-scaling-stroke"
@@ -331,7 +332,7 @@ export function DocCanvas({
           </svg>
           {/* Region tags stay a constant screen size at any zoom. */}
           {ordered
-            .filter((r) => r.primary || r.finding.id === selectedFindingId)
+            .filter((r) => r.finding.id === selectedFindingId || (r.primary && r.finding.status !== "OBSERVATION"))
             .map((r, i) => {
               const m = STATUS_META[r.finding.status];
               const sel = r.finding.id === selectedFindingId;

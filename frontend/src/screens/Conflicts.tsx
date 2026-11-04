@@ -5,20 +5,25 @@ import { Button } from "@/components/ui/button";
 import { Empty, ErrorState, Loading } from "@/components/ui/states";
 import { ComparisonPanel } from "@/components/ComparisonPanel";
 import { PageHeading } from "@/components/Shell";
-import { findingLabels, sortFindings } from "@/lib/findings";
+import { findingLabels, sortFindings, spansDocuments } from "@/lib/findings";
 import { humanize } from "@/lib/utils";
 
 export function ConflictsScreen() {
   const { caseId = "" } = useParams();
   const f = useFindings(caseId);
   const { byId, fieldsById, isLoading } = useCaseDocuments(caseId);
-  const list = useMemo(
+  const crossList = useMemo(
+    () => sortFindings((f.data ?? []).filter((x) => x.category === "cross_document" || spansDocuments(x, fieldsById))),
+    [f.data, fieldsById],
+  );
+  const withinList = useMemo(
     () =>
-      sortFindings((f.data ?? []).filter((x) => x.category === "cross_document" || (x.category === "contextual" && x.related_field_ids.length >= 2))),
-    [f.data],
+      sortFindings(
+        (f.data ?? []).filter((x) => x.category === "contextual" && x.related_field_ids.length >= 2 && !spansDocuments(x, fieldsById)),
+      ),
+    [f.data, fieldsById],
   );
   const labels = useMemo(() => findingLabels(f.data ?? []), [f.data]);
-  const crossList = list.filter((x) => x.category === "cross_document");
   const types = [...new Set(crossList.map((x) => x.discrepancy_type).filter(Boolean))] as string[];
 
   if (f.isLoading || isLoading) return <Loading label="Loading conflicts" className="h-full" />;
@@ -39,7 +44,7 @@ export function ConflictsScreen() {
           ))}
         </div>
       )}
-      {list.length === 0 ? (
+      {crossList.length + withinList.length === 0 ? (
         <Empty
           title="No conflicts recorded"
           action={
@@ -52,11 +57,21 @@ export function ConflictsScreen() {
         </Empty>
       ) : (
         <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-4 p-6">
-          {list.map((x) => (
+          {crossList.map((x) => (
             <section key={x.id} className="border border-line bg-panel p-4">
               <ComparisonPanel caseId={caseId} finding={x} docs={byId} fieldsById={fieldsById} label={labels.get(x.id)} />
             </section>
           ))}
+          {withinList.length > 0 && (
+            <>
+              <h2 className="eyebrow mt-4">Within a single document</h2>
+              {withinList.map((x) => (
+                <section key={x.id} className="border border-line bg-panel p-4">
+                  <ComparisonPanel caseId={caseId} finding={x} docs={byId} fieldsById={fieldsById} label={labels.get(x.id)} />
+                </section>
+              ))}
+            </>
+          )}
         </div>
       )}
     </div>

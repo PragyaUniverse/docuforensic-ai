@@ -131,7 +131,12 @@ export function comparisonSources(f: Finding, fieldsById: Map<string, Field>): L
     seen.add(k);
     out.push({ ...s, key: k });
   };
-  for (const ev of f.evidence) {
+  // Crops come first so a located region keeps its descriptive label; bare measurements don't count as sources.
+  const rank = (e: EvidenceItem) => (e.kind === "field_ref" || e.kind === "comparison" ? 0 : e.kind === "crop" ? 1 : 2);
+  const located = [...f.evidence]
+    .filter((e) => e.kind === "field_ref" || e.kind === "comparison" || e.kind === "crop")
+    .sort((a, b) => rank(a) - rank(b));
+  for (const ev of located) {
     const field = ev.field_id ? (fieldsById.get(ev.field_id) ?? null) : null;
     const docId = ev.doc_id ?? field?.doc_id;
     const page = ev.page ?? field?.page;
@@ -211,4 +216,32 @@ export function charDiff(a: string, b: string): [DiffPart[], DiffPart[]] {
     }
   }
   return [pa, pb];
+}
+
+/** True when a finding's located sources span more than one document. */
+export function spansDocuments(f: Finding, fieldsById: Map<string, Field>): boolean {
+  return new Set(comparisonSources(f, fieldsById).map((x) => x.docId)).size >= 2;
+}
+
+export interface ExplanationPart {
+  heading: string | null;
+  text: string;
+}
+
+/** Splits composed explanations into their labelled parts, so each reads as its own block. */
+export function splitExplanation(text: string): ExplanationPart[] {
+  const re = /(Why it matters:|AI reasoning(?: \([^)]*\))?:)/gi;
+  const parts: ExplanationPart[] = [];
+  let heading: string | null = null;
+  let last = 0;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) {
+    const body = text.slice(last, m.index).trim();
+    if (body) parts.push({ heading, text: body });
+    heading = m[1].replace(/:$/, "").replace(/^ai reasoning/i, "AI reasoning");
+    last = m.index + m[0].length;
+  }
+  const tail = text.slice(last).trim();
+  if (tail) parts.push({ heading, text: tail });
+  return parts;
 }

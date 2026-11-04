@@ -7,6 +7,7 @@ import { cn, fmtBBox, humanize, pct } from "@/lib/utils";
 import { PageCrop } from "./PageCrop";
 import { ConfidenceMeter, StatusBadge } from "./StatusBadge";
 import { DataList } from "./DataList";
+import { Explanation } from "./FindingCard";
 
 function num(s: string | null): number | null {
   if (!s) return null;
@@ -68,9 +69,11 @@ function SourceCard({
       </div>
       <div className="px-3 pb-2 pt-3">
         <div className="text-xs text-ink-3">{source.label}</div>
-        <div className="mt-0.5 break-words font-mono text-[19px] font-medium leading-snug text-ink">
-          {parts ? <Parts parts={parts} tone={tone} /> : (source.value ?? <span className="text-ink-3">no value recorded</span>)}
-        </div>
+        {(parts || source.value) && (
+          <div className="mt-0.5 break-words font-mono text-[19px] font-medium leading-snug text-ink">
+            {parts ? <Parts parts={parts} tone={tone} /> : source.value}
+          </div>
+        )}
       </div>
       <div className="mt-auto border-t border-line">
         <PageCrop caseId={caseId} doc={doc} page={source.page} bbox={source.bbox} stroke={stroke} className="max-h-44" />
@@ -101,6 +104,8 @@ export function ComparisonPanel({
 }) {
   const sources = useMemo(() => comparisonSources(finding, fieldsById), [finding, fieldsById]);
   const m = STATUS_META[finding.status];
+  // Reuse findings flag two regions for being identical, not for differing.
+  const sameExpected = /signature_reuse|copy_move/.test(finding.detector);
 
   const diff = useMemo(() => {
     if (sources.length !== 2 || !sources[0].value || !sources[1].value) return null;
@@ -135,7 +140,13 @@ export function ComparisonPanel({
         <div className={cn("flex items-stretch gap-2", compact ? "flex-col" : "flex-col md:flex-row")}>
           <SourceCard caseId={caseId} source={sources[0]} doc={docs.get(sources[0].docId)} parts={diff?.[0] ?? null} stroke={m.stroke} tone={m.text} />
           <div className="flex shrink-0 flex-col items-center justify-center gap-1 px-1 py-1">
-            <span role="img" aria-label="does not match" className={cn("font-mono text-[26px] font-medium leading-none", m.text)}>≠</span>
+            <span
+              role="img"
+              aria-label={sameExpected ? "matches" : "does not match"}
+              className={cn("font-mono text-[26px] font-medium leading-none", m.text)}
+            >
+              {sameExpected ? "=" : "≠"}
+            </span>
             {delta !== null && delta > 0 && (
               <span className={cn("font-mono text-[11px]", m.text)}>
                 {delta.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -152,11 +163,13 @@ export function ComparisonPanel({
         </div>
       )}
 
-      <p className="max-w-[75ch] leading-relaxed text-ink-2">{finding.explanation}</p>
-      {finding.evidence.some((e) => Object.keys(e.data ?? {}).length > 0 && (e.kind === "comparison" || e.kind === "raw_value")) && (
+      <div className="max-w-[80ch]">
+        <Explanation text={finding.explanation} />
+      </div>
+      {finding.evidence.some((e) => Object.keys(e.data ?? {}).length > 0 && e.kind === "raw_value") && (
         <div className="flex flex-col gap-2 border-t border-line pt-2">
           {finding.evidence
-            .filter((e) => Object.keys(e.data ?? {}).length > 0 && (e.kind === "comparison" || e.kind === "raw_value"))
+            .filter((e) => Object.keys(e.data ?? {}).length > 0 && e.kind === "raw_value")
             .map((e, i) => (
               <div key={i}>
                 <div className="mb-1 text-xs text-ink-3">{e.label}</div>

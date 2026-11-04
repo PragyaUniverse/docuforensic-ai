@@ -55,7 +55,10 @@ export function PipelineScreen() {
     if (!running) return;
     setStreamLost(false);
     const stop = api.subscribeProgress(caseId, {
-      onProgress: (e) => setLive(e),
+      onProgress: (e) => {
+        setLive(e);
+        qc.invalidateQueries({ queryKey: ["case", caseId] });
+      },
       onDone: () => {
         qc.invalidateQueries({ queryKey: ["case", caseId] });
         qc.invalidateQueries({ queryKey: ["findings", caseId] });

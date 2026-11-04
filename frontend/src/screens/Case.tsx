@@ -11,7 +11,7 @@ import { ConfidenceMeter, ProcBadge } from "@/components/StatusBadge";
 import { PageHeading } from "@/components/Shell";
 import { cn, humanize } from "@/lib/utils";
 
-function DocRow({ d }: { d: DocumentSummary }) {
+function DocRow({ d, caseRunning }: { d: DocumentSummary; caseRunning: boolean }) {
   const problem = d.status === "unsupported" || d.status === "failed" || d.status === "degraded";
   return (
     <tr className="border-b border-line align-top">
@@ -25,7 +25,13 @@ function DocRow({ d }: { d: DocumentSummary }) {
         )}
       </td>
       <td className="px-3 py-2.5">
-        <ProcBadge status={d.status} />
+        {d.status === "processing" && !caseRunning ? (
+          <span className="inline-flex border border-line-strong px-1.5 py-0.5 font-mono text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink-2">
+            Ready to analyse
+          </span>
+        ) : (
+          <ProcBadge status={d.status} />
+        )}
       </td>
       <td className="px-3 py-2.5 font-mono text-xs text-ink-2">{d.format}</td>
       <td className="px-3 py-2.5">
@@ -174,7 +180,7 @@ export function CaseScreen() {
                 </thead>
                 <tbody>
                   {documents.map((d) => (
-                    <DocRow key={d.id} d={d} />
+                    <DocRow key={d.id} d={d} caseRunning={cs.status === "running"} />
                   ))}
                 </tbody>
               </table>

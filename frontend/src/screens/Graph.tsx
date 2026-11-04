@@ -127,15 +127,27 @@ export default function GraphScreen() {
   const { byId, fieldsById } = useCaseDocuments(caseId);
   const [sel, setSel] = useState<Selection>(null);
   const [conflictsOnly, setConflictsOnly] = useState(false);
+  const [showObs, setShowObs] = useState(false);
 
   const labels = useMemo(() => findingLabels(findingsQ.data ?? []), [findingsQ.data]);
   const findingsById = useMemo(() => new Map((findingsQ.data ?? []).map((f) => [f.id, f])), [findingsQ.data]);
   const entById = useMemo(() => new Map((entitiesQ.data ?? []).map((e) => [e.id, e])), [entitiesQ.data]);
 
+  // Routine observations can outnumber everything else, so they start hidden.
+  const visible = useMemo<EvidenceGraph | undefined>(() => {
+    const g = graphQ.data;
+    if (!g || showObs) return g;
+    const isObs = (n: GraphNode) => n.kind === "finding" && (findingsById.get(n.ref_id)?.status ?? n.meta.status) === "OBSERVATION";
+    const nodes = g.nodes.filter((n) => !isObs(n));
+    const ids = new Set(nodes.map((n) => n.id));
+    return { ...g, nodes, edges: g.edges.filter((e) => ids.has(e.source) && ids.has(e.target)) };
+  }, [graphQ.data, showObs, findingsById]);
+  const hiddenObs = (graphQ.data?.nodes.length ?? 0) - (visible?.nodes.length ?? 0);
+
   const selectedId = sel?.type === "node" ? sel.node.id : null;
   const selectedEdge = sel?.type === "edge" ? sel.edge.id : null;
   const neighbors = useMemo(() => {
-    const g = graphQ.data;
+    const g = visible;
     if (!g) return null;
     if (sel?.type === "node") {
       const s = new Set([sel.node.id]);
@@ -147,10 +159,10 @@ export default function GraphScreen() {
     }
     if (sel?.type === "edge") return new Set([sel.edge.source, sel.edge.target]);
     return null;
-  }, [graphQ.data, sel]);
+  }, [visible, sel]);
 
   const { nodes, edges } = useMemo(() => {
-    const g = graphQ.data;
+    const g = visible;
     if (!g) return { nodes: [] as Node<NodeData>[], edges: [] as Edge[] };
     const pos = layout(g);
     const conflictNodes = new Set<string>();
@@ -203,7 +215,7 @@ export default function GraphScreen() {
       };
     });
     return { nodes, edges };
-  }, [graphQ.data, byId, entById, findingsById, labels, selectedId, selectedEdge, neighbors, sel, conflictsOnly]);
+  }, [visible, byId, entById, findingsById, labels, selectedId, selectedEdge, neighbors, sel, conflictsOnly]);
 
   const onNodeClick = useCallback(
     (_: unknown, n: Node) => {
@@ -240,7 +252,7 @@ export default function GraphScreen() {
   const conflictCount = graphQ.data.edges.filter((e) => e.conflict).length;
 
   return (
-    <div className={cn("grid h-full min-h-[560px]", sel ? "grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_460px]" : "grid-cols-1")}>
+    <div className={cn("grid h-full min-h-[560px]", sel ? "grid-rows-[minmax(0,1fr)_minmax(0,50%)] lg:grid-cols-[minmax(0,1fr)_400px] lg:grid-rows-1 xl:grid-cols-[minmax(0,1fr)_460px]" : "grid-cols-1")}>
       <div className="relative min-h-0">
         <div className="absolute left-3 top-3 z-10 flex flex-col gap-2 border border-line bg-panel p-2.5">
           <div className="eyebrow">Evidence graph</div>
@@ -258,6 +270,10 @@ export default function GraphScreen() {
           <label className="flex items-center gap-1.5 text-xs text-ink-2">
             <input type="checkbox" checked={conflictsOnly} onChange={(e) => setConflictsOnly(e.target.checked)} className="accent-[#eceae4]" />
             Emphasize conflicts ({conflictCount})
+          </label>
+          <label className="flex items-center gap-1.5 text-xs text-ink-2">
+            <input type="checkbox" checked={showObs} onChange={(e) => setShowObs(e.target.checked)} className="accent-[#eceae4]" />
+            Show observations{!showObs && hiddenObs > 0 ? ` (${hiddenObs} hidden)` : ""}
           </label>
         </div>
         <ReactFlow
@@ -281,7 +297,7 @@ export default function GraphScreen() {
         </ReactFlow>
       </div>
       {sel && (
-        <aside aria-label="Selection details" className="flex min-h-0 flex-col overflow-y-auto border-l border-line bg-panel">
+        <aside aria-label="Selection details" className="flex min-h-0 flex-col overflow-y-auto border-t border-line bg-panel lg:border-l lg:border-t-0">
           <div className="flex items-center justify-between border-b border-line px-4 py-2">
             <span className="eyebrow">{sel.type === "edge" ? (sel.edge.conflict ? "Conflict edge" : "Relationship") : humanize(sel.node.kind)}</span>
             <button type="button" aria-label="Close details" onClick={() => setSel(null)} className="cursor-pointer rounded-sm p-1 text-ink-3 hover:bg-hover hover:text-ink">

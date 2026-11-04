@@ -13,7 +13,7 @@ import { Empty, ErrorState, Loading } from "@/components/ui/states";
 import { ComparisonPanel } from "@/components/ComparisonPanel";
 import { DocCanvas } from "@/components/DocCanvas";
 import { FindingCard } from "@/components/FindingCard";
-import { ProcBadge } from "@/components/StatusBadge";
+import { ProcBadge, StatusBadge } from "@/components/StatusBadge";
 import { STATUS_META, STATUS_ORDER, comparisonSources, findingLabels, regionsForPage, sortFindings } from "@/lib/findings";
 import { cn, humanize } from "@/lib/utils";
 
@@ -54,6 +54,7 @@ export function ViewerScreen() {
   const [onlyThisDoc, setOnlyThisDoc] = useState(false);
   const [focusNonce, setFocusNonce] = useState(0);
   const [compare, setCompare] = useState<Finding | null>(null);
+  const [openGroups, setOpenGroups] = useState<Set<string>>(new Set());
 
   const overlays = useQuery({
     queryKey: ["overlays", caseId, docId, page],
@@ -87,8 +88,7 @@ export function ViewerScreen() {
         return;
       }
       const loc = move ? locationOf(f) : null;
-      // Stay on the current page when this finding also has a region here.
-      const alreadyHere = docId && regionsForPage([f], docId, page).length > 0;
+      const alreadyHere = loc?.docId === docId && loc?.page === page;
       update({
         finding: f.id,
         field: null,
@@ -143,6 +143,27 @@ export function ViewerScreen() {
     [findings, statuses, onlyThisDoc, docId],
   );
 
+  // Routine observations repeat; group them so the hypotheses and conflicts stay in view.
+  const groups = useMemo(() => {
+    const out: { key: string; items: Finding[] }[] = [];
+    const seen = new Map<string, { key: string; items: Finding[] }>();
+    for (const f of listed) {
+      if (f.status !== "OBSERVATION") {
+        out.push({ key: f.id, items: [f] });
+        continue;
+      }
+      const key = `${f.detector}|${f.title}`;
+      const g = seen.get(key);
+      if (g) g.items.push(f);
+      else {
+        const n = { key, items: [f] };
+        seen.set(key, n);
+        out.push(n);
+      }
+    }
+    return out;
+  }, [listed]);
+
   const docCounts = useCallback(
     (id: string) =>
       findings.filter((f) => f.doc_id === id || f.evidence.some((e) => e.doc_id === id)).length,
@@ -167,8 +188,8 @@ export function ViewerScreen() {
   const notRun = caseQ.data?.case.status !== "complete";
 
   return (
-    <div className="grid h-full min-h-[560px] grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,1fr)_420px]">
-      <div className="flex min-h-0 min-w-0 flex-col border-r border-line">
+    <div className="grid h-full min-h-[560px] grid-rows-[minmax(0,58fr)_minmax(0,42fr)] lg:grid-cols-[minmax(0,1fr)_360px] lg:grid-rows-1 xl:grid-cols-[minmax(0,1fr)_420px]">
+      <div className="flex min-h-0 min-w-0 flex-col border-b border-line lg:border-b-0 lg:border-r">
         <div role="tablist" aria-label="Documents" className="flex shrink-0 overflow-x-auto border-b border-line bg-panel">
           {summaries.map((s) => {
             const active = s.id === docId;
@@ -318,23 +339,50 @@ export function ViewerScreen() {
                 : "Adjust the status toggles above."}
             </Empty>
           )}
-          {listed.map((f) => (
-            <FindingCard
-              key={f.id}
-              finding={f}
-              label={labels.get(f.id) ?? ""}
-              caseId={caseId}
-              docs={byId}
-              labelsById={labels}
-              selected={f.id === selectedId}
-              onSelect={() => selectFinding(f, true)}
-              onSelectRelated={(id) => {
-                const r = findings.find((x) => x.id === id);
-                if (r) selectFinding(r, true);
-              }}
-              onCompare={comparisonSources(f, fieldsById).length >= 2 ? () => setCompare(f) : undefined}
-            />
-          ))}
+          {groups.map((g) => {
+            const renderCard = (f: Finding) => (
+              <FindingCard
+                key={f.id}
+                finding={f}
+                label={labels.get(f.id) ?? ""}
+                caseId={caseId}
+                docs={byId}
+                labelsById={labels}
+                selected={f.id === selectedId}
+                onSelect={() => selectFinding(f, true)}
+                onSelectRelated={(id) => {
+                  const r = findings.find((x) => x.id === id);
+                  if (r) selectFinding(r, true);
+                }}
+                onCompare={comparisonSources(f, fieldsById).length >= 2 ? () => setCompare(f) : undefined}
+              />
+            );
+            if (g.items.length === 1) return renderCard(g.items[0]);
+            const open = openGroups.has(g.key) || g.items.some((f) => f.id === selectedId);
+            return (
+              <div key={g.key}>
+                <button
+                  type="button"
+                  aria-expanded={open}
+                  onClick={() =>
+                    setOpenGroups((prev) => {
+                      const n = new Set(prev);
+                      if (n.has(g.key)) n.delete(g.key);
+                      else n.add(g.key);
+                      return n;
+                    })
+                  }
+                  className="flex w-full cursor-pointer items-center gap-2 border-b border-line px-3 py-2 text-left hover:bg-hover"
+                >
+                  <ChevronRight className={cn("size-3.5 shrink-0 text-ink-3 transition-transform", open && "rotate-90")} aria-hidden />
+                  <StatusBadge status={g.items[0].status} compact />
+                  <span className="min-w-0 flex-1 truncate text-[13px] text-ink-2">{g.items[0].title}</span>
+                  <span className="font-mono text-xs text-ink-3">{g.items.length}</span>
+                </button>
+                {open && <div className="border-l border-line-strong">{g.items.map(renderCard)}</div>}
+              </div>
+            );
+          })}
         </div>
       </aside>
 

@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { api } from "@/api";
 import type { Document, EvidenceItem, Finding, ReasoningProvenance, ReviewDecision } from "@/api/types";
-import { CATEGORY_LABEL, STATUS_META } from "@/lib/findings";
+import { CATEGORY_LABEL, STATUS_META, splitExplanation } from "@/lib/findings";
 import { getReviewer, setReviewer } from "@/lib/reviewer";
 import { cn, fmtBBox, fmtTime } from "@/lib/utils";
 import { Button } from "./ui/button";
@@ -38,6 +38,20 @@ export function Provenance({ r }: { r: ReasoningProvenance }) {
   );
 }
 
+export function Explanation({ text }: { text: string }) {
+  const parts = splitExplanation(text);
+  return (
+    <div className="flex flex-col gap-2">
+      {parts.map((p, i) => (
+        <div key={i}>
+          {p.heading && <div className="eyebrow mb-0.5">{p.heading}</div>}
+          <p className="leading-relaxed text-ink-2">{p.text}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function EvidenceBlock({
   ev,
   caseId,
@@ -52,6 +66,36 @@ function EvidenceBlock({
   const [failed, setFailed] = useState(false);
   const hasImage = ev.uri && !failed;
   const doc = ev.doc_id ? docs.get(ev.doc_id) : undefined;
+  const measurement = ev.kind === "raw_value" || ev.kind === "metadata" || ev.kind === "field_ref";
+  const location = ev.doc_id && (
+    <span className="font-mono text-[10.5px] text-ink-3">
+      {doc?.filename ?? ev.doc_id}
+      {ev.page !== null && ` · p${ev.page + 1}`} {ev.bbox && fmtBBox(ev.bbox)}
+    </span>
+  );
+
+  // Measurements lead with the numbers; their source crop is a small reference.
+  if (measurement) {
+    return (
+      <figure className="flex gap-2 border border-line bg-ground p-2">
+        <figcaption className="flex min-w-0 flex-1 flex-col gap-1">
+          <span className="text-xs text-ink-2">{ev.label}</span>
+          <DataList data={ev.data} />
+          {location}
+        </figcaption>
+        {hasImage && (
+          <img
+            src={api.fileUrl(ev.uri!)}
+            alt=""
+            loading="lazy"
+            onError={() => setFailed(true)}
+            className="h-auto max-h-16 w-20 shrink-0 self-start bg-white object-contain"
+          />
+        )}
+      </figure>
+    );
+  }
+
   return (
     <figure className="border border-line bg-ground">
       {hasImage ? (
@@ -60,7 +104,7 @@ function EvidenceBlock({
           alt={ev.label}
           loading="lazy"
           onError={() => setFailed(true)}
-          className="max-h-56 w-full bg-white object-contain"
+          className={cn("max-h-56 w-full object-contain", ev.kind === "heatmap" ? "bg-[#050608]" : "bg-white")}
         />
       ) : ev.doc_id && ev.page !== null && ev.bbox ? (
         <PageCrop caseId={caseId} doc={doc} page={ev.page} bbox={ev.bbox} stroke={stroke} className="max-h-48" />
@@ -69,12 +113,7 @@ function EvidenceBlock({
       ) : null}
       <figcaption className="flex flex-col gap-1 px-2 py-1.5">
         <span className="text-xs text-ink-2">{ev.label}</span>
-        {ev.doc_id && (
-          <span className="font-mono text-[10.5px] text-ink-3">
-            {doc?.filename ?? ev.doc_id}
-            {ev.page !== null && ` · p${ev.page + 1}`} {ev.bbox && fmtBBox(ev.bbox)}
-          </span>
-        )}
+        {location}
         <DataList data={ev.data} />
       </figcaption>
     </figure>
@@ -176,7 +215,7 @@ export function FindingCard({
             className="overflow-hidden"
           >
             <div className="flex flex-col gap-3 px-3 pb-3">
-              <p className="leading-relaxed text-ink-2">{finding.explanation}</p>
+              <Explanation text={finding.explanation} />
 
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                 <SeverityText severity={finding.severity} />
