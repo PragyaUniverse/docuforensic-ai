@@ -197,3 +197,13 @@ def restore_tamper_demo() -> int | None:
             return row["seq"]
         finally:
             conn.close()
+
+
+def tamper_active_seq() -> int | None:
+    """The seq currently edited by the demo, or None if the chain holds no demo edit."""
+    conn = _connect()
+    try:
+        row = conn.execute("SELECT seq FROM audit_tamper_backup LIMIT 1").fetchone()
+        return row["seq"] if row else None
+    finally:
+        conn.close()

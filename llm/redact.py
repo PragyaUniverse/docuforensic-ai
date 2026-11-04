@@ -13,12 +13,12 @@ _PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("EMAIL", re.compile(r"\b[\w.+-]+@[\w-]+\.[\w.-]+\b")),
     ("PAN", re.compile(r"\b[A-Z]{5}[0-9]{4}[A-Z]\b")),
     ("IFSC", re.compile(r"\b[A-Z]{4}0[A-Z0-9]{6}\b")),
-    ("AADHAAR", re.compile(r"(?<![\d.,])\d{4}[ -]\d{4}[ -]\d{4}(?![\d.,])")),
-    ("PHONE", re.compile(r"(?<![\d.,])(?:\+91[ -]?)?[6-9]\d{4}[ -]?\d{5}(?![\d.,])")),
-    ("ACCOUNT", re.compile(r"(?<![\d.,])\d{9,18}(?![\d.,])")),
+    ("AADHAAR", re.compile(r"(?<!\d)(?<!\d[.,])\d{4}[ -]\d{4}[ -]\d{4}(?!\d|[.,]\d)")),
+    ("PHONE", re.compile(r"(?<!\d)(?<!\d[.,])(?:\+91[ -]?)?[6-9]\d{4}[ -]?\d{5}(?!\d|[.,]\d)")),
+    ("ACCOUNT", re.compile(r"(?<!\d)(?<!\d[.,])\d{9,18}(?!\d|[.,]\d)")),
     ("MASKED_ID", re.compile(r"\b[Xx*]{4,}[ -]?[Xx*]{0,4}[ -]?\d{3,4}\b")),
     ("DATE", re.compile(r"\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b|\b\d{4}-\d{2}-\d{2}\b")),
-    ("PINCODE", re.compile(r"(?<![\d.,])\d{6}(?![\d.,])")),
+    ("PINCODE", re.compile(r"(?<!\d)(?<!\d[.,])\d{6}(?!\d|[.,]\d)")),
 ]
 
 
