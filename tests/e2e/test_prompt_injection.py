@@ -79,16 +79,10 @@ class _Obedient:
         self.result_cls = result_cls
         self.prompts: list[str] = []
 
-    def __call__(self, task, prompt, schema, strength="fast", **kwargs):
-        self.prompts.append(prompt)
-        data = _attack_instance(schema)
-        fields = self.result_cls.model_fields if hasattr(self.result_cls, "model_fields") else {}
-        kwargs = {"ok": True, "mode": "live_llm"}
-        for key, value in (("data", data), ("parsed", data), ("value", data), ("output", data),
-                           ("provider", "test"), ("model", "test"), ("prompt_hash", "0")):
-            if key in fields:
-                kwargs[key] = value
-        return self.result_cls(**{k: v for k, v in kwargs.items() if k in fields})
+    def __call__(self, task, prompt, schema, strength="fast", system="", pii_values=None):
+        self.prompts.append(f"{system}\n{prompt}")
+        return self.result_cls(ok=True, mode="live_llm", data=_attack_instance(schema),
+                               provider="test", model="test", prompt_hash="0")
 
 
 def _attack_value(name: str, annotation):
@@ -168,20 +162,15 @@ def test_document_text_is_marked_as_untrusted_in_the_prompt(investigator):
         assert "untrusted" in joined or "do not follow" in joined or "data, not instructions" in joined
 
 
-def test_external_prompts_are_redacted(investigator):
-    """No ID, phone or email from the document should pass through unredacted when external."""
-    from llm import client as client_module
-
-    redact = getattr(client_module, "redact_pii", None)
-    if redact is None:
-        redact_module = pytest.importorskip("llm.redact", reason="PII redaction not landed yet")
-        redact = redact_module.redact_pii
-    # All synthetic values. The Aadhaar-format number fails nothing here; it's only a pattern.
-    text = "Name: Asha Testperson PAN ABCDE1234F Aadhaar 2345 6789 0123 asha@example.com 9876543210"
-    cleaned = redact(text)
-    cleaned = cleaned[0] if isinstance(cleaned, tuple) else cleaned
-    for value in ("ABCDE1234F", "2345 6789 0123", "asha@example.com", "9876543210"):
-        assert value not in cleaned
+def test_redaction_removes_identifiers_and_restores_them_locally():
+    redact_module = pytest.importorskip("llm.redact", reason="PII redaction not landed yet")
+    # All synthetic values.
+    text = "Asha Testperson, PAN ABCDE1234F, Aadhaar 2345 6789 0123, asha@example.com, 9876543210"
+    result = redact_module.redact(text, ["Asha Testperson"])
+    for value in ("Asha Testperson", "ABCDE1234F", "2345 6789 0123", "asha@example.com",
+                  "9876543210"):
+        assert value not in result.text
+    assert result.restore(result.text) == text
 
 
 def test_injected_document_text_does_not_suppress_findings_end_to_end(api):

@@ -1,0 +1,32 @@
+# Not yet run, because the Docker daemon was off during development. See docs/LIMITATIONS.md.
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8000:8000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATA_DIR: /app/var
+      # Reach a local Ollama running on the host, if there is one.
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      CORS_ORIGINS: http://localhost:5173
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - api-data:/app/var
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
+
+volumes:
+  api-data:

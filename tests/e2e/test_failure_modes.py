@@ -5,12 +5,15 @@ import io
 import json
 import zipfile
 
+import httpx
 import pytest
+from pydantic import BaseModel
 
 from config.settings import settings
 from tests.conftest import noise_png, synthetic_document_png
 
 UNHEALTHY = {"failed", "unsupported", "degraded"}
+KEY_CANARY = "AIzaFAKE-e2e-canary-0123456789abcdef"
 
 
 def _docs(api, case_id: str) -> list[dict]:
@@ -120,6 +123,84 @@ def test_llm_client_reports_an_outage_instead_of_raising():
     assert result.mode == "deterministic"
 
 
+class _Schema(BaseModel):
+    text: str
+
+
+def _external_client(monkeypatch, handler):
+    """A real LLMClient talking to a fake network, with Gemini as a keyed external provider."""
+    client_mod = pytest.importorskip("llm.client", reason="LLM layer not landed yet")
+    monkeypatch.setattr(settings, "offline", False)
+    monkeypatch.setattr(settings, "gemini_api_keys", KEY_CANARY)
+    monkeypatch.setattr(settings, "llm_chain", "gemini")
+    client = client_mod.LLMClient(transport=httpx.MockTransport(handler))
+    client._sleep = lambda _seconds: None
+    return client
+
+
+@pytest.mark.parametrize("status", [401, 403, 429, 500, 503])
+def test_provider_error_statuses_become_a_clean_deterministic_result(monkeypatch, status):
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        return httpx.Response(status, json={"error": {"message": "nope"}})
+
+    result = _external_client(monkeypatch, handler).complete_json("t", "hello", _Schema)
+    assert calls, "the provider should have been tried"
+    assert result.ok is False and result.mode == "deterministic"
+    assert KEY_CANARY not in str(result.error) and KEY_CANARY not in str(result.tried)
+
+
+@pytest.mark.parametrize("error", [httpx.ConnectError, httpx.ReadTimeout])
+def test_network_failures_become_a_clean_deterministic_result(monkeypatch, error):
+    def handler(request):
+        raise error("network down", request=request)
+
+    result = _external_client(monkeypatch, handler).complete_json("t", "hello", _Schema)
+    assert result.ok is False and result.mode == "deterministic"
+    assert KEY_CANARY not in str(result.error)
+
+
+def test_garbage_model_output_is_rejected_not_passed_on(monkeypatch):
+    def handler(request):
+        return httpx.Response(200, json={"candidates": [{"content": {"parts": [{"text": "lol"}]}}]})
+
+    result = _external_client(monkeypatch, handler).complete_json("t", "hello", _Schema)
+    assert result.ok is False
+    assert result.data is None
+
+
+def test_identifiers_are_redacted_on_the_wire_to_external_providers(monkeypatch):
+    bodies = []
+
+    def handler(request):
+        bodies.append(request.content.decode())
+        return httpx.Response(429, json={"error": {"message": "quota"}})
+
+    client = _external_client(monkeypatch, handler)
+    prompt = "Asha Testperson PAN ABCDE1234F 2345 6789 0123 asha@example.com 9876543210"
+    client.complete_json("t", prompt, _Schema, pii_values=["Asha Testperson"])
+    assert bodies, "the provider should have been tried"
+    for value in ("Asha Testperson", "ABCDE1234F", "2345 6789 0123", "asha@example.com",
+                  "9876543210"):
+        assert value not in bodies[0]
+
+
+def test_offline_mode_makes_no_external_call(monkeypatch):
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        return httpx.Response(500)
+
+    client = _external_client(monkeypatch, handler)
+    monkeypatch.setattr(settings, "offline", True)
+    result = client.complete_json("t", "hello", _Schema)
+    assert calls == []
+    assert result.ok is False and result.mode == "deterministic"
+
+
 def test_capabilities_are_honest_with_no_keys(api):
     res = api.client.get("/api/capabilities")
     assert res.status_code == 200
@@ -136,7 +217,7 @@ def test_capabilities_are_honest_with_no_keys(api):
 
 
 def test_keys_never_leak_through_the_api(api, monkeypatch):
-    secret = "AIzaFAKE-e2e-canary-0123456789abcdef"
+    secret = KEY_CANARY
     monkeypatch.setattr(settings, "gemini_api_keys", secret)
     for path in ("/api/capabilities", "/api/health"):
         res = api.client.get(path)
