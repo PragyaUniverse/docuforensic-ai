@@ -77,7 +77,7 @@ def norm_date(raw: str) -> str | None:
 
 
 def norm_period(raw: str) -> str | None:
-    """'March 2026' -> '2026-03'; a date range -> 'start..end'."""
+    """'March 2026' -> '2026-03'; a date range -> 'start/end'."""
     dates = re.findall(
         r"\d{1,2}\s*[-/.]\s*\d{1,2}\s*[-/.]\s*\d{2,4}|\d{1,2}(?:st|nd|rd|th)?[\s\-]*[A-Za-z]{3,9}[\s\-,]*\d{2,4}|\d{4}-\d{2}-\d{2}",
         raw,
@@ -85,7 +85,7 @@ def norm_period(raw: str) -> str | None:
     if len(dates) >= 2:
         a, b = norm_date(dates[0]), norm_date(dates[1])
         if a and b:
-            return f"{a}..{b}"
+            return f"{a}/{b}"
     m = re.search(r"\b([A-Za-z]{3,9})[\s\-,']*(\d{2,4})\b", raw)
     if m and m.group(1)[:3].lower() in MONTHS:
         y = int(m.group(2))

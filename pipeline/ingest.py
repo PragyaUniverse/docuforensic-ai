@@ -99,15 +99,23 @@ def _ingest_image(path: Path, doc: Document, ddir: Path, kind: str) -> None:
 
 
 def _page_is_scan(page: pymupdf.Page) -> bool:
+    """A full-page image with no text painted visibly on top of it. A background image under real
+    text (letterhead, watermark) is still a digital page, and an invisible OCR layer is a scan."""
     area = abs(page.rect) or 1.0
     try:
-        for info in page.get_image_info():
-            rect = pymupdf.Rect(info["bbox"]) & page.rect
-            if abs(rect) / area >= SCAN_IMAGE_COVERAGE:
-                return True
+        full_page = any(
+            abs(pymupdf.Rect(info["bbox"]) & page.rect) / area >= SCAN_IMAGE_COVERAGE
+            for info in page.get_image_info()
+        )
+        if not full_page:
+            return False
+        visible = sum(
+            len(span.get("chars", [])) for span in page.get_texttrace()
+            if span.get("type") != 3 and span.get("opacity", 1) > 0
+        )
+        return visible < 20
     except Exception:
         return False
-    return False
 
 
 def _ingest_pdf(path: Path, doc: Document, ddir: Path) -> None:

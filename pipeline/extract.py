@@ -55,12 +55,12 @@ COMMON_LABELS: dict[str, tuple[ValueType, list[str]]] = {
     "phone": (S, ["mobile number", "mobile no", "phone number", "phone no", "contact number", "contact no", "mobile", "phone"]),
     "email": (S, ["email address", "e-mail address", "email id", "e-mail", "email"]),
     "id_number": (I, ["aadhaar number", "aadhaar no", "aadhar number", "aadhar no", "national id number", "national id", "id number", "id no", "aadhaar", "uid"]),
-    "pan_number": (I, ["pan number", "pan no", "permanent account number", "pan"]),
+    "pan_number": (I, ["pan number", "pan no", "permanent account number", "permanent account no", "pan"]),
     "employer_name": (S, ["name of employer", "employer name", "current employer", "company name", "organisation", "organization", "employer", "company"]),
     "designation": (S, ["designation", "job title"]),
     "declared_monthly_income": (M, ["declared monthly income", "gross monthly income", "net monthly income", "monthly income", "monthly salary"]),
     "loan_amount": (M, ["loan amount requested", "requested loan amount", "loan amount", "amount requested"]),
-    "bank_account_number": (C, ["bank account number", "bank account no", "salary account number", "salary account no", "salary a/c no", "account number", "account no", "a/c number", "a/c no", "acct no"]),
+    "bank_account_number": (C, ["bank account number", "bank account no", "bank a/c number", "bank a/c no", "salary account number", "salary account no", "salary a/c number", "salary a/c no", "account number", "account no", "a/c number", "a/c no", "acct no"]),
     "application_id": (S, ["application id", "application number", "application no", "application ref", "reference number", "ref no"]),
     "application_date": (D, ["application date", "date of application"]),
     "employee_id": (S, ["employee id", "employee no", "employee code", "emp id", "emp code", "emp no"]),
@@ -73,6 +73,9 @@ COMMON_LABELS: dict[str, tuple[ValueType, list[str]]] = {
     "net_pay": (M, ["net salary payable", "net amount payable", "net pay", "net salary", "take home pay", "take home", "net payable"]),
     "date_of_joining": (D, ["date of joining", "joining date", "doj"]),
     "bank_name": (S, ["name of bank", "bank name", "bank"]),
+    "tenure": (S, ["tenure"]),
+    "due_date": (D, ["due date"]),
+    "billing_period": (S, ["billing period"]),
     "ifsc": (I, ["ifsc code", "ifsc"]),
     "statement_period": (S, ["statement period", "statement for the period", "period"]),
     "opening_balance": (M, ["opening balance", "balance brought forward"]),
@@ -93,7 +96,7 @@ FIELDS_BY_TYPE: dict[DocType, list[str]] = {
     DocType.application_form: [
         "application_id", "person_name", "date_of_birth", "gender", "address", "phone", "email",
         "id_number", "pan_number", "employer_name", "designation", "declared_monthly_income",
-        "loan_amount", "bank_account_number", "application_date", "_date",
+        "loan_amount", "bank_account_number", "application_date", "date_of_joining", "ifsc", "place", "tenure", "_date",
     ],
     DocType.id_proof: ["id_type", "id_number", "pan_number", "person_name", "date_of_birth", "gender", "address", "document_date"],
     DocType.salary_slip: [
@@ -105,7 +108,7 @@ FIELDS_BY_TYPE: dict[DocType, list[str]] = {
         "person_name", "address", "bank_name", "bank_account_number", "ifsc", "statement_period",
         "opening_balance", "closing_balance", "date_of_birth", "document_date",
     ],
-    DocType.address_proof: ["person_name", "address", "issuer_name", "consumer_number", "bill_date", "amount_due", "document_date", "_date"],
+    DocType.address_proof: ["person_name", "address", "issuer_name", "consumer_number", "bill_date", "amount_due", "due_date", "billing_period", "document_date", "_date"],
     DocType.declaration: [
         "person_name", "date_of_birth", "address", "employer_name", "declared_monthly_income",
         "declaration_date", "place", "_date", "document_date",
@@ -197,20 +200,33 @@ def _boundary_ok(line: Line, i: int, end: int) -> bool:
 
 
 def _accept_position(line: Line, i: int, end: int) -> bool:
-    """Reject label words used inside prose. Needs a colon, a column gap, or the row's end."""
+    """Reject label words used inside prose. A label closes with a colon or a column gap, or ends
+    the row, and it opens a row or a column unless a colon makes its role unambiguous."""
     chars = line.chars
-    if end >= len(chars):
+    closes_with_colon = _colon_follows(line, end)
+    if i > 0 and not closes_with_colon:
+        gap_before = line.span_bbox(i, i + 1).x0 - line.span_bbox(i - 1, i).x1
+        if gap_before < 0.7 * line.height and chars[i - 1].ch not in ":;|":
+            return False
+    if end >= len(chars) or closes_with_colon:
         return True
-    if chars[end].ch in ":：-–=":
-        return True
-    b0 = line.span_bbox(end - 1, end)
-    b1 = line.span_bbox(end, end + 1)
-    return (b1.x0 - b0.x1) >= 0.7 * line.height
+    gap_after = line.span_bbox(end, end + 1).x0 - line.span_bbox(end - 1, end).x1
+    return gap_after >= 0.7 * line.height
+
+
+def _colon_follows(line: Line, end: int) -> bool:
+    """A colon right after the label, allowing 'No.' and '(Rs.)' style tails."""
+    tail = "".join(c.ch for c in line.chars[end : end + 9])
+    return bool(re.match(r"\.?(\((rs|inr|₹)\.?\))?\.?[:：=]", tail, re.I))
 
 
 def _value_span(line: Line, hit: LabelHit, next_start: int) -> tuple[int, int]:
     """Value characters to the right of a label, up to the next label or a wide gap."""
     i = hit.end
+    tail = "".join(c.ch for c in line.chars[i : i + 9])
+    m = re.match(r"\.?(\((rs|inr|₹)\.?\))?", tail, re.I)
+    if m:
+        i += len(m.group(0))
     while i < next_start and line.chars[i].ch in ":：-–=.|":
         i += 1
     j = i
@@ -226,33 +242,44 @@ def _value_span(line: Line, hit: LabelHit, next_start: int) -> tuple[int, int]:
 
 
 def _fit_value(raw: str, vtype: ValueType, name: str) -> tuple[int, int] | None:
-    """Locate the actual value inside the raw span (index in the raw string), or None."""
+    """Locate the actual value inside the raw span as non-space character offsets, or None."""
+    squished = re.sub(r"\s+", "", raw)
+
+    def spaced(m: re.Match) -> tuple[int, int]:
+        return _map_raw_span(raw, (m.start(), m.end()))
+
+    def whole() -> tuple[int, int]:
+        return 0, len(squished)
+
     if vtype == M:
         m = MONEY_RE.search(raw)
-        return (m.start(), m.end()) if m and norm_money(m.group(0)) else None
+        return spaced(m) if m and norm_money(m.group(0)) else None
     if vtype == D:
         m = DATE_RE.search(raw)
-        return (m.start(), m.end()) if m and norm_date(m.group(0)) else None
-    if name == "pan_number":
-        m = PAN_RE.search(raw.replace(" ", "").upper())
-        return (0, len(raw)) if m else None
-    if name == "ifsc":
-        m = IFSC_RE.search(raw.replace(" ", "").upper())
-        return (0, len(raw)) if m else None
+        return spaced(m) if m and norm_date(m.group(0)) else None
+    if name in ("pan_number", "ifsc"):
+        m = (PAN_RE if name == "pan_number" else IFSC_RE).search(squished.upper())
+        if m:
+            return m.start(), m.end()
+        if name == "pan_number":
+            for i in range(0, max(len(squished) - 9, 0)):
+                if repair_pan(squished[i : i + 10]):
+                    return i, i + 10
+        return None
     if name == "email":
-        m = EMAIL_RE.search(raw.replace(" ", ""))
-        return (0, len(raw)) if m else None
+        m = EMAIL_RE.search(squished)
+        return (m.start(), m.end()) if m else None
     if name == "id_number":
-        return (0, len(raw)) if sum(c.isdigit() for c in raw) >= 8 else None
+        return whole() if sum(c.isdigit() for c in raw) >= 8 else None
     if vtype == C:
-        return (0, len(raw)) if sum(c.isdigit() for c in raw) >= 6 else None
+        return whole() if sum(c.isdigit() for c in raw) >= 6 else None
     if vtype == N:
-        return (0, len(raw)) if sum(c.isalpha() for c in raw) >= 2 else None
+        return whole() if sum(c.isalpha() for c in raw) >= 2 else None
     if name == "phone":
-        return (0, len(raw)) if sum(c.isdigit() for c in raw) >= 8 else None
+        return whole() if sum(c.isdigit() for c in raw) >= 8 else None
     if name == "gender":
-        return (0, len(raw)) if re.search(r"(?i)\b(male|female|other|m|f)\b", raw) else None
-    return (0, len(raw)) if any(c.isalnum() for c in raw) else None
+        return whole() if re.search(r"(?i)\b(male|female|other|m|f)\b", raw) else None
+    return whole() if any(c.isalnum() for c in raw) else None
 
 
 def _normalize(name: str, vtype: ValueType, raw: str) -> str | None:
@@ -289,8 +316,21 @@ def _map_raw_span(raw: str, fit: tuple[int, int]) -> tuple[int, int]:
     return a, b
 
 
-def _spaced_gap_cut(line: Line, start: int, end: int) -> int:
-    return end
+def repair_pan(token: str) -> str | None:
+    """PAN format is five letters, four digits, one letter, so OCR's letter/digit mix-ups in a
+    given position have a single valid reading. Returns None if the token can't be a PAN."""
+    t = re.sub(r"\s+", "", token).upper()
+    if len(t) != 10 or not t.isalnum():
+        return None
+    to_letter = str.maketrans({"0": "O", "1": "I", "5": "S", "8": "B", "2": "Z"})
+    to_digit = str.maketrans({"O": "0", "I": "1", "L": "1", "S": "5", "B": "8", "Z": "2"})
+    fixed = t[:5].translate(to_letter) + t[5:9].translate(to_digit) + t[9].translate(to_letter)
+    return fixed if PAN_RE.fullmatch(fixed) else None
+
+
+def _repair_name(raw: str) -> str:
+    """OCR often reads a capital I as lowercase l at the start of a name ('lyer' for 'Iyer')."""
+    return re.sub(r"\bl(?=[a-z])", "I", raw)
 
 
 class _Extractor:
@@ -307,6 +347,10 @@ class _Extractor:
         raw = raw.strip(" :-–|")
         if not raw:
             return None
+        if vtype == N or name == "employer_name":
+            raw = _repair_name(raw)
+        if name == "pan_number":
+            raw = repair_pan(raw) or raw
         field = Field(
             doc_id=self.doc.id,
             name=name,
@@ -351,10 +395,13 @@ class _Extractor:
         h = lines[idx].height
         for k in range(idx + 1, min(idx + 4, len(lines))):
             ln = lines[k]
-            if ln.y - prev_y > 1.9 * h:
+            if ln.y - prev_y > 2.8 * h:
                 break
             chars = [i for i in range(len(ln.chars)) if x0 - 1.2 * h <= ln.span_bbox(i, i + 1).x0 < x_limit]
             if not chars:
+                break
+            # Anything printed left of the value column means this row starts a new label.
+            if chars[0] > 0:
                 break
             a, b = chars[0], chars[-1] + 1
             if abs(ln.span_bbox(a, a + 1).x0 - x0) > 1.5 * h:
@@ -401,8 +448,7 @@ class _Extractor:
                         continue
                     quality = 0.9
                     used_below = True
-                sa, sb = _map_raw_span(raw, fit)
-                a2, b2 = a + sa, a + sb
+                a2, b2 = a + fit[0], a + fit[1]
                 raw_value = value_line.span_text(a2, b2)
                 bbox = value_line.span_bbox(a2, b2)
                 conf = value_line.span_conf(a2, b2) * quality
@@ -462,7 +508,7 @@ class _Extractor:
         if dtype == DocType.bank_statement and "bank_name" not in have:
             self._header_org("bank_name", first_lines, r"\bbank\b")
         if dtype == DocType.address_proof and "issuer_name" not in have:
-            self._header_org("issuer_name", first_lines, r"(electric|power|energy|gas|water|telecom|board|discom|utility|limited|ltd)")
+            self._header_org("issuer_name", first_lines)
         if dtype == DocType.declaration:
             self._declaration_prose(have)
 
@@ -475,25 +521,37 @@ class _Extractor:
             line.span_conf(a, b) * quality, page, line.words[line.chars[a].word_index].source,
         )
 
-    def _header_org(self, name: str, lines: list[Line], pattern: str) -> None:
+    def _header_org(self, name: str, lines: list[Line], pattern: str | None = None) -> None:
+        """The organisation name printed at the top: its row's first chunk, in the tallest type."""
+        chunks: list[tuple[Line, int, int]] = []
         for line in lines[:8]:
-            if re.search(pattern, line.text, re.I) and not re.search(r"(?i)statement|slip|bill\b", line.text):
-                self._emit_regex(name, S, line, 0, len(line.chars), 0, quality=0.75)
-                return
+            if re.search(r"(?i)specimen|synthetic|fictional|not a real", line.text):
+                continue
+            end = len(line.chars)
+            for j in range(1, len(line.chars)):
+                if line.span_bbox(j, j + 1).x0 - line.span_bbox(j - 1, j).x1 > 2.5 * line.height:
+                    end = j
+                    break
+            chunks.append((line, 0, end))
+        chunks = [c for c in chunks if sum(ch.ch.isalpha() for ch in c[0].chars[c[1] : c[2]]) >= 4
+                  and not re.search(r"(?i)statement|slip|bill\b|application|declaration", c[0].span_text(c[1], c[2]))]
+        if pattern:
+            matching = [c for c in chunks if re.search(pattern, c[0].span_text(c[1], c[2]), re.I)]
+            chunks = matching or chunks
+        if chunks:
+            line, a, b = max(chunks, key=lambda c: c[0].height)
+            self._emit_regex(name, S, line, a, b, line.page, quality=0.75)
 
     def _id_proof_fallbacks(self, lines: list[Line], have: set[str]) -> None:
-        text = " ".join(ln.squished for ln in lines)
         if "id_type" not in have:
-            kind = None
-            for key, value in (("aadhaar", "Aadhaar-format ID"), ("permanentaccountnumber", "PAN-format ID"), ("incometaxdepartment", "PAN-format ID"), ("nationalid", "National ID"), ("voter", "Voter ID"), ("passport", "Passport")):
-                if key in text:
-                    kind = value
+            pattern = re.compile(r"(aadhaar|aadhar|pan|voter|passport|national)[-\s]*(style|format|id|card)?", re.I)
+            for line in lines:
+                if not any(k in line.squished for k in ("aadhaar", "aadhar", "permanentaccountnumber", "nationalid", "voter", "passport", "pan-style", "panstyle", "pan-format")):
+                    continue
+                m = pattern.search(line.squished)
+                if m:
+                    self._emit_regex("id_type", S, line, m.start(), m.end(), 0, quality=0.8)
                     break
-            if kind:
-                for line in lines:
-                    if any(k in line.squished for k in ("aadhaar", "permanentaccountnumber", "incometaxdepartment", "nationalid", "voter", "passport")):
-                        self._emit("id_type", S, None, kind, line.bbox, line.span_conf(0, len(line.chars)) * 0.8, 0, line.words[0].source)
-                        break
         if "person_name" not in have:
             # On ID cards the name often sits unlabelled directly above the date of birth.
             dob = next((f for f in self.fields if f.name == "date_of_birth"), None)

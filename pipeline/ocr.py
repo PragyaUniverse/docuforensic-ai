@@ -8,6 +8,7 @@ tight boxes. All confidences are kept: OCR output is a measurement, never ground
 from __future__ import annotations
 
 import math
+import re
 import threading
 from dataclasses import dataclass
 from difflib import SequenceMatcher
@@ -81,6 +82,10 @@ def rapid_lines(img: np.ndarray) -> list[OcrLine] | None:
             step = (bbox.x1 - bbox.x0) / max(len(text), 1)
             for i, ch in enumerate(text):
                 chars.append((ch, conf, BBox(x0=bbox.x0 + i * step, y0=bbox.y0, x1=bbox.x0 + (i + 1) * step, y1=bbox.y1)))
+        fixed = repair_text(text)
+        if len(fixed) == len(text):
+            chars = [(fixed[i], c[1], c[2]) for i, c in enumerate(chars)]
+            text = fixed
         lines.append(OcrLine(text=text, confidence=conf, bbox=bbox, tilt_deg=tilt, chars=chars))
     return lines
 
@@ -102,6 +107,33 @@ def tesseract_words(img: np.ndarray) -> list[tuple[str, float, BBox]] | None:
             continue
         x, y, w, h = data["left"][i], data["top"][i], data["width"][i], data["height"][i]
         out.append((text, conf / 100.0, BBox(x0=x, y0=y, x1=x + w, y1=y + h)))
+    return out
+
+
+def repair_text(text: str) -> str:
+    """Fix OCR confusions that have only one sensible reading. Everything else stays as read."""
+    text = text.translate(str.maketrans({"，": ",", "：": ":", "．": ".", "（": "(", "）": ")", "；": ";"}))
+    # A digit zero inside a month name: 12-0ct-2026.
+    return re.sub(r"(?<![A-Za-z0-9])0ct(?![a-z])|(?<=[-/\s\d])0ct(?![a-z])", "Oct", text)
+
+
+def merge_fragments(lines: list[OcrLine], tess: list[tuple[str, float, BBox]]) -> list[OcrLine]:
+    """The line detector can shatter one word into pieces, often where a watermark crosses it.
+    When one confident Tesseract word covers several pieces, it replaces them."""
+    out = list(lines)
+    for text, conf, box in tess:
+        if conf < 0.8 or sum(c.isalnum() for c in text) < 3:
+            continue
+        pieces = [ln for ln in out if _center_inside(ln.bbox, box, slack=6) and (ln.bbox.x1 - ln.bbox.x0) < (box.x1 - box.x0)]
+        if len(pieces) < 2:
+            continue
+        step = (box.x1 - box.x0) / max(len(text), 1)
+        chars = [
+            (ch, conf, BBox(x0=box.x0 + i * step, y0=box.y0, x1=box.x0 + (i + 1) * step, y1=box.y1))
+            for i, ch in enumerate(text)
+        ]
+        out = [ln for ln in out if not any(ln is q for q in pieces)]
+        out.append(OcrLine(text=text, confidence=conf, bbox=box, tilt_deg=0.0, chars=chars))
     return out
 
 
@@ -201,8 +233,9 @@ def ocr_image(img: np.ndarray, page: int = 0) -> tuple[list[Word], TextSource | 
         ]
         return words, TextSource.ocr_tesseract
 
-    kept = [ln for ln in lines if abs(ln.tilt_deg) <= MAX_LINE_TILT_DEG]
     tess = tess or []
+    lines = merge_fragments(lines, tess)
+    kept = [ln for ln in lines if abs(ln.tilt_deg) <= MAX_LINE_TILT_DEG]
     words: list[Word] = []
     for ln in kept:
         words.extend(_line_to_words(ln, tess, page))
