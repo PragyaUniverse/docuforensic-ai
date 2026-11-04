@@ -600,9 +600,9 @@
           "raw": "Rohan Aditya Kulkarni",
           "page": 0,
           "bbox": [
-            430,
+            480,
             205,
-            726,
+            776,
             232
           ],
           "label": "Account Holder"
@@ -612,9 +612,9 @@
           "raw": "House 88, Sector 21,, Vashi, Navi Mumbai,, Maharashtra 400703",
           "page": 0,
           "bbox": [
-            430,
+            480,
             256,
-            713,
+            763,
             352
           ],
           "label": "Address"
@@ -624,9 +624,9 @@
           "raw": "Sahyadri Cooperative Bank",
           "page": 0,
           "bbox": [
-            430,
+            480,
             381,
-            798,
+            848,
             408
           ],
           "label": "Bank"
@@ -648,9 +648,9 @@
           "raw": "30088199127764",
           "page": 0,
           "bbox": [
-            430,
+            480,
             432,
-            670,
+            720,
             452
           ],
           "label": "Account No."
@@ -660,9 +660,9 @@
           "raw": "01-May-2026 to 31-Oct-2026",
           "page": 0,
           "bbox": [
-            430,
+            480,
             482,
-            822,
+            872,
             508
           ],
           "label": "Statement Period"
@@ -672,9 +672,9 @@
           "raw": "88,215.10",
           "page": 0,
           "bbox": [
-            430,
+            480,
             532,
-            567,
+            617,
             555
           ],
           "label": "Opening Balance (Rs.)"
@@ -684,9 +684,9 @@
           "raw": "3,15,383.52",
           "page": 0,
           "bbox": [
-            430,
+            480,
             582,
-            593,
+            643,
             605
           ],
           "label": "Closing Balance (Rs.)"
@@ -1085,6 +1085,10 @@
                 1770,
                 1530.5,
                 1791
+              ],
+              "text_layer_values": [
+                "62,400.00",
+                "86,400.00"
               ]
             }
           ]

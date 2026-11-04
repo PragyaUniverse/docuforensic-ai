@@ -25,8 +25,8 @@ import shutil
 import sys
 import zipfile
 from dataclasses import dataclass, field
-from datetime import date, timedelta
-from functools import lru_cache
+from datetime import date
+from functools import cache, lru_cache, partial
 from pathlib import Path
 
 import cv2
@@ -75,7 +75,7 @@ for _n, _f in (("Vera", "Vera.ttf"), ("VeraBd", "VeraBd.ttf"), ("VeraIt", "VeraI
     pdfmetrics.registerFont(TTFont(_n, str(VERA / _f)))
 
 
-@lru_cache(maxsize=None)
+@cache
 def font(name: str, size: int) -> ImageFont.FreeTypeFont:
     if name in _VERA:
         return ImageFont.truetype(str(VERA / _VERA[name]), size)
@@ -250,9 +250,8 @@ def dmy(iso: str, style="/") -> str:
     return d.strftime(f"%d{style}%m{style}%Y")
 
 
-ONES = ("Zero One Two Three Four Five Six Seven Eight Nine Ten Eleven Twelve Thirteen Fourteen "
-        "Fifteen Sixteen Seventeen Eighteen Nineteen").split()
-TENS = "x x Twenty Thirty Forty Fifty Sixty Seventy Eighty Ninety".split()
+ONES = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"]
+TENS = ["x", "x", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"]
 
 
 def words(n: int) -> str:
@@ -268,8 +267,6 @@ def words(n: int) -> str:
 
 
 # Verhoeff checksum, used for Aadhaar-format numbers. The 9999 prefix marks them as test values.
-_VD = [[(i + j) % 5 + 5 * ((i // 5 + j // 5) % 2) if i < 5 and j < 5 else 0 for j in range(10)]
-       for i in range(10)]
 _VD = [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 0, 6, 7, 8, 9, 5],
        [2, 3, 4, 0, 1, 7, 8, 9, 5, 6], [3, 4, 0, 1, 2, 8, 9, 5, 6, 7],
        [4, 0, 1, 2, 3, 9, 5, 6, 7, 8], [5, 9, 8, 7, 6, 0, 4, 3, 2, 1],
@@ -823,23 +820,23 @@ def draw_bank_statement(c, p: Profile, rec: Rec, multipage=False):
     rows = transactions(p)
     closing = rows[-1]["balance"]
     y += 16
-    kv(c, rec, "person_name", "Account Holder", p.get(d, "name"), y, vx=430)
+    kv(c, rec, "person_name", "Account Holder", p.get(d, "name"), y, vx=480)
     y += 50
-    y = kv_lines(c, rec, "address", "Address", p.get(d, "address"), y, vx=430, lead=38)
+    y = kv_lines(c, rec, "address", "Address", p.get(d, "address"), y, vx=480, lead=38)
     y += 50
-    kv(c, rec, "bank_name", "Bank", p.bank, y, vx=430)
+    kv(c, rec, "bank_name", "Bank", p.bank, y, vx=480)
     kv(c, rec, "ifsc", "IFSC", p.ifsc, y, x=1000, vx=1140)
     y += 50
-    kv(c, rec, "bank_account_number", "Account No.", p.get(d, "account"), y, vx=430)
+    kv(c, rec, "bank_account_number", "Account No.", p.get(d, "account"), y, vx=480)
     y += 50
     period = "01-May-2026 to 31-Oct-2026"
-    kv(c, rec, "statement_period", "Statement Period", period, y, vx=430,
+    kv(c, rec, "statement_period", "Statement Period", period, y, vx=480,
        value="2026-05-01/2026-10-31")
     y += 50
-    kv(c, rec, "opening_balance", "Opening Balance (Rs.)", inr(p.opening), y, vx=430,
+    kv(c, rec, "opening_balance", "Opening Balance (Rs.)", inr(p.opening), y, vx=480,
        value=money(p.opening), lsize=24)
     y += 50
-    kv(c, rec, "closing_balance", "Closing Balance (Rs.)", inr(closing), y, vx=430,
+    kv(c, rec, "closing_balance", "Closing Balance (Rs.)", inr(closing), y, vx=480,
        value=money(closing), lsize=24)
     y += 44
 
@@ -856,7 +853,7 @@ def draw_bank_statement(c, p: Profile, rec: Rec, multipage=False):
 
     y = table_head(y)
     row_h = 46
-    page_rows, gt_rows = [], []
+    gt_rows = []
     page = 0
     for row in rows:
         if y + row_h > H - 120:
@@ -937,6 +934,16 @@ def draw_address_proof(c, p: Profile, rec: Rec):
          W - 248, size=23, lead=34, fill=MUTED)
 
 
+DECLARATION_CLAUSES = (
+    ("1. I declare that the particulars stated above are true and correct, and that the "
+     "documents I have submitted in support of my loan application are genuine."),
+    ("2. I understand that the lender may verify these particulars with my employer, my bank "
+     "and the issuing authorities, and may rely on them while assessing my application."),
+    ("3. I undertake to inform the lender promptly of any material change in my employment, "
+     "my income or my residential address while the application is under consideration."),
+)
+
+
 def draw_declaration(c, p: Profile, rec: Rec):
     d = "declaration"
     c.begin_page()
@@ -965,14 +972,7 @@ def draw_declaration(c, p: Profile, rec: Rec):
     kv(c, rec, "declared_monthly_income", "Monthly Income (Rs.)", inr(inc), y, x=150, vx=vx,
        value=money(inc), vfont="serif", size=33)
     y += 90
-    for clause in (
-        "1. I declare that the particulars stated above are true and correct, and that the "
-        "documents I have submitted in support of my loan application are genuine.",
-        "2. I understand that the lender may verify these particulars with my employer, my bank "
-        "and the issuing authorities, and may rely on them while assessing my application.",
-        "3. I undertake to inform the lender promptly of any material change in my employment, "
-        "my income or my residential address while the application is under consideration.",
-    ):
+    for clause in DECLARATION_CLAUSES:
         y = para(c, 150, y, clause, W - 300, "serif", 32, 46)
         y += 22
     y += 70
@@ -994,6 +994,20 @@ LAYOUTS = {"application_form": draw_application_form, "id_proof": draw_id_proof,
 CREATORS = {"application_form": "Loan Origination Portal 3.4", "salary_slip": "PayrollDesk HRMS 6.1",
             "bank_statement": "CoreBank Statement Service 9.2", "declaration": "Loan Origination Portal 3.4",
             "address_proof": "Utility Billing Engine 2.8", "id_proof": "Loan Origination Portal 3.4"}
+
+
+def stabilize_incremental_id(path: Path, key: str) -> None:
+    """saveIncr writes a random second /ID into its trailer. Make that value reproducible.
+
+    Trailer length may change safely: it sits after the xref section that startxref points to.
+    """
+    data = path.read_bytes()
+    at = data.rindex(b"trailer")
+    start = data.index(b"/ID[", at)
+    first_end = data.index(b">", start) + 1
+    end = data.index(b"]/Prev", first_end)
+    stable = hashlib.md5(key.encode()).hexdigest().upper().encode()
+    path.write_bytes(data[:first_end] + b"<" + stable + b">" + data[end:])
 
 
 def pdf_date(iso: str, hhmm="1030") -> str:
@@ -1208,8 +1222,11 @@ def build_case(case: str, p: Profile, multipage_bank=False,
 def strip_table(t: dict) -> dict:
     rows = []
     for r in t["rows"]:
-        rows.append({"cells": r["cells"], "page": r["page"], "bbox": r["bbox"]}
-                    if isinstance(r, dict) else r)
+        if isinstance(r, dict):
+            keep = {"cells", "page", "bbox", "text_layer_values"}
+            rows.append({k: v for k, v in r.items() if k in keep})
+        else:
+            rows.append(r)
     return {"page": t["page"], "headers": t["headers"], "rows": rows}
 
 
@@ -1406,6 +1423,7 @@ def gen_case_d():
     doc.set_metadata(meta)
     doc.saveIncr()
     doc.close()
+    stabilize_incremental_id(slip.path, "case_d/salary_slip")
     glyphs = ink_bbox(inr(forged_net), "helvb", 35, box[0] + 6, y1)
     f.update(value=money(forged_net), raw=inr(forged_net), bbox=glyphs,
              text_layer_value=inr(p.net), original_value=money(p.net))
@@ -1439,6 +1457,7 @@ def gen_case_d():
     doc.saveIncr()
     doc.close()
     ov.close()
+    stabilize_incremental_id(bank.path, "case_d/bank_statement")
     old_s = row["cells"][3]
     row["cells"][3] = new_s
     row["text_layer_values"] = [old_s, new_s]
@@ -1479,6 +1498,10 @@ VARIANT_DOCS = {
 }
 
 
+def _identity(box):
+    return box
+
+
 def rotate_box(box, M):
     x0, y0, x1, y1 = box
     pts = np.array([[x0, y0, 1], [x1, y0, 1], [x1, y1, 1], [x0, y1, 1]], dtype=np.float64)
@@ -1512,14 +1535,14 @@ def gen_noise_variants(gts: dict):
                 r = rng_for("variant", case, dt, kind)
                 name = f"{dt}__{kind}.jpg"
                 params: dict = {}
-                fn = lambda b: b  # noqa: E731
+                fn = _identity
                 if kind == "rot":
                     angle = float(r.uniform(1.0, 2.0) * r.choice([-1, 1]))
                     M = cv2.getRotationMatrix2D((W / 2, H / 2), angle, 1.0)
                     im = Image.fromarray(cv2.warpAffine(arr, M, (W, H), flags=cv2.INTER_CUBIC,
                                                         borderValue=(244, 243, 238)))
                     params = {"angle_deg": round(angle, 3)}
-                    fn = lambda b, M=M: rotate_box(b, M)  # noqa: E731
+                    fn = partial(rotate_box, M=M)
                     im.save(out / name, "JPEG", quality=85)
                 elif kind == "blur":
                     sigma = 1.4
@@ -1582,6 +1605,10 @@ def write_manifest():
 
 
 def generate():
+    """Build in a sibling directory, then swap it in, so readers never see a partial tree."""
+    global OUT
+    final = OUT
+    OUT = final.with_name(final.name + ".building")
     if OUT.exists():
         shutil.rmtree(OUT)
     OUT.mkdir(parents=True)
@@ -1593,6 +1620,10 @@ def generate():
     gen_unsupported()
     write_manifest()
     assert all(verhoeff_valid(p.aadhaar) for p in (PA, PB, PC, PD))
+    if final.exists():
+        shutil.rmtree(final)
+    OUT.rename(final)
+    OUT = final
 
 
 # ----------------------------------------------------------------------------------------------
@@ -1610,7 +1641,7 @@ def verify(threshold=80.0) -> int:
     failures = 0
     for key, *_ in MANIFEST:
         gt = json.loads((OUT / key / "ground_truth.json").read_text())
-        total, scores = 0, []
+        total, scores, full = 0, [], {}
         for d in gt["documents"]:
             path = OUT / key / d["filename"]
             pages = {}
@@ -1625,6 +1656,14 @@ def verify(threshold=80.0) -> int:
                 res, _ = engine(crop)
                 got = " ".join(r[1] for r in res) if res else ""
                 score = fuzz.partial_ratio(_norm(str(f["raw"])), _norm(got))
+                if score < threshold:
+                    if (d["filename"], pg) not in full:
+                        full[(d["filename"], pg)] = engine(pages[pg])[0] or []
+                    near = [r[1] for r in full[(d["filename"], pg)]
+                            if x0 - 14 <= np.mean([q[0] for q in r[0]]) <= x1 + 14
+                            and y0 - 14 <= np.mean([q[1] for q in r[0]]) <= y1 + 14]
+                    got = " ".join(near)
+                    score = fuzz.partial_ratio(_norm(str(f["raw"])), _norm(got))
                 total += 1
                 scores.append(score)
                 if score < threshold:

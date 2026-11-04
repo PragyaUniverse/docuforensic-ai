@@ -599,9 +599,9 @@
           "raw": "Arjun Vikram Desai",
           "page": 0,
           "bbox": [
-            430,
+            480,
             205,
-            689,
+            739,
             232
           ],
           "label": "Account Holder"
@@ -611,9 +611,9 @@
           "raw": "B-17, Shanti Nagar Society,, Paud Road, Kothrud,, Pune, Maharashtra 411038",
           "page": 0,
           "bbox": [
-            430,
+            480,
             255,
-            802,
+            852,
             355
           ],
           "label": "Address"
@@ -623,9 +623,9 @@
           "raw": "Sahyadri Cooperative Bank",
           "page": 0,
           "bbox": [
-            430,
+            480,
             381,
-            798,
+            848,
             408
           ],
           "label": "Bank"
@@ -647,9 +647,9 @@
           "raw": "30088172640055",
           "page": 0,
           "bbox": [
-            430,
+            480,
             432,
-            670,
+            720,
             452
           ],
           "label": "Account No."
@@ -659,9 +659,9 @@
           "raw": "01-May-2026 to 31-Oct-2026",
           "page": 0,
           "bbox": [
-            430,
+            480,
             482,
-            822,
+            872,
             508
           ],
           "label": "Statement Period"
@@ -671,9 +671,9 @@
           "raw": "31,890.40",
           "page": 0,
           "bbox": [
-            430,
+            480,
             532,
-            567,
+            617,
             555
           ],
           "label": "Opening Balance (Rs.)"
@@ -683,9 +683,9 @@
           "raw": "1,79,308.65",
           "page": 0,
           "bbox": [
-            430,
+            480,
             582,
-            593,
+            643,
             605
           ],
           "label": "Closing Balance (Rs.)"

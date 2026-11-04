@@ -598,9 +598,9 @@
           "raw": "Meenakshi Sundaram Iyer",
           "page": 0,
           "bbox": [
-            430,
+            480,
             205,
-            783,
+            833,
             232
           ],
           "label": "Account Holder"
@@ -610,9 +610,9 @@
           "raw": "Flat 12B, Sai Krupa Apartments,, 4th Cross, Malleshwaram,, Bengaluru, Karnataka 560003",
           "page": 0,
           "bbox": [
-            430,
+            480,
             255,
-            864,
+            914,
             358
           ],
           "label": "Address"
@@ -622,9 +622,9 @@
           "raw": "Aravali National Bank",
           "page": 0,
           "bbox": [
-            430,
+            480,
             381,
-            721,
+            771,
             402
           ],
           "label": "Bank"
@@ -646,9 +646,9 @@
           "raw": "50100234567812",
           "page": 0,
           "bbox": [
-            430,
+            480,
             432,
-            670,
+            720,
             452
           ],
           "label": "Account No."
@@ -658,9 +658,9 @@
           "raw": "01-May-2026 to 31-Oct-2026",
           "page": 0,
           "bbox": [
-            430,
+            480,
             482,
-            822,
+            872,
             508
           ],
           "label": "Statement Period"
@@ -670,9 +670,9 @@
           "raw": "2,04,115.75",
           "page": 0,
           "bbox": [
-            430,
+            480,
             532,
-            593,
+            643,
             555
           ],
           "label": "Opening Balance (Rs.)"
@@ -682,9 +682,9 @@
           "raw": "3,83,948.45",
           "page": 0,
           "bbox": [
-            430,
+            480,
             582,
-            593,
+            643,
             605
           ],
           "label": "Closing Balance (Rs.)"
