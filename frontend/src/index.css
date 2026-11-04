@@ -1,0 +1,117 @@
+@import "tailwindcss";
+@import "@fontsource-variable/archivo/wdth.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+/* Instrument palette. Status colors carry meaning and are never decorative. */
+@theme {
+  --font-sans: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+
+  --color-ground: #0a0c0f;
+  --color-panel: #101317;
+  --color-raised: #171b21;
+  --color-hover: #1e232b;
+  --color-line: #262c35;
+  --color-line-strong: #3a424e;
+  --color-ink: #eceae4;
+  --color-ink-2: #b4b9c1;
+  --color-ink-3: #868e9a;
+
+  --color-obs: #5aa9ff;
+  --color-obs-dim: #10253c;
+  --color-inc: #f6b12d;
+  --color-inc-dim: #33260a;
+  --color-man: #ff5a4f;
+  --color-man-dim: #3a1412;
+  --color-ok: #41d39a;
+  --color-ok-dim: #0d2e22;
+
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 8px;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--color-ground);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "tnum" 1;
+}
+
+.display {
+  font-stretch: 118%;
+  font-weight: 640;
+  letter-spacing: -0.012em;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: #3b4553;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line-strong) transparent;
+}
+
+/* Selected-region pulse on the document viewer. */
+@keyframes region-pulse {
+  0%,
+  100% {
+    stroke-opacity: 1;
+    stroke-width: var(--sw);
+  }
+  50% {
+    stroke-opacity: 0.45;
+    stroke-width: calc(var(--sw) * 1.9);
+  }
+}
+.region-selected {
+  animation: region-pulse 1.3s ease-in-out infinite;
+}
+
+/* Graph chrome */
+.react-flow__attribution {
+  display: none;
+}
+.react-flow__controls-button {
+  background: var(--color-raised) !important;
+  border-color: var(--color-line) !important;
+  fill: var(--color-ink-2) !important;
+  color: var(--color-ink-2) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
