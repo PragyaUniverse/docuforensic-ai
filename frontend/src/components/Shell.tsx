@@ -184,7 +184,7 @@ export function Shell() {
             </NavLink>
           </div>
         </nav>
-        <main className="min-w-0 flex-1 overflow-auto">
+        <main className="relative min-w-0 flex-1 overflow-auto">
           <Outlet />
         </main>
       </div>

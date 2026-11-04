@@ -322,7 +322,7 @@ export function ViewerScreen() {
             <Switch checked={onlyThisDoc} onCheckedChange={setOnlyThisDoc} label="Only findings touching this document" />
           </label>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto">
+        <div className="relative min-h-0 flex-1 overflow-y-auto">
           {findingsQ.isLoading && <Loading label="Loading findings" />}
           {findingsQ.isError && <ErrorState title="Findings could not load" error={findingsQ.error} onRetry={() => findingsQ.refetch()} />}
           {findingsQ.data && listed.length === 0 && (

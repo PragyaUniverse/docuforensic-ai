@@ -37,11 +37,11 @@ body {
   height: 100%;
 }
 
-/* The shell scrolls its own panes. Fixing the root stops scrollIntoView from shifting the whole page. */
+/* The shell scrolls its own panes. Clip, unlike hidden, also stops scrollIntoView from shifting the whole page. */
 #root {
   position: fixed;
   inset: 0;
-  overflow: hidden;
+  overflow: clip;
 }
 
 body {

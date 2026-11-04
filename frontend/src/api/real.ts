@@ -10,6 +10,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   } catch {
     throw new ApiError(0, "The analysis service is not reachable. Check that the backend is running on port 8000.");
   }
+  if (res.status === 502 || res.status === 503 || res.status === 504) {
+    throw new ApiError(res.status, "The analysis service is not reachable. Check that the backend is running on port 8000.");
+  }
   if (!res.ok) {
     let detail = `The analysis service returned HTTP ${res.status}.`;
     try {
