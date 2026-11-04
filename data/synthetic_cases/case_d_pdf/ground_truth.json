@@ -1,0 +1,1401 @@
+{
+  "case": "case_d_pdf",
+  "synthetic": true,
+  "applicant": {
+    "person_name": "Rohan Aditya Kulkarni",
+    "date_of_birth": "1993-02-27"
+  },
+  "documents": [
+    {
+      "filename": "application_form.pdf",
+      "doc_type": "application_form",
+      "format": "digital_pdf",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "application_id": {
+          "value": "MF-2026-118640",
+          "raw": "MF-2026-118640",
+          "page": 0,
+          "bbox": [
+            470,
+            220,
+            700,
+            240
+          ],
+          "label": "Application ID"
+        },
+        "person_name": {
+          "value": "Rohan Aditya Kulkarni",
+          "raw": "Rohan Aditya Kulkarni",
+          "page": 0,
+          "bbox": [
+            470,
+            369,
+            766,
+            396
+          ],
+          "label": "Applicant Name"
+        },
+        "date_of_birth": {
+          "value": "1993-02-27",
+          "raw": "27/02/1993",
+          "page": 0,
+          "bbox": [
+            470,
+            422,
+            626,
+            444
+          ],
+          "label": "Date of Birth"
+        },
+        "gender": {
+          "value": "Male",
+          "raw": "Male",
+          "page": 0,
+          "bbox": [
+            470,
+            473,
+            534,
+            494
+          ],
+          "label": "Gender"
+        },
+        "id_number": {
+          "value": "999917193734",
+          "raw": "9999 1719 3734",
+          "page": 0,
+          "bbox": [
+            470,
+            526,
+            693,
+            546
+          ],
+          "label": "Aadhaar No."
+        },
+        "pan_number": {
+          "value": "ZZDPK9144M",
+          "raw": "ZZDPK9144M",
+          "page": 0,
+          "bbox": [
+            470,
+            588,
+            654,
+            608
+          ],
+          "label": "PAN"
+        },
+        "address": {
+          "value": "House 88, Sector 21,, Vashi, Navi Mumbai,, Maharashtra 400703",
+          "raw": "House 88, Sector 21,, Vashi, Navi Mumbai,, Maharashtra 400703",
+          "page": 0,
+          "bbox": [
+            540,
+            714,
+            823,
+            814
+          ],
+          "label": "Residential Address"
+        },
+        "phone": {
+          "value": "+91 90000 03456",
+          "raw": "+91 90000 03456",
+          "page": 0,
+          "bbox": [
+            540,
+            846,
+            786,
+            866
+          ],
+          "label": "Mobile"
+        },
+        "email": {
+          "value": "rohan.kulkarni@example.com",
+          "raw": "rohan.kulkarni@example.com",
+          "page": 0,
+          "bbox": [
+            540,
+            897,
+            942,
+            924
+          ],
+          "label": "Email"
+        },
+        "employer_name": {
+          "value": "Vantage Point Systems Pvt. Ltd.",
+          "raw": "Vantage Point Systems Pvt. Ltd.",
+          "page": 0,
+          "bbox": [
+            540,
+            1023,
+            970,
+            1050
+          ],
+          "label": "Employer Name"
+        },
+        "designation": {
+          "value": "Software Engineer",
+          "raw": "Software Engineer",
+          "page": 0,
+          "bbox": [
+            540,
+            1075,
+            789,
+            1102
+          ],
+          "label": "Designation"
+        },
+        "date_of_joining": {
+          "value": "2020-09-01",
+          "raw": "01/09/2020",
+          "page": 0,
+          "bbox": [
+            540,
+            1128,
+            696,
+            1150
+          ],
+          "label": "Date of Joining"
+        },
+        "declared_monthly_income": {
+          "value": "86400.00",
+          "raw": "86,400.00",
+          "page": 0,
+          "bbox": [
+            540,
+            1180,
+            677,
+            1203
+          ],
+          "label": "Monthly Income (Rs.)"
+        },
+        "loan_amount": {
+          "value": "1800000.00",
+          "raw": "18,00,000.00",
+          "page": 0,
+          "bbox": [
+            540,
+            1306,
+            720,
+            1329
+          ],
+          "label": "Loan Amount (Rs.)"
+        },
+        "bank_account_number": {
+          "value": "30088199127764",
+          "raw": "30088199127764",
+          "page": 0,
+          "bbox": [
+            540,
+            1410,
+            780,
+            1430
+          ],
+          "label": "Bank A/c No."
+        },
+        "application_date": {
+          "value": "2026-11-02",
+          "raw": "02/11/2026",
+          "page": 0,
+          "bbox": [
+            420,
+            1690,
+            576,
+            1712
+          ],
+          "label": "Application Date"
+        }
+      },
+      "tables": {},
+      "regions": {
+        "photo": {
+          "page": 0,
+          "bbox": [
+            1274,
+            216,
+            1544,
+            546
+          ]
+        },
+        "signature": {
+          "page": 0,
+          "bbox": [
+            1000,
+            1644,
+            1420,
+            1774
+          ]
+        }
+      }
+    },
+    {
+      "filename": "id_proof.jpg",
+      "doc_type": "id_proof",
+      "format": "jpg",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "id_type": {
+          "value": "AADHAAR-STYLE",
+          "raw": "AADHAAR-STYLE",
+          "page": 0,
+          "bbox": [
+            394.7,
+            285,
+            648.7,
+            305
+          ],
+          "label": "Card title"
+        },
+        "person_name": {
+          "value": "Rohan Aditya Kulkarni",
+          "raw": "Rohan Aditya Kulkarni",
+          "page": 0,
+          "bbox": [
+            704,
+            389,
+            1044,
+            416
+          ],
+          "label": "Name"
+        },
+        "date_of_birth": {
+          "value": "1993-02-27",
+          "raw": "27/02/1993",
+          "page": 0,
+          "bbox": [
+            704,
+            456,
+            860,
+            478
+          ],
+          "label": "DOB"
+        },
+        "gender": {
+          "value": "Male",
+          "raw": "Male",
+          "page": 0,
+          "bbox": [
+            704,
+            521,
+            768,
+            542
+          ],
+          "label": "Gender"
+        },
+        "address": {
+          "value": "House 88, Sector 21,, Vashi, Navi Mumbai,, Maharashtra 400703",
+          "raw": "House 88, Sector 21,, Vashi, Navi Mumbai,, Maharashtra 400703",
+          "page": 0,
+          "bbox": [
+            704,
+            590,
+            966,
+            684
+          ],
+          "label": "Address"
+        },
+        "id_number": {
+          "value": "999917193734",
+          "raw": "9999 1719 3734",
+          "page": 0,
+          "bbox": [
+            627.0,
+            865,
+            1043.0,
+            900
+          ],
+          "label": "ID No"
+        },
+        "pan_number": {
+          "value": "ZZDPK9144M",
+          "raw": "ZZDPK9144M",
+          "page": 0,
+          "bbox": [
+            630,
+            1358,
+            880,
+            1382
+          ],
+          "label": "Permanent Account No"
+        }
+      },
+      "tables": {},
+      "regions": {
+        "photo": {
+          "page": 0,
+          "bbox": [
+            214,
+            370,
+            484,
+            700
+          ]
+        },
+        "signature": {
+          "page": 0,
+          "bbox": [
+            590,
+            1438,
+            1010,
+            1568
+          ]
+        }
+      }
+    },
+    {
+      "filename": "salary_slip.pdf",
+      "doc_type": "salary_slip",
+      "format": "digital_pdf",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "person_name": {
+          "value": "Rohan Aditya Kulkarni",
+          "raw": "Rohan Aditya Kulkarni",
+          "page": 0,
+          "bbox": [
+            400,
+            251,
+            696,
+            278
+          ],
+          "label": "Employee Name"
+        },
+        "employee_id": {
+          "value": "VPS-14590",
+          "raw": "VPS-14590",
+          "page": 0,
+          "bbox": [
+            1150,
+            252,
+            1298,
+            272
+          ],
+          "label": "Employee ID"
+        },
+        "designation": {
+          "value": "Software Engineer",
+          "raw": "Software Engineer",
+          "page": 0,
+          "bbox": [
+            400,
+            303,
+            649,
+            330
+          ],
+          "label": "Designation"
+        },
+        "pay_period": {
+          "value": "2026-10",
+          "raw": "October 2026",
+          "page": 0,
+          "bbox": [
+            1150,
+            303,
+            1335,
+            324
+          ],
+          "label": "Pay Period"
+        },
+        "date_of_joining": {
+          "value": "2020-09-01",
+          "raw": "01-Sep-2020",
+          "page": 0,
+          "bbox": [
+            400,
+            356,
+            573,
+            382
+          ],
+          "label": "Date of Joining"
+        },
+        "pan_number": {
+          "value": "ZZDPK9144M",
+          "raw": "ZZDPK9144M",
+          "page": 0,
+          "bbox": [
+            1150,
+            356,
+            1334,
+            376
+          ],
+          "label": "PAN"
+        },
+        "employer_name": {
+          "value": "Vantage Point Systems Pvt. Ltd.",
+          "raw": "Vantage Point Systems Pvt. Ltd.",
+          "page": 0,
+          "bbox": [
+            400,
+            407,
+            830,
+            434
+          ],
+          "label": "Employer"
+        },
+        "bank_account_number": {
+          "value": "30088199127764",
+          "raw": "30088199127764",
+          "page": 0,
+          "bbox": [
+            400,
+            460,
+            640,
+            480
+          ],
+          "label": "Salary A/c No."
+        },
+        "basic_pay": {
+          "value": "40000.00",
+          "raw": "40,000.00",
+          "page": 0,
+          "bbox": [
+            678.6,
+            599,
+            810.6,
+            621
+          ],
+          "label": "Basic Pay"
+        },
+        "hra": {
+          "value": "16000.00",
+          "raw": "16,000.00",
+          "page": 0,
+          "bbox": [
+            678.6,
+            655,
+            810.6,
+            677
+          ],
+          "label": "HRA"
+        },
+        "other_allowances": {
+          "value": "12000.00",
+          "raw": "12,000.00",
+          "page": 0,
+          "bbox": [
+            678.6,
+            711,
+            810.6,
+            733
+          ],
+          "label": "Other Allowances"
+        },
+        "gross_pay": {
+          "value": "68000.00",
+          "raw": "68,000.00",
+          "page": 0,
+          "bbox": [
+            664.6,
+            783,
+            810.6,
+            806
+          ],
+          "label": "Gross Pay"
+        },
+        "total_deductions": {
+          "value": "5600.00",
+          "raw": "5,600.00",
+          "page": 0,
+          "bbox": [
+            1399.7,
+            783,
+            1527.7,
+            806
+          ],
+          "label": "Total Deductions"
+        },
+        "net_pay": {
+          "value": "86400.00",
+          "raw": "86,400.00",
+          "page": 0,
+          "bbox": [
+            470,
+            883,
+            626,
+            916
+          ],
+          "label": "Net Pay (Rs.)",
+          "text_layer_value": "62,400.00",
+          "original_value": "62400.00"
+        }
+      },
+      "tables": {
+        "earnings": {
+          "page": 0,
+          "headers": [
+            "component",
+            "amount"
+          ],
+          "rows": [
+            [
+              "Basic Pay",
+              "40,000.00"
+            ],
+            [
+              "HRA",
+              "16,000.00"
+            ],
+            [
+              "Other Allowances",
+              "12,000.00"
+            ]
+          ]
+        },
+        "deductions": {
+          "page": 0,
+          "headers": [
+            "component",
+            "amount"
+          ],
+          "rows": [
+            [
+              "Provident Fund",
+              "4,800.00"
+            ],
+            [
+              "Professional Tax",
+              "200.00"
+            ],
+            [
+              "Income Tax (TDS)",
+              "600.00"
+            ]
+          ]
+        }
+      },
+      "regions": {
+        "authorised_signature": {
+          "page": 0,
+          "bbox": [
+            110,
+            1070,
+            530,
+            1200
+          ]
+        }
+      }
+    },
+    {
+      "filename": "bank_statement.pdf",
+      "doc_type": "bank_statement",
+      "format": "digital_pdf",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "person_name": {
+          "value": "Rohan Aditya Kulkarni",
+          "raw": "Rohan Aditya Kulkarni",
+          "page": 0,
+          "bbox": [
+            430,
+            205,
+            726,
+            232
+          ],
+          "label": "Account Holder"
+        },
+        "address": {
+          "value": "House 88, Sector 21,, Vashi, Navi Mumbai,, Maharashtra 400703",
+          "raw": "House 88, Sector 21,, Vashi, Navi Mumbai,, Maharashtra 400703",
+          "page": 0,
+          "bbox": [
+            430,
+            256,
+            713,
+            352
+          ],
+          "label": "Address"
+        },
+        "bank_name": {
+          "value": "Sahyadri Cooperative Bank",
+          "raw": "Sahyadri Cooperative Bank",
+          "page": 0,
+          "bbox": [
+            430,
+            381,
+            798,
+            408
+          ],
+          "label": "Bank"
+        },
+        "ifsc": {
+          "value": "SHYD0000433",
+          "raw": "SHYD0000433",
+          "page": 0,
+          "bbox": [
+            1140,
+            382,
+            1335,
+            402
+          ],
+          "label": "IFSC"
+        },
+        "bank_account_number": {
+          "value": "30088199127764",
+          "raw": "30088199127764",
+          "page": 0,
+          "bbox": [
+            430,
+            432,
+            670,
+            452
+          ],
+          "label": "Account No."
+        },
+        "statement_period": {
+          "value": "2026-05-01/2026-10-31",
+          "raw": "01-May-2026 to 31-Oct-2026",
+          "page": 0,
+          "bbox": [
+            430,
+            482,
+            822,
+            508
+          ],
+          "label": "Statement Period"
+        },
+        "opening_balance": {
+          "value": "88215.10",
+          "raw": "88,215.10",
+          "page": 0,
+          "bbox": [
+            430,
+            532,
+            567,
+            555
+          ],
+          "label": "Opening Balance (Rs.)"
+        },
+        "closing_balance": {
+          "value": "315383.52",
+          "raw": "3,15,383.52",
+          "page": 0,
+          "bbox": [
+            430,
+            582,
+            593,
+            605
+          ],
+          "label": "Closing Balance (Rs.)"
+        }
+      },
+      "tables": {
+        "transactions": {
+          "page": 0,
+          "headers": [
+            "date",
+            "description",
+            "debit",
+            "credit",
+            "balance"
+          ],
+          "rows": [
+            {
+              "cells": [
+                "03-May-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "19,000.00",
+                "",
+                "69,215.10"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                712,
+                1529.7,
+                734
+              ]
+            },
+            {
+              "cells": [
+                "08-May-2026",
+                "ELECTRICITY BILL PAY",
+                "1,904.36",
+                "",
+                "67,310.74"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                758,
+                1529.7,
+                780
+              ]
+            },
+            {
+              "cells": [
+                "13-May-2026",
+                "UPI-GROCERY STORE",
+                "1,880.90",
+                "",
+                "65,429.84"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                804,
+                1529.7,
+                826
+              ]
+            },
+            {
+              "cells": [
+                "29-May-2026",
+                "NEFT CR-VANTAGE-SALARY",
+                "",
+                "62,400.00",
+                "1,27,829.84"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                850,
+                1530.5,
+                872
+              ]
+            },
+            {
+              "cells": [
+                "03-Jun-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "17,000.00",
+                "",
+                "1,10,829.84"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                896,
+                1530.5,
+                917
+              ]
+            },
+            {
+              "cells": [
+                "06-Jun-2026",
+                "ELECTRICITY BILL PAY",
+                "2,263.79",
+                "",
+                "1,08,566.05"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                942,
+                1530.5,
+                963
+              ]
+            },
+            {
+              "cells": [
+                "18-Jun-2026",
+                "UPI-GROCERY STORE",
+                "2,889.04",
+                "",
+                "1,05,677.01"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                988,
+                1530.5,
+                1009
+              ]
+            },
+            {
+              "cells": [
+                "30-Jun-2026",
+                "NEFT CR-VANTAGE-SALARY",
+                "",
+                "62,400.00",
+                "1,68,077.01"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1034,
+                1530.5,
+                1055
+              ]
+            },
+            {
+              "cells": [
+                "03-Jul-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "22,000.00",
+                "",
+                "1,46,077.01"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1080,
+                1530.5,
+                1101
+              ]
+            },
+            {
+              "cells": [
+                "10-Jul-2026",
+                "ELECTRICITY BILL PAY",
+                "1,417.08",
+                "",
+                "1,44,659.93"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1126,
+                1530.5,
+                1147
+              ]
+            },
+            {
+              "cells": [
+                "16-Jul-2026",
+                "UPI-GROCERY STORE",
+                "4,345.68",
+                "",
+                "1,40,314.25"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1172,
+                1530.5,
+                1193
+              ]
+            },
+            {
+              "cells": [
+                "31-Jul-2026",
+                "NEFT CR-VANTAGE-SALARY",
+                "",
+                "62,400.00",
+                "2,02,714.25"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1218,
+                1530.5,
+                1239
+              ]
+            },
+            {
+              "cells": [
+                "03-Aug-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "23,000.00",
+                "",
+                "1,79,714.25"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1264,
+                1530.5,
+                1286
+              ]
+            },
+            {
+              "cells": [
+                "08-Aug-2026",
+                "ELECTRICITY BILL PAY",
+                "1,344.77",
+                "",
+                "1,78,369.48"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1310,
+                1530.5,
+                1332
+              ]
+            },
+            {
+              "cells": [
+                "13-Aug-2026",
+                "UPI-GROCERY STORE",
+                "4,953.84",
+                "",
+                "1,73,415.64"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1356,
+                1530.5,
+                1378
+              ]
+            },
+            {
+              "cells": [
+                "31-Aug-2026",
+                "NEFT CR-VANTAGE-SALARY",
+                "",
+                "62,400.00",
+                "2,35,815.64"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1402,
+                1530.5,
+                1424
+              ]
+            },
+            {
+              "cells": [
+                "03-Sep-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "18,000.00",
+                "",
+                "2,17,815.64"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1448,
+                1530.5,
+                1470
+              ]
+            },
+            {
+              "cells": [
+                "07-Sep-2026",
+                "ELECTRICITY BILL PAY",
+                "1,237.67",
+                "",
+                "2,16,577.97"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1494,
+                1530.5,
+                1516
+              ]
+            },
+            {
+              "cells": [
+                "17-Sep-2026",
+                "UPI-GROCERY STORE",
+                "2,496.05",
+                "",
+                "2,14,081.92"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1540,
+                1530.5,
+                1562
+              ]
+            },
+            {
+              "cells": [
+                "30-Sep-2026",
+                "NEFT CR-VANTAGE-SALARY",
+                "",
+                "62,400.00",
+                "2,76,481.92"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1586,
+                1530.5,
+                1608
+              ]
+            },
+            {
+              "cells": [
+                "03-Oct-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "18,000.00",
+                "",
+                "2,58,481.92"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1632,
+                1530.5,
+                1653
+              ]
+            },
+            {
+              "cells": [
+                "10-Oct-2026",
+                "ELECTRICITY BILL PAY",
+                "2,147.93",
+                "",
+                "2,56,333.99"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1678,
+                1530.5,
+                1699
+              ]
+            },
+            {
+              "cells": [
+                "17-Oct-2026",
+                "UPI-GROCERY STORE",
+                "3,350.47",
+                "",
+                "2,52,983.52"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1724,
+                1530.5,
+                1745
+              ]
+            },
+            {
+              "cells": [
+                "30-Oct-2026",
+                "NEFT CR-VANTAGE-SALARY",
+                "",
+                "86,400.00",
+                "3,15,383.52"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1770,
+                1530.5,
+                1791
+              ]
+            }
+          ]
+        }
+      },
+      "regions": {}
+    },
+    {
+      "filename": "address_proof.pdf",
+      "doc_type": "address_proof",
+      "format": "scanned_pdf",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "issuer_name": {
+          "value": "Western Metro Power Supply",
+          "raw": "Western Metro Power Supply",
+          "page": 0,
+          "bbox": [
+            110,
+            110,
+            768,
+            149
+          ],
+          "label": null
+        },
+        "person_name": {
+          "value": "Rohan Aditya Kulkarni",
+          "raw": "Rohan Aditya Kulkarni",
+          "page": 0,
+          "bbox": [
+            540,
+            301,
+            836,
+            328
+          ],
+          "label": "Consumer Name"
+        },
+        "address": {
+          "value": "House 88, Sector 21,, Vashi, Navi Mumbai,, Maharashtra 400703",
+          "raw": "House 88, Sector 21,, Vashi, Navi Mumbai,, Maharashtra 400703",
+          "page": 0,
+          "bbox": [
+            540,
+            354,
+            823,
+            454
+          ],
+          "label": "Service Address"
+        },
+        "consumer_number": {
+          "value": "WMP-55640018",
+          "raw": "WMP-55640018",
+          "page": 0,
+          "bbox": [
+            540,
+            486,
+            753,
+            506
+          ],
+          "label": "Consumer No."
+        },
+        "bill_date": {
+          "value": "2026-10-12",
+          "raw": "12-Oct-2026",
+          "page": 0,
+          "bbox": [
+            540,
+            664,
+            710,
+            684
+          ],
+          "label": "Bill Date"
+        },
+        "amount_due": {
+          "value": "1496.00",
+          "raw": "1,496.00",
+          "page": 0,
+          "bbox": [
+            540,
+            820,
+            673,
+            844
+          ],
+          "label": "Amount Due (Rs.)"
+        }
+      },
+      "tables": {
+        "charges": {
+          "page": 0,
+          "headers": [
+            "item",
+            "value"
+          ],
+          "rows": [
+            [
+              "Previous Reading",
+              "18,204"
+            ],
+            [
+              "Current Reading",
+              "18,396"
+            ],
+            [
+              "Units Consumed",
+              "192"
+            ],
+            [
+              "Energy Charges (Rs.)",
+              "1,152.00"
+            ],
+            [
+              "Fixed Charges (Rs.)",
+              "210.00"
+            ],
+            [
+              "Taxes and Duty (Rs.)",
+              "134.00"
+            ]
+          ]
+        }
+      },
+      "regions": {}
+    },
+    {
+      "filename": "declaration.png",
+      "doc_type": "declaration",
+      "format": "png",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "person_name": {
+          "value": "Rohan Aditya Kulkarni",
+          "raw": "Rohan Aditya Kulkarni",
+          "page": 0,
+          "bbox": [
+            560,
+            309,
+            870,
+            340
+          ],
+          "label": "Name"
+        },
+        "date_of_birth": {
+          "value": "1993-02-27",
+          "raw": "27-02-1993",
+          "page": 0,
+          "bbox": [
+            560,
+            367,
+            714,
+            391
+          ],
+          "label": "Date of Birth"
+        },
+        "address": {
+          "value": "House 88, Sector 21,, Vashi, Navi Mumbai,, Maharashtra 400703",
+          "raw": "House 88, Sector 21,, Vashi, Navi Mumbai,, Maharashtra 400703",
+          "page": 0,
+          "bbox": [
+            560,
+            425,
+            846,
+            537
+          ],
+          "label": "Residential Address"
+        },
+        "employer_name": {
+          "value": "Vantage Point Systems Pvt. Ltd.",
+          "raw": "Vantage Point Systems Pvt. Ltd.",
+          "page": 0,
+          "bbox": [
+            560,
+            571,
+            989,
+            602
+          ],
+          "label": "Employer"
+        },
+        "declared_monthly_income": {
+          "value": "86400.00",
+          "raw": "86,400.00",
+          "page": 0,
+          "bbox": [
+            560,
+            629,
+            692,
+            657
+          ],
+          "label": "Monthly Income (Rs.)"
+        },
+        "declaration_date": {
+          "value": "2026-11-02",
+          "raw": "02-11-2026",
+          "page": 0,
+          "bbox": [
+            330,
+            1131,
+            484,
+            1155
+          ],
+          "label": "Date"
+        },
+        "place": {
+          "value": "Navi Mumbai",
+          "raw": "Navi Mumbai",
+          "page": 0,
+          "bbox": [
+            330,
+            1189,
+            514,
+            1213
+          ],
+          "label": "Place"
+        }
+      },
+      "tables": {},
+      "regions": {
+        "signature": {
+          "page": 0,
+          "bbox": [
+            1010,
+            1084,
+            1430,
+            1214
+          ]
+        }
+      }
+    }
+  ],
+  "manipulations": [
+    {
+      "id": "m1",
+      "type": "pdf_raster_patch",
+      "filename": "salary_slip.pdf",
+      "page": 0,
+      "bbox": [
+        464,
+        873,
+        675,
+        917
+      ],
+      "expected_detectors": [
+        "pdf.text_vs_pixels",
+        "pdf.incremental_update",
+        "pdf.producer_mismatch",
+        "pdf.overlay_object",
+        "metadata.pdf_dates"
+      ],
+      "description": "Incremental update places an image over net pay. Pixels read 86,400.00, the text layer still reads 62,400.00. Producer and modified date changed in the same update."
+    },
+    {
+      "id": "m2",
+      "type": "pdf_overlay",
+      "filename": "bank_statement.pdf",
+      "page": 0,
+      "bbox": [
+        1173.7,
+        1765,
+        1325.7,
+        1798
+      ],
+      "expected_detectors": [
+        "pdf.overlay_object",
+        "pdf.incremental_update",
+        "pdf.producer_mismatch",
+        "pdf.text_vs_pixels",
+        "metadata.pdf_dates"
+      ],
+      "description": "An overlay object covers the October salary credit with 86,400.00. The text layer holds both 62,400.00 and 86,400.00 at that location."
+    }
+  ],
+  "discrepancies": [
+    {
+      "id": "d1",
+      "discrepancy_type": "salary_vs_bank_credit",
+      "documents": [
+        "salary_slip.pdf",
+        "bank_statement.pdf"
+      ],
+      "description": "Visible net pay 86,400.00, while five of six monthly credits are 62,400.00."
+    },
+    {
+      "id": "d2",
+      "discrepancy_type": "declared_vs_actual_income",
+      "documents": [
+        "application_form.pdf",
+        "salary_slip.pdf"
+      ],
+      "description": "Declared 86,400.00 against payslip gross 68,000.00."
+    }
+  ],
+  "within_document": [
+    {
+      "id": "w1",
+      "detector": "context.arithmetic_salary",
+      "filename": "salary_slip.pdf",
+      "description": "Gross 68,000.00 less deductions 5,600.00 is 62,400.00, not the visible 86,400.00."
+    },
+    {
+      "id": "w2",
+      "detector": "context.arithmetic_balance",
+      "filename": "bank_statement.pdf",
+      "description": "The balance column reflects the original October credit, not the overlay."
+    }
+  ],
+  "benign_variations": []
+}

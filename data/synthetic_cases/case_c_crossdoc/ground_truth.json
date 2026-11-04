@@ -1,0 +1,1600 @@
+{
+  "case": "case_c_crossdoc",
+  "synthetic": true,
+  "applicant": {
+    "person_name": "Meenakshi Sundaram Iyer",
+    "date_of_birth": "1988-07-19"
+  },
+  "documents": [
+    {
+      "filename": "application_form.pdf",
+      "doc_type": "application_form",
+      "format": "digital_pdf",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "application_id": {
+          "value": "MF-2026-118512",
+          "raw": "MF-2026-118512",
+          "page": 0,
+          "bbox": [
+            470,
+            220,
+            700,
+            240
+          ],
+          "label": "Application ID"
+        },
+        "person_name": {
+          "value": "Meenakshi Sundaram Iyer",
+          "raw": "Meenakshi Sundaram Iyer",
+          "page": 0,
+          "bbox": [
+            470,
+            369,
+            823,
+            396
+          ],
+          "label": "Applicant Name"
+        },
+        "date_of_birth": {
+          "value": "1988-07-19",
+          "raw": "19/07/1988",
+          "page": 0,
+          "bbox": [
+            470,
+            422,
+            626,
+            444
+          ],
+          "label": "Date of Birth"
+        },
+        "gender": {
+          "value": "Female",
+          "raw": "Female",
+          "page": 0,
+          "bbox": [
+            470,
+            473,
+            568,
+            494
+          ],
+          "label": "Gender"
+        },
+        "id_number": {
+          "value": "999901315981",
+          "raw": "9999 0131 5981",
+          "page": 0,
+          "bbox": [
+            470,
+            526,
+            693,
+            546
+          ],
+          "label": "Aadhaar No."
+        },
+        "pan_number": {
+          "value": "ZZCPI5502R",
+          "raw": "ZZCPI5502R",
+          "page": 0,
+          "bbox": [
+            470,
+            588,
+            638,
+            608
+          ],
+          "label": "PAN"
+        },
+        "address": {
+          "value": "Flat 12B, Sai Krupa Apartments,, 4th Cross, Malleshwaram,, Bengaluru, Karnataka 560003",
+          "raw": "Flat 12B, Sai Krupa Apartments,, 4th Cross, Malleshwaram,, Bengaluru, Karnataka 560003",
+          "page": 0,
+          "bbox": [
+            540,
+            713,
+            974,
+            820
+          ],
+          "label": "Residential Address"
+        },
+        "phone": {
+          "value": "+91 90000 09012",
+          "raw": "+91 90000 09012",
+          "page": 0,
+          "bbox": [
+            540,
+            846,
+            786,
+            866
+          ],
+          "label": "Mobile"
+        },
+        "email": {
+          "value": "meenakshi.iyer@example.com",
+          "raw": "meenakshi.iyer@example.com",
+          "page": 0,
+          "bbox": [
+            540,
+            897,
+            957,
+            924
+          ],
+          "label": "Email"
+        },
+        "employer_name": {
+          "value": "Zenvora Technologies Pvt. Ltd.",
+          "raw": "Zenvora Technologies Pvt. Ltd.",
+          "page": 0,
+          "bbox": [
+            540,
+            1023,
+            954,
+            1050
+          ],
+          "label": "Employer Name"
+        },
+        "designation": {
+          "value": "Project Manager",
+          "raw": "Project Manager",
+          "page": 0,
+          "bbox": [
+            540,
+            1075,
+            760,
+            1102
+          ],
+          "label": "Designation"
+        },
+        "date_of_joining": {
+          "value": "2019-06-15",
+          "raw": "15/06/2019",
+          "page": 0,
+          "bbox": [
+            540,
+            1128,
+            696,
+            1150
+          ],
+          "label": "Date of Joining"
+        },
+        "declared_monthly_income": {
+          "value": "120000.00",
+          "raw": "1,20,000.00",
+          "page": 0,
+          "bbox": [
+            540,
+            1180,
+            703,
+            1203
+          ],
+          "label": "Monthly Income (Rs.)"
+        },
+        "loan_amount": {
+          "value": "2500000.00",
+          "raw": "25,00,000.00",
+          "page": 0,
+          "bbox": [
+            540,
+            1306,
+            720,
+            1329
+          ],
+          "label": "Loan Amount (Rs.)"
+        },
+        "bank_account_number": {
+          "value": "50100234567812",
+          "raw": "50100234567812",
+          "page": 0,
+          "bbox": [
+            540,
+            1410,
+            780,
+            1430
+          ],
+          "label": "Bank A/c No."
+        },
+        "application_date": {
+          "value": "2026-11-02",
+          "raw": "02/11/2026",
+          "page": 0,
+          "bbox": [
+            420,
+            1690,
+            576,
+            1712
+          ],
+          "label": "Application Date"
+        }
+      },
+      "tables": {},
+      "regions": {
+        "photo": {
+          "page": 0,
+          "bbox": [
+            1274,
+            216,
+            1544,
+            546
+          ]
+        },
+        "signature": {
+          "page": 0,
+          "bbox": [
+            1000,
+            1644,
+            1420,
+            1774
+          ]
+        }
+      }
+    },
+    {
+      "filename": "id_proof.png",
+      "doc_type": "id_proof",
+      "format": "png",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "id_type": {
+          "value": "AADHAAR-STYLE",
+          "raw": "AADHAAR-STYLE",
+          "page": 0,
+          "bbox": [
+            394.7,
+            285,
+            648.7,
+            305
+          ],
+          "label": "Card title"
+        },
+        "person_name": {
+          "value": "Meenakshi Sundaram Iyer",
+          "raw": "Meenakshi Sundaram Iyer",
+          "page": 0,
+          "bbox": [
+            704,
+            389,
+            1101,
+            416
+          ],
+          "label": "Name"
+        },
+        "date_of_birth": {
+          "value": "1986-07-19",
+          "raw": "19/07/1986",
+          "page": 0,
+          "bbox": [
+            704,
+            456,
+            860,
+            478
+          ],
+          "label": "DOB"
+        },
+        "gender": {
+          "value": "Female",
+          "raw": "Female",
+          "page": 0,
+          "bbox": [
+            704,
+            521,
+            802,
+            542
+          ],
+          "label": "Gender"
+        },
+        "address": {
+          "value": "Flat 12B, Sai Krupa Apartments,, 4th Cross, Malleshwaram,, Bengaluru, Karnataka 560003",
+          "raw": "Flat 12B, Sai Krupa Apartments,, 4th Cross, Malleshwaram,, Bengaluru, Karnataka 560003",
+          "page": 0,
+          "bbox": [
+            704,
+            589,
+            1106,
+            689
+          ],
+          "label": "Address"
+        },
+        "id_number": {
+          "value": "999901315981",
+          "raw": "9999 0131 5981",
+          "page": 0,
+          "bbox": [
+            627.0,
+            865,
+            1043.0,
+            900
+          ],
+          "label": "ID No"
+        },
+        "pan_number": {
+          "value": "ZZCPI5520R",
+          "raw": "ZZCPI5520R",
+          "page": 0,
+          "bbox": [
+            630,
+            1358,
+            856,
+            1382
+          ],
+          "label": "Permanent Account No"
+        }
+      },
+      "tables": {},
+      "regions": {
+        "photo": {
+          "page": 0,
+          "bbox": [
+            214,
+            370,
+            484,
+            700
+          ]
+        },
+        "signature": {
+          "page": 0,
+          "bbox": [
+            590,
+            1438,
+            1010,
+            1568
+          ]
+        }
+      }
+    },
+    {
+      "filename": "salary_slip.pdf",
+      "doc_type": "salary_slip",
+      "format": "scanned_pdf",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "person_name": {
+          "value": "Minakshi S. Iyengar",
+          "raw": "Minakshi S. Iyengar",
+          "page": 0,
+          "bbox": [
+            400,
+            251,
+            665,
+            278
+          ],
+          "label": "Employee Name"
+        },
+        "employee_id": {
+          "value": "ZT-33105",
+          "raw": "ZT-33105",
+          "page": 0,
+          "bbox": [
+            1150,
+            252,
+            1278,
+            272
+          ],
+          "label": "Employee ID"
+        },
+        "designation": {
+          "value": "Project Manager",
+          "raw": "Project Manager",
+          "page": 0,
+          "bbox": [
+            400,
+            303,
+            620,
+            330
+          ],
+          "label": "Designation"
+        },
+        "pay_period": {
+          "value": "2026-10",
+          "raw": "October 2026",
+          "page": 0,
+          "bbox": [
+            1150,
+            303,
+            1335,
+            324
+          ],
+          "label": "Pay Period"
+        },
+        "date_of_joining": {
+          "value": "2024-02-01",
+          "raw": "01-Feb-2024",
+          "page": 0,
+          "bbox": [
+            400,
+            355,
+            570,
+            376
+          ],
+          "label": "Date of Joining"
+        },
+        "pan_number": {
+          "value": "ZZCPI5502R",
+          "raw": "ZZCPI5502R",
+          "page": 0,
+          "bbox": [
+            1150,
+            356,
+            1318,
+            376
+          ],
+          "label": "PAN"
+        },
+        "employer_name": {
+          "value": "Zenvora Infotech Solutions",
+          "raw": "Zenvora Infotech Solutions",
+          "page": 0,
+          "bbox": [
+            400,
+            407,
+            764,
+            428
+          ],
+          "label": "Employer"
+        },
+        "bank_account_number": {
+          "value": "50100234567821",
+          "raw": "50100234567821",
+          "page": 0,
+          "bbox": [
+            400,
+            460,
+            640,
+            480
+          ],
+          "label": "Salary A/c No."
+        },
+        "basic_pay": {
+          "value": "44000.00",
+          "raw": "44,000.00",
+          "page": 0,
+          "bbox": [
+            678.6,
+            599,
+            810.6,
+            621
+          ],
+          "label": "Basic Pay"
+        },
+        "hra": {
+          "value": "17600.00",
+          "raw": "17,600.00",
+          "page": 0,
+          "bbox": [
+            678.6,
+            655,
+            810.6,
+            677
+          ],
+          "label": "HRA"
+        },
+        "other_allowances": {
+          "value": "26400.00",
+          "raw": "26,400.00",
+          "page": 0,
+          "bbox": [
+            678.6,
+            711,
+            810.6,
+            733
+          ],
+          "label": "Other Allowances"
+        },
+        "gross_pay": {
+          "value": "88000.00",
+          "raw": "88,000.00",
+          "page": 0,
+          "bbox": [
+            664.6,
+            783,
+            810.6,
+            806
+          ],
+          "label": "Gross Pay"
+        },
+        "total_deductions": {
+          "value": "9750.00",
+          "raw": "9,750.00",
+          "page": 0,
+          "bbox": [
+            1399.7,
+            783,
+            1527.7,
+            806
+          ],
+          "label": "Total Deductions"
+        },
+        "net_pay": {
+          "value": "78250.00",
+          "raw": "78,250.00",
+          "page": 0,
+          "bbox": [
+            470,
+            879,
+            661,
+            909
+          ],
+          "label": "Net Pay (Rs.)"
+        }
+      },
+      "tables": {
+        "earnings": {
+          "page": 0,
+          "headers": [
+            "component",
+            "amount"
+          ],
+          "rows": [
+            [
+              "Basic Pay",
+              "44,000.00"
+            ],
+            [
+              "HRA",
+              "17,600.00"
+            ],
+            [
+              "Other Allowances",
+              "26,400.00"
+            ]
+          ]
+        },
+        "deductions": {
+          "page": 0,
+          "headers": [
+            "component",
+            "amount"
+          ],
+          "rows": [
+            [
+              "Provident Fund",
+              "5,280.00"
+            ],
+            [
+              "Professional Tax",
+              "200.00"
+            ],
+            [
+              "Income Tax (TDS)",
+              "4,270.00"
+            ]
+          ]
+        }
+      },
+      "regions": {
+        "authorised_signature": {
+          "page": 0,
+          "bbox": [
+            110,
+            1070,
+            530,
+            1200
+          ]
+        }
+      }
+    },
+    {
+      "filename": "bank_statement.pdf",
+      "doc_type": "bank_statement",
+      "format": "digital_pdf",
+      "pages": 2,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "person_name": {
+          "value": "Meenakshi Sundaram Iyer",
+          "raw": "Meenakshi Sundaram Iyer",
+          "page": 0,
+          "bbox": [
+            430,
+            205,
+            783,
+            232
+          ],
+          "label": "Account Holder"
+        },
+        "address": {
+          "value": "Flat 12B, Sai Krupa Apartments,, 4th Cross, Malleshwaram,, Bengaluru, Karnataka 560003",
+          "raw": "Flat 12B, Sai Krupa Apartments,, 4th Cross, Malleshwaram,, Bengaluru, Karnataka 560003",
+          "page": 0,
+          "bbox": [
+            430,
+            255,
+            864,
+            358
+          ],
+          "label": "Address"
+        },
+        "bank_name": {
+          "value": "Aravali National Bank",
+          "raw": "Aravali National Bank",
+          "page": 0,
+          "bbox": [
+            430,
+            381,
+            721,
+            402
+          ],
+          "label": "Bank"
+        },
+        "ifsc": {
+          "value": "ARVL0001108",
+          "raw": "ARVL0001108",
+          "page": 0,
+          "bbox": [
+            1140,
+            382,
+            1329,
+            402
+          ],
+          "label": "IFSC"
+        },
+        "bank_account_number": {
+          "value": "50100234567812",
+          "raw": "50100234567812",
+          "page": 0,
+          "bbox": [
+            430,
+            432,
+            670,
+            452
+          ],
+          "label": "Account No."
+        },
+        "statement_period": {
+          "value": "2026-05-01/2026-10-31",
+          "raw": "01-May-2026 to 31-Oct-2026",
+          "page": 0,
+          "bbox": [
+            430,
+            482,
+            822,
+            508
+          ],
+          "label": "Statement Period"
+        },
+        "opening_balance": {
+          "value": "204115.75",
+          "raw": "2,04,115.75",
+          "page": 0,
+          "bbox": [
+            430,
+            532,
+            593,
+            555
+          ],
+          "label": "Opening Balance (Rs.)"
+        },
+        "closing_balance": {
+          "value": "383948.45",
+          "raw": "3,83,948.45",
+          "page": 0,
+          "bbox": [
+            430,
+            582,
+            593,
+            605
+          ],
+          "label": "Closing Balance (Rs.)"
+        }
+      },
+      "tables": {
+        "transactions": {
+          "page": 0,
+          "headers": [
+            "date",
+            "description",
+            "debit",
+            "credit",
+            "balance"
+          ],
+          "rows": [
+            {
+              "cells": [
+                "03-May-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "19,000.00",
+                "",
+                "1,85,115.75"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                712,
+                1530.5,
+                734
+              ]
+            },
+            {
+              "cells": [
+                "07-May-2026",
+                "ELECTRICITY BILL PAY",
+                "1,479.71",
+                "",
+                "1,83,636.04"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                758,
+                1530.5,
+                780
+              ]
+            },
+            {
+              "cells": [
+                "14-May-2026",
+                "UPI-GROCERY STORE",
+                "2,041.65",
+                "",
+                "1,81,594.39"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                804,
+                1530.5,
+                826
+              ]
+            },
+            {
+              "cells": [
+                "20-May-2026",
+                "ATM CASH WITHDRAWAL",
+                "3,000.00",
+                "",
+                "1,78,594.39"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                850,
+                1530.5,
+                872
+              ]
+            },
+            {
+              "cells": [
+                "26-May-2026",
+                "INSURANCE PREMIUM ECS",
+                "1,241.18",
+                "",
+                "1,77,353.21"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                896,
+                1530.5,
+                918
+              ]
+            },
+            {
+              "cells": [
+                "29-May-2026",
+                "NEFT CR-ZENVORA-SALARY",
+                "",
+                "61,250.00",
+                "2,38,603.21"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                942,
+                1530.5,
+                964
+              ]
+            },
+            {
+              "cells": [
+                "03-Jun-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "16,000.00",
+                "",
+                "2,22,603.21"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                988,
+                1530.5,
+                1009
+              ]
+            },
+            {
+              "cells": [
+                "08-Jun-2026",
+                "ELECTRICITY BILL PAY",
+                "1,487.30",
+                "",
+                "2,21,115.91"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1034,
+                1530.5,
+                1055
+              ]
+            },
+            {
+              "cells": [
+                "13-Jun-2026",
+                "UPI-GROCERY STORE",
+                "3,503.16",
+                "",
+                "2,17,612.75"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1080,
+                1530.5,
+                1101
+              ]
+            },
+            {
+              "cells": [
+                "23-Jun-2026",
+                "ATM CASH WITHDRAWAL",
+                "7,000.00",
+                "",
+                "2,10,612.75"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1126,
+                1530.5,
+                1147
+              ]
+            },
+            {
+              "cells": [
+                "27-Jun-2026",
+                "INSURANCE PREMIUM ECS",
+                "1,801.61",
+                "",
+                "2,08,811.14"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1172,
+                1530.5,
+                1193
+              ]
+            },
+            {
+              "cells": [
+                "30-Jun-2026",
+                "NEFT CR-ZENVORA-SALARY",
+                "",
+                "61,250.00",
+                "2,70,061.14"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1218,
+                1530.5,
+                1239
+              ]
+            },
+            {
+              "cells": [
+                "03-Jul-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "21,000.00",
+                "",
+                "2,49,061.14"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1264,
+                1530.5,
+                1285
+              ]
+            },
+            {
+              "cells": [
+                "09-Jul-2026",
+                "ELECTRICITY BILL PAY",
+                "1,153.33",
+                "",
+                "2,47,907.81"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1310,
+                1530.5,
+                1331
+              ]
+            },
+            {
+              "cells": [
+                "16-Jul-2026",
+                "UPI-GROCERY STORE",
+                "1,806.28",
+                "",
+                "2,46,101.53"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1356,
+                1530.5,
+                1377
+              ]
+            },
+            {
+              "cells": [
+                "23-Jul-2026",
+                "ATM CASH WITHDRAWAL",
+                "5,000.00",
+                "",
+                "2,41,101.53"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1402,
+                1530.5,
+                1423
+              ]
+            },
+            {
+              "cells": [
+                "24-Jul-2026",
+                "INSURANCE PREMIUM ECS",
+                "2,746.98",
+                "",
+                "2,38,354.55"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1448,
+                1530.5,
+                1469
+              ]
+            },
+            {
+              "cells": [
+                "31-Jul-2026",
+                "NEFT CR-ZENVORA-SALARY",
+                "",
+                "61,250.00",
+                "2,99,604.55"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1494,
+                1530.5,
+                1515
+              ]
+            },
+            {
+              "cells": [
+                "03-Aug-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "23,000.00",
+                "",
+                "2,76,604.55"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1540,
+                1530.5,
+                1562
+              ]
+            },
+            {
+              "cells": [
+                "09-Aug-2026",
+                "ELECTRICITY BILL PAY",
+                "1,607.75",
+                "",
+                "2,74,996.80"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1586,
+                1530.5,
+                1608
+              ]
+            },
+            {
+              "cells": [
+                "18-Aug-2026",
+                "UPI-GROCERY STORE",
+                "3,889.64",
+                "",
+                "2,71,107.16"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1632,
+                1530.5,
+                1654
+              ]
+            },
+            {
+              "cells": [
+                "20-Aug-2026",
+                "ATM CASH WITHDRAWAL",
+                "4,000.00",
+                "",
+                "2,67,107.16"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1678,
+                1530.5,
+                1700
+              ]
+            },
+            {
+              "cells": [
+                "25-Aug-2026",
+                "INSURANCE PREMIUM ECS",
+                "2,538.56",
+                "",
+                "2,64,568.60"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1724,
+                1530.5,
+                1746
+              ]
+            },
+            {
+              "cells": [
+                "31-Aug-2026",
+                "NEFT CR-ZENVORA-SALARY",
+                "",
+                "61,250.00",
+                "3,25,818.60"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1770,
+                1530.5,
+                1792
+              ]
+            },
+            {
+              "cells": [
+                "03-Sep-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "19,000.00",
+                "",
+                "3,06,818.60"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1816,
+                1530.5,
+                1838
+              ]
+            },
+            {
+              "cells": [
+                "07-Sep-2026",
+                "ELECTRICITY BILL PAY",
+                "2,281.67",
+                "",
+                "3,04,536.93"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1862,
+                1530.5,
+                1884
+              ]
+            },
+            {
+              "cells": [
+                "17-Sep-2026",
+                "UPI-GROCERY STORE",
+                "1,829.24",
+                "",
+                "3,02,707.69"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1908,
+                1530.5,
+                1930
+              ]
+            },
+            {
+              "cells": [
+                "22-Sep-2026",
+                "ATM CASH WITHDRAWAL",
+                "8,000.00",
+                "",
+                "2,94,707.69"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1954,
+                1530.5,
+                1976
+              ]
+            },
+            {
+              "cells": [
+                "26-Sep-2026",
+                "INSURANCE PREMIUM ECS",
+                "1,376.84",
+                "",
+                "2,93,330.85"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                2000,
+                1530.5,
+                2022
+              ]
+            },
+            {
+              "cells": [
+                "30-Sep-2026",
+                "NEFT CR-ZENVORA-SALARY",
+                "",
+                "61,250.00",
+                "3,54,580.85"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                2046,
+                1530.5,
+                2068
+              ]
+            },
+            {
+              "cells": [
+                "03-Oct-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "22,000.00",
+                "",
+                "3,32,580.85"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                2092,
+                1530.5,
+                2113
+              ]
+            },
+            {
+              "cells": [
+                "08-Oct-2026",
+                "ELECTRICITY BILL PAY",
+                "2,186.95",
+                "",
+                "3,30,393.90"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                2138,
+                1530.5,
+                2159
+              ]
+            },
+            {
+              "cells": [
+                "12-Oct-2026",
+                "UPI-GROCERY STORE",
+                "2,104.12",
+                "",
+                "3,28,289.78"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                2184,
+                1530.5,
+                2205
+              ]
+            },
+            {
+              "cells": [
+                "21-Oct-2026",
+                "ATM CASH WITHDRAWAL",
+                "4,000.00",
+                "",
+                "3,24,289.78"
+              ],
+              "page": 1,
+              "bbox": [
+                124,
+                226,
+                1530.5,
+                247
+              ]
+            },
+            {
+              "cells": [
+                "27-Oct-2026",
+                "INSURANCE PREMIUM ECS",
+                "1,591.33",
+                "",
+                "3,22,698.45"
+              ],
+              "page": 1,
+              "bbox": [
+                124,
+                272,
+                1530.5,
+                293
+              ]
+            },
+            {
+              "cells": [
+                "30-Oct-2026",
+                "NEFT CR-ZENVORA-SALARY",
+                "",
+                "61,250.00",
+                "3,83,948.45"
+              ],
+              "page": 1,
+              "bbox": [
+                124,
+                318,
+                1530.5,
+                339
+              ]
+            }
+          ]
+        }
+      },
+      "regions": {}
+    },
+    {
+      "filename": "address_proof.jpg",
+      "doc_type": "address_proof",
+      "format": "jpg",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "issuer_name": {
+          "value": "Cauvery Urban Power Distribution",
+          "raw": "Cauvery Urban Power Distribution",
+          "page": 0,
+          "bbox": [
+            110,
+            110,
+            882,
+            149
+          ],
+          "label": null
+        },
+        "person_name": {
+          "value": "Meenakshi Sundaram Iyer",
+          "raw": "Meenakshi Sundaram Iyer",
+          "page": 0,
+          "bbox": [
+            540,
+            301,
+            893,
+            328
+          ],
+          "label": "Consumer Name"
+        },
+        "address": {
+          "value": "Flat 21B, Sai Krupa Apartments,, 4th Cross, Malleswaram,, Bengaluru, Karnataka 560055",
+          "raw": "Flat 21B, Sai Krupa Apartments,, 4th Cross, Malleswaram,, Bengaluru, Karnataka 560055",
+          "page": 0,
+          "bbox": [
+            540,
+            353,
+            974,
+            460
+          ],
+          "label": "Service Address"
+        },
+        "consumer_number": {
+          "value": "BPD-77998120",
+          "raw": "BPD-77998120",
+          "page": 0,
+          "bbox": [
+            540,
+            486,
+            743,
+            506
+          ],
+          "label": "Consumer No."
+        },
+        "bill_date": {
+          "value": "2026-10-12",
+          "raw": "12-Oct-2026",
+          "page": 0,
+          "bbox": [
+            540,
+            664,
+            710,
+            684
+          ],
+          "label": "Bill Date"
+        },
+        "amount_due": {
+          "value": "1496.00",
+          "raw": "1,496.00",
+          "page": 0,
+          "bbox": [
+            540,
+            820,
+            673,
+            844
+          ],
+          "label": "Amount Due (Rs.)"
+        }
+      },
+      "tables": {
+        "charges": {
+          "page": 0,
+          "headers": [
+            "item",
+            "value"
+          ],
+          "rows": [
+            [
+              "Previous Reading",
+              "18,204"
+            ],
+            [
+              "Current Reading",
+              "18,396"
+            ],
+            [
+              "Units Consumed",
+              "192"
+            ],
+            [
+              "Energy Charges (Rs.)",
+              "1,152.00"
+            ],
+            [
+              "Fixed Charges (Rs.)",
+              "210.00"
+            ],
+            [
+              "Taxes and Duty (Rs.)",
+              "134.00"
+            ]
+          ]
+        }
+      },
+      "regions": {}
+    },
+    {
+      "filename": "declaration.png",
+      "doc_type": "declaration",
+      "format": "png",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "person_name": {
+          "value": "Meenakshi Sundaram Iyer",
+          "raw": "Meenakshi Sundaram Iyer",
+          "page": 0,
+          "bbox": [
+            560,
+            309,
+            909,
+            340
+          ],
+          "label": "Name"
+        },
+        "date_of_birth": {
+          "value": "1988-07-19",
+          "raw": "19-07-1988",
+          "page": 0,
+          "bbox": [
+            560,
+            367,
+            714,
+            391
+          ],
+          "label": "Date of Birth"
+        },
+        "address": {
+          "value": "Flat 12B, Sai Krupa Apartments,, 4th Cross, Malleshwaram,, Bengaluru, Karnataka 560003",
+          "raw": "Flat 12B, Sai Krupa Apartments,, 4th Cross, Malleshwaram,, Bengaluru, Karnataka 560003",
+          "page": 0,
+          "bbox": [
+            560,
+            425,
+            994,
+            544
+          ],
+          "label": "Residential Address"
+        },
+        "employer_name": {
+          "value": "Zenvora Technologies Pvt. Ltd.",
+          "raw": "Zenvora Technologies Pvt. Ltd.",
+          "page": 0,
+          "bbox": [
+            560,
+            571,
+            979,
+            602
+          ],
+          "label": "Employer"
+        },
+        "declared_monthly_income": {
+          "value": "120000.00",
+          "raw": "1,20,000.00",
+          "page": 0,
+          "bbox": [
+            560,
+            629,
+            717,
+            657
+          ],
+          "label": "Monthly Income (Rs.)"
+        },
+        "declaration_date": {
+          "value": "2026-11-02",
+          "raw": "02-11-2026",
+          "page": 0,
+          "bbox": [
+            330,
+            1131,
+            484,
+            1155
+          ],
+          "label": "Date"
+        },
+        "place": {
+          "value": "Bengaluru",
+          "raw": "Bengaluru",
+          "page": 0,
+          "bbox": [
+            330,
+            1189,
+            467,
+            1220
+          ],
+          "label": "Place"
+        }
+      },
+      "tables": {},
+      "regions": {
+        "signature": {
+          "page": 0,
+          "bbox": [
+            1010,
+            1084,
+            1430,
+            1214
+          ]
+        }
+      }
+    }
+  ],
+  "manipulations": [],
+  "discrepancies": [
+    {
+      "id": "d1",
+      "discrepancy_type": "dob_mismatch",
+      "documents": [
+        "application_form.pdf",
+        "id_proof.png"
+      ],
+      "description": "Date of birth 19/07/1988 on the application and declaration, 19/07/1986 on the ID."
+    },
+    {
+      "id": "d2",
+      "discrepancy_type": "salary_vs_bank_credit",
+      "documents": [
+        "salary_slip.pdf",
+        "bank_statement.pdf"
+      ],
+      "description": "Net pay 78,250.00 on the payslip, monthly credits of 61,250.00."
+    },
+    {
+      "id": "d3",
+      "discrepancy_type": "address_variant",
+      "documents": [
+        "application_form.pdf",
+        "address_proof.jpg"
+      ],
+      "description": "Flat 12B / PIN 560003 on the application, Flat 21B / PIN 560055 on the utility bill."
+    },
+    {
+      "id": "d4",
+      "discrepancy_type": "employer_mismatch",
+      "documents": [
+        "application_form.pdf",
+        "salary_slip.pdf"
+      ],
+      "description": "Zenvora Technologies Pvt. Ltd. against Zenvora Infotech Solutions."
+    },
+    {
+      "id": "d5",
+      "discrepancy_type": "declared_vs_actual_income",
+      "documents": [
+        "application_form.pdf",
+        "salary_slip.pdf"
+      ],
+      "description": "Declared 1,20,000.00 against payslip gross 88,000.00."
+    },
+    {
+      "id": "d6",
+      "discrepancy_type": "name_variant",
+      "documents": [
+        "application_form.pdf",
+        "salary_slip.pdf"
+      ],
+      "description": "Meenakshi Sundaram Iyer against Minakshi S. Iyengar: the surname differs."
+    },
+    {
+      "id": "d7",
+      "discrepancy_type": "account_number_mismatch",
+      "documents": [
+        "salary_slip.pdf",
+        "bank_statement.pdf"
+      ],
+      "description": "Salary account ends 7821 on the payslip, 7812 on the statement and the application."
+    },
+    {
+      "id": "d8",
+      "discrepancy_type": "id_number_mismatch",
+      "documents": [
+        "application_form.pdf",
+        "id_proof.png"
+      ],
+      "description": "PAN ZZCPI5502R on the application, ZZCPI5520R on the ID card."
+    },
+    {
+      "id": "d9",
+      "discrepancy_type": "employment_date_conflict",
+      "documents": [
+        "application_form.pdf",
+        "salary_slip.pdf"
+      ],
+      "description": "Date of joining 15/06/2019 on the application, 01-Feb-2024 on the payslip."
+    }
+  ],
+  "within_document": [],
+  "benign_variations": []
+}

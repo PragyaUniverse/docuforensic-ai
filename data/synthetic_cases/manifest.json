@@ -1,0 +1,58 @@
+[
+  {
+    "key": "case_a_clean",
+    "name": "Case A: Consistent application",
+    "description": "All documents agree, apart from everyday formatting differences.",
+    "dir": "case_a_clean",
+    "documents": [
+      "application_form.png",
+      "id_proof.jpg",
+      "salary_slip.pdf",
+      "bank_statement.pdf",
+      "address_proof.jpg",
+      "declaration.pdf"
+    ]
+  },
+  {
+    "key": "case_b_visual",
+    "name": "Case B: Visual investigation",
+    "description": "Image-level examination of a salary-backed application.",
+    "dir": "case_b_visual",
+    "documents": [
+      "application_form.png",
+      "id_proof.jpg",
+      "salary_slip.png",
+      "bank_statement.pdf",
+      "address_proof.pdf",
+      "declaration.png"
+    ]
+  },
+  {
+    "key": "case_c_crossdoc",
+    "name": "Case C: Cross-document investigation",
+    "description": "Visually ordinary documents compared with each other.",
+    "dir": "case_c_crossdoc",
+    "documents": [
+      "application_form.pdf",
+      "id_proof.png",
+      "salary_slip.pdf",
+      "bank_statement.pdf",
+      "address_proof.jpg",
+      "declaration.png"
+    ]
+  },
+  {
+    "key": "case_d_pdf",
+    "name": "Case D: PDF structure investigation",
+    "description": "Digital PDFs examined at the file-structure level.",
+    "dir": "case_d_pdf",
+    "documents": [
+      "application_form.pdf",
+      "id_proof.jpg",
+      "salary_slip.pdf",
+      "bank_statement.pdf",
+      "address_proof.pdf",
+      "declaration.png"
+    ]
+  }
+]

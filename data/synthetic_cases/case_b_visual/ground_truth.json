@@ -1,0 +1,1445 @@
+{
+  "case": "case_b_visual",
+  "synthetic": true,
+  "applicant": {
+    "person_name": "Arjun Vikram Desai",
+    "date_of_birth": "1989-11-05"
+  },
+  "documents": [
+    {
+      "filename": "application_form.png",
+      "doc_type": "application_form",
+      "format": "png",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "application_id": {
+          "value": "MF-2026-118377",
+          "raw": "MF-2026-118377",
+          "page": 0,
+          "bbox": [
+            470,
+            220,
+            700,
+            240
+          ],
+          "label": "Application ID"
+        },
+        "person_name": {
+          "value": "Arjun Vikram Desai",
+          "raw": "Arjun Vikram Desai",
+          "page": 0,
+          "bbox": [
+            470,
+            369,
+            729,
+            396
+          ],
+          "label": "Applicant Name"
+        },
+        "date_of_birth": {
+          "value": "1989-11-05",
+          "raw": "05/11/1989",
+          "page": 0,
+          "bbox": [
+            470,
+            422,
+            626,
+            444
+          ],
+          "label": "Date of Birth"
+        },
+        "gender": {
+          "value": "Male",
+          "raw": "Male",
+          "page": 0,
+          "bbox": [
+            470,
+            473,
+            534,
+            494
+          ],
+          "label": "Gender"
+        },
+        "id_number": {
+          "value": "999948611759",
+          "raw": "9999 4861 1759",
+          "page": 0,
+          "bbox": [
+            470,
+            526,
+            693,
+            546
+          ],
+          "label": "Aadhaar No."
+        },
+        "pan_number": {
+          "value": "ZZBPD7316L",
+          "raw": "ZZBPD7316L",
+          "page": 0,
+          "bbox": [
+            470,
+            588,
+            646,
+            608
+          ],
+          "label": "PAN"
+        },
+        "address": {
+          "value": "B-17, Shanti Nagar Society,, Paud Road, Kothrud,, Pune, Maharashtra 411038",
+          "raw": "B-17, Shanti Nagar Society,, Paud Road, Kothrud,, Pune, Maharashtra 411038",
+          "page": 0,
+          "bbox": [
+            540,
+            713,
+            912,
+            817
+          ],
+          "label": "Residential Address"
+        },
+        "phone": {
+          "value": "+91 90000 05678",
+          "raw": "+91 90000 05678",
+          "page": 0,
+          "bbox": [
+            540,
+            846,
+            786,
+            866
+          ],
+          "label": "Mobile"
+        },
+        "email": {
+          "value": "arjun.desai@example.com",
+          "raw": "arjun.desai@example.com",
+          "page": 0,
+          "bbox": [
+            540,
+            897,
+            899,
+            924
+          ],
+          "label": "Email"
+        },
+        "employer_name": {
+          "value": "Kestrel Logistics Pvt. Ltd.",
+          "raw": "Kestrel Logistics Pvt. Ltd.",
+          "page": 0,
+          "bbox": [
+            540,
+            1023,
+            878,
+            1050
+          ],
+          "label": "Employer Name"
+        },
+        "designation": {
+          "value": "Operations Executive",
+          "raw": "Operations Executive",
+          "page": 0,
+          "bbox": [
+            540,
+            1075,
+            828,
+            1102
+          ],
+          "label": "Designation"
+        },
+        "date_of_joining": {
+          "value": "2022-01-17",
+          "raw": "17/01/2022",
+          "page": 0,
+          "bbox": [
+            540,
+            1128,
+            696,
+            1150
+          ],
+          "label": "Date of Joining"
+        },
+        "declared_monthly_income": {
+          "value": "84320.00",
+          "raw": "84,320.00",
+          "page": 0,
+          "bbox": [
+            540,
+            1180,
+            677,
+            1203
+          ],
+          "label": "Monthly Income (Rs.)"
+        },
+        "loan_amount": {
+          "value": "1500000.00",
+          "raw": "15,00,000.00",
+          "page": 0,
+          "bbox": [
+            540,
+            1306,
+            720,
+            1329
+          ],
+          "label": "Loan Amount (Rs.)"
+        },
+        "bank_account_number": {
+          "value": "30088172640055",
+          "raw": "30088172640055",
+          "page": 0,
+          "bbox": [
+            540,
+            1410,
+            780,
+            1430
+          ],
+          "label": "Bank A/c No."
+        },
+        "application_date": {
+          "value": "2026-11-02",
+          "raw": "02/11/2026",
+          "page": 0,
+          "bbox": [
+            420,
+            1690,
+            576,
+            1712
+          ],
+          "label": "Application Date"
+        }
+      },
+      "tables": {},
+      "regions": {
+        "photo": {
+          "page": 0,
+          "bbox": [
+            1274,
+            216,
+            1544,
+            546
+          ]
+        },
+        "signature": {
+          "page": 0,
+          "bbox": [
+            1000,
+            1644,
+            1420,
+            1774
+          ]
+        }
+      }
+    },
+    {
+      "filename": "id_proof.jpg",
+      "doc_type": "id_proof",
+      "format": "jpg",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "id_type": {
+          "value": "AADHAAR-STYLE",
+          "raw": "AADHAAR-STYLE",
+          "page": 0,
+          "bbox": [
+            394.7,
+            285,
+            648.7,
+            305
+          ],
+          "label": "Card title"
+        },
+        "person_name": {
+          "value": "Arjun Vikram Desai",
+          "raw": "Arjun Vikram Desai",
+          "page": 0,
+          "bbox": [
+            704,
+            389,
+            996,
+            416
+          ],
+          "label": "Name"
+        },
+        "date_of_birth": {
+          "value": "1989-11-05",
+          "raw": "05/11/1989",
+          "page": 0,
+          "bbox": [
+            704,
+            456,
+            860,
+            478
+          ],
+          "label": "DOB"
+        },
+        "gender": {
+          "value": "Male",
+          "raw": "Male",
+          "page": 0,
+          "bbox": [
+            704,
+            521,
+            768,
+            542
+          ],
+          "label": "Gender"
+        },
+        "address": {
+          "value": "B-17, Shanti Nagar Society,, Paud Road, Kothrud,, Pune, Maharashtra 411038",
+          "raw": "B-17, Shanti Nagar Society,, Paud Road, Kothrud,, Pune, Maharashtra 411038",
+          "page": 0,
+          "bbox": [
+            704,
+            589,
+            1049,
+            687
+          ],
+          "label": "Address"
+        },
+        "id_number": {
+          "value": "999948611759",
+          "raw": "9999 4861 1759",
+          "page": 0,
+          "bbox": [
+            627.0,
+            865,
+            1043.0,
+            900
+          ],
+          "label": "ID No"
+        },
+        "pan_number": {
+          "value": "ZZBPD7316L",
+          "raw": "ZZBPD7316L",
+          "page": 0,
+          "bbox": [
+            630,
+            1358,
+            867,
+            1382
+          ],
+          "label": "Permanent Account No"
+        }
+      },
+      "tables": {},
+      "regions": {
+        "photo": {
+          "page": 0,
+          "bbox": [
+            214,
+            370,
+            484,
+            700
+          ]
+        },
+        "signature": {
+          "page": 0,
+          "bbox": [
+            590,
+            1438,
+            1010,
+            1568
+          ]
+        }
+      }
+    },
+    {
+      "filename": "salary_slip.png",
+      "doc_type": "salary_slip",
+      "format": "png",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "person_name": {
+          "value": "Arjun Vikram Desai",
+          "raw": "Arjun Vikram Desai",
+          "page": 0,
+          "bbox": [
+            400,
+            251,
+            659,
+            278
+          ],
+          "label": "Employee Name"
+        },
+        "employee_id": {
+          "value": "KL-08812",
+          "raw": "KL-08812",
+          "page": 0,
+          "bbox": [
+            1150,
+            252,
+            1278,
+            272
+          ],
+          "label": "Employee ID"
+        },
+        "designation": {
+          "value": "Operations Executive",
+          "raw": "Operations Executive",
+          "page": 0,
+          "bbox": [
+            400,
+            303,
+            688,
+            330
+          ],
+          "label": "Designation"
+        },
+        "pay_period": {
+          "value": "2026-10",
+          "raw": "October 2026",
+          "page": 0,
+          "bbox": [
+            1150,
+            303,
+            1335,
+            324
+          ],
+          "label": "Pay Period"
+        },
+        "date_of_joining": {
+          "value": "2022-01-17",
+          "raw": "17-Jan-2022",
+          "page": 0,
+          "bbox": [
+            400,
+            356,
+            566,
+            381
+          ],
+          "label": "Date of Joining"
+        },
+        "pan_number": {
+          "value": "ZZBPD7316L",
+          "raw": "ZZBPD7316L",
+          "page": 0,
+          "bbox": [
+            1150,
+            356,
+            1326,
+            376
+          ],
+          "label": "PAN"
+        },
+        "employer_name": {
+          "value": "Kestrel Logistics Pvt. Ltd.",
+          "raw": "Kestrel Logistics Pvt. Ltd.",
+          "page": 0,
+          "bbox": [
+            400,
+            407,
+            738,
+            434
+          ],
+          "label": "Employer"
+        },
+        "bank_account_number": {
+          "value": "30088172640055",
+          "raw": "30088172640055",
+          "page": 0,
+          "bbox": [
+            400,
+            460,
+            640,
+            480
+          ],
+          "label": "Salary A/c No."
+        },
+        "basic_pay": {
+          "value": "30000.00",
+          "raw": "30,000.00",
+          "page": 0,
+          "bbox": [
+            678.6,
+            599,
+            810.6,
+            621
+          ],
+          "label": "Basic Pay"
+        },
+        "hra": {
+          "value": "12000.00",
+          "raw": "12,000.00",
+          "page": 0,
+          "bbox": [
+            678.6,
+            655,
+            810.6,
+            677
+          ],
+          "label": "HRA"
+        },
+        "other_allowances": {
+          "value": "12000.00",
+          "raw": "12,000.00",
+          "page": 0,
+          "bbox": [
+            678.6,
+            711,
+            810.6,
+            733
+          ],
+          "label": "Other Allowances"
+        },
+        "gross_pay": {
+          "value": "54000.00",
+          "raw": "54,000.00",
+          "page": 0,
+          "bbox": [
+            664.6,
+            783,
+            810.6,
+            806
+          ],
+          "label": "Gross Pay"
+        },
+        "total_deductions": {
+          "value": "5680.00",
+          "raw": "5,680.00",
+          "page": 0,
+          "bbox": [
+            1399.7,
+            783,
+            1527.7,
+            806
+          ],
+          "label": "Total Deductions"
+        },
+        "net_pay": {
+          "value": "84320.00",
+          "raw": "84,320.00",
+          "page": 0,
+          "bbox": [
+            470,
+            878,
+            626,
+            911
+          ],
+          "label": "Net Pay (Rs.)",
+          "original_value": "48320.00"
+        }
+      },
+      "tables": {
+        "earnings": {
+          "page": 0,
+          "headers": [
+            "component",
+            "amount"
+          ],
+          "rows": [
+            [
+              "Basic Pay",
+              "30,000.00"
+            ],
+            [
+              "HRA",
+              "12,000.00"
+            ],
+            [
+              "Other Allowances",
+              "12,000.00"
+            ]
+          ]
+        },
+        "deductions": {
+          "page": 0,
+          "headers": [
+            "component",
+            "amount"
+          ],
+          "rows": [
+            [
+              "Provident Fund",
+              "3,600.00"
+            ],
+            [
+              "Professional Tax",
+              "200.00"
+            ],
+            [
+              "Income Tax (TDS)",
+              "1,880.00"
+            ]
+          ]
+        }
+      },
+      "regions": {
+        "authorised_signature": {
+          "page": 0,
+          "bbox": [
+            110,
+            1070,
+            530,
+            1200
+          ]
+        }
+      }
+    },
+    {
+      "filename": "bank_statement.pdf",
+      "doc_type": "bank_statement",
+      "format": "scanned_pdf",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "person_name": {
+          "value": "Arjun Vikram Desai",
+          "raw": "Arjun Vikram Desai",
+          "page": 0,
+          "bbox": [
+            430,
+            205,
+            689,
+            232
+          ],
+          "label": "Account Holder"
+        },
+        "address": {
+          "value": "B-17, Shanti Nagar Society,, Paud Road, Kothrud,, Pune, Maharashtra 411038",
+          "raw": "B-17, Shanti Nagar Society,, Paud Road, Kothrud,, Pune, Maharashtra 411038",
+          "page": 0,
+          "bbox": [
+            430,
+            255,
+            802,
+            355
+          ],
+          "label": "Address"
+        },
+        "bank_name": {
+          "value": "Sahyadri Cooperative Bank",
+          "raw": "Sahyadri Cooperative Bank",
+          "page": 0,
+          "bbox": [
+            430,
+            381,
+            798,
+            408
+          ],
+          "label": "Bank"
+        },
+        "ifsc": {
+          "value": "SHYD0000917",
+          "raw": "SHYD0000917",
+          "page": 0,
+          "bbox": [
+            1140,
+            382,
+            1335,
+            402
+          ],
+          "label": "IFSC"
+        },
+        "bank_account_number": {
+          "value": "30088172640055",
+          "raw": "30088172640055",
+          "page": 0,
+          "bbox": [
+            430,
+            432,
+            670,
+            452
+          ],
+          "label": "Account No."
+        },
+        "statement_period": {
+          "value": "2026-05-01/2026-10-31",
+          "raw": "01-May-2026 to 31-Oct-2026",
+          "page": 0,
+          "bbox": [
+            430,
+            482,
+            822,
+            508
+          ],
+          "label": "Statement Period"
+        },
+        "opening_balance": {
+          "value": "31890.40",
+          "raw": "31,890.40",
+          "page": 0,
+          "bbox": [
+            430,
+            532,
+            567,
+            555
+          ],
+          "label": "Opening Balance (Rs.)"
+        },
+        "closing_balance": {
+          "value": "179308.65",
+          "raw": "1,79,308.65",
+          "page": 0,
+          "bbox": [
+            430,
+            582,
+            593,
+            605
+          ],
+          "label": "Closing Balance (Rs.)"
+        }
+      },
+      "tables": {
+        "transactions": {
+          "page": 0,
+          "headers": [
+            "date",
+            "description",
+            "debit",
+            "credit",
+            "balance"
+          ],
+          "rows": [
+            {
+              "cells": [
+                "03-May-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "18,000.00",
+                "",
+                "13,890.40"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                712,
+                1529.7,
+                734
+              ]
+            },
+            {
+              "cells": [
+                "07-May-2026",
+                "ELECTRICITY BILL PAY",
+                "2,081.73",
+                "",
+                "11,808.67"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                758,
+                1529.7,
+                780
+              ]
+            },
+            {
+              "cells": [
+                "12-May-2026",
+                "UPI-GROCERY STORE",
+                "4,049.44",
+                "",
+                "7,759.23"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                804,
+                1530.2,
+                826
+              ]
+            },
+            {
+              "cells": [
+                "29-May-2026",
+                "NEFT CR-KESTREL-SALARY",
+                "",
+                "48,320.00",
+                "56,079.23"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                850,
+                1529.7,
+                872
+              ]
+            },
+            {
+              "cells": [
+                "03-Jun-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "16,000.00",
+                "",
+                "40,079.23"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                896,
+                1529.7,
+                917
+              ]
+            },
+            {
+              "cells": [
+                "09-Jun-2026",
+                "ELECTRICITY BILL PAY",
+                "2,299.79",
+                "",
+                "37,779.44"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                942,
+                1529.7,
+                963
+              ]
+            },
+            {
+              "cells": [
+                "17-Jun-2026",
+                "UPI-GROCERY STORE",
+                "2,140.80",
+                "",
+                "35,638.64"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                988,
+                1529.7,
+                1009
+              ]
+            },
+            {
+              "cells": [
+                "30-Jun-2026",
+                "NEFT CR-KESTREL-SALARY",
+                "",
+                "48,320.00",
+                "83,958.64"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1034,
+                1529.7,
+                1055
+              ]
+            },
+            {
+              "cells": [
+                "03-Jul-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "21,000.00",
+                "",
+                "62,958.64"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1080,
+                1529.7,
+                1101
+              ]
+            },
+            {
+              "cells": [
+                "10-Jul-2026",
+                "ELECTRICITY BILL PAY",
+                "1,353.17",
+                "",
+                "61,605.47"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1126,
+                1529.7,
+                1147
+              ]
+            },
+            {
+              "cells": [
+                "15-Jul-2026",
+                "UPI-GROCERY STORE",
+                "4,331.21",
+                "",
+                "57,274.26"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1172,
+                1529.7,
+                1193
+              ]
+            },
+            {
+              "cells": [
+                "31-Jul-2026",
+                "NEFT CR-KESTREL-SALARY",
+                "",
+                "48,320.00",
+                "1,05,594.26"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1218,
+                1530.5,
+                1239
+              ]
+            },
+            {
+              "cells": [
+                "03-Aug-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "16,000.00",
+                "",
+                "89,594.26"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1264,
+                1529.7,
+                1286
+              ]
+            },
+            {
+              "cells": [
+                "08-Aug-2026",
+                "ELECTRICITY BILL PAY",
+                "1,556.73",
+                "",
+                "88,037.53"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1310,
+                1529.7,
+                1332
+              ]
+            },
+            {
+              "cells": [
+                "14-Aug-2026",
+                "UPI-GROCERY STORE",
+                "2,771.99",
+                "",
+                "85,265.54"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1356,
+                1529.7,
+                1378
+              ]
+            },
+            {
+              "cells": [
+                "31-Aug-2026",
+                "NEFT CR-KESTREL-SALARY",
+                "",
+                "48,320.00",
+                "1,33,585.54"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1402,
+                1530.5,
+                1424
+              ]
+            },
+            {
+              "cells": [
+                "03-Sep-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "19,000.00",
+                "",
+                "1,14,585.54"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1448,
+                1530.5,
+                1470
+              ]
+            },
+            {
+              "cells": [
+                "07-Sep-2026",
+                "ELECTRICITY BILL PAY",
+                "1,438.33",
+                "",
+                "1,13,147.21"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1494,
+                1530.5,
+                1516
+              ]
+            },
+            {
+              "cells": [
+                "17-Sep-2026",
+                "NEFT CR-KESTREL-SALARY",
+                "",
+                "48,320.00",
+                "1,09,579.56"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1528,
+                1530.5,
+                1568
+              ]
+            },
+            {
+              "cells": [
+                "30-Sep-2026",
+                "NEFT CR-KESTREL-SALARY",
+                "",
+                "48,320.00",
+                "1,57,899.56"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1586,
+                1530.5,
+                1608
+              ]
+            },
+            {
+              "cells": [
+                "03-Oct-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "22,000.00",
+                "",
+                "1,35,899.56"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1632,
+                1530.5,
+                1653
+              ]
+            },
+            {
+              "cells": [
+                "06-Oct-2026",
+                "ELECTRICITY BILL PAY",
+                "2,277.09",
+                "",
+                "1,33,622.47"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1678,
+                1530.5,
+                1699
+              ]
+            },
+            {
+              "cells": [
+                "14-Oct-2026",
+                "UPI-GROCERY STORE",
+                "2,633.82",
+                "",
+                "1,30,988.65"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1724,
+                1530.5,
+                1745
+              ]
+            },
+            {
+              "cells": [
+                "30-Oct-2026",
+                "NEFT CR-KESTREL-SALARY",
+                "",
+                "48,320.00",
+                "1,79,308.65"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1770,
+                1530.5,
+                1791
+              ]
+            }
+          ]
+        }
+      },
+      "regions": {}
+    },
+    {
+      "filename": "address_proof.pdf",
+      "doc_type": "address_proof",
+      "format": "digital_pdf",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "issuer_name": {
+          "value": "Western Metro Power Supply",
+          "raw": "Western Metro Power Supply",
+          "page": 0,
+          "bbox": [
+            110,
+            110,
+            768,
+            149
+          ],
+          "label": null
+        },
+        "person_name": {
+          "value": "Arjun Vikram Desai",
+          "raw": "Arjun Vikram Desai",
+          "page": 0,
+          "bbox": [
+            540,
+            301,
+            799,
+            328
+          ],
+          "label": "Consumer Name"
+        },
+        "address": {
+          "value": "B-17, Shanti Nagar Society,, Paud Road, Kothrud,, Pune, Maharashtra 411038",
+          "raw": "B-17, Shanti Nagar Society,, Paud Road, Kothrud,, Pune, Maharashtra 411038",
+          "page": 0,
+          "bbox": [
+            540,
+            353,
+            912,
+            457
+          ],
+          "label": "Service Address"
+        },
+        "consumer_number": {
+          "value": "WMP-55102873",
+          "raw": "WMP-55102873",
+          "page": 0,
+          "bbox": [
+            540,
+            486,
+            753,
+            506
+          ],
+          "label": "Consumer No."
+        },
+        "bill_date": {
+          "value": "2026-10-12",
+          "raw": "12-Oct-2026",
+          "page": 0,
+          "bbox": [
+            540,
+            664,
+            710,
+            684
+          ],
+          "label": "Bill Date"
+        },
+        "amount_due": {
+          "value": "1496.00",
+          "raw": "1,496.00",
+          "page": 0,
+          "bbox": [
+            540,
+            820,
+            673,
+            844
+          ],
+          "label": "Amount Due (Rs.)"
+        }
+      },
+      "tables": {
+        "charges": {
+          "page": 0,
+          "headers": [
+            "item",
+            "value"
+          ],
+          "rows": [
+            [
+              "Previous Reading",
+              "18,204"
+            ],
+            [
+              "Current Reading",
+              "18,396"
+            ],
+            [
+              "Units Consumed",
+              "192"
+            ],
+            [
+              "Energy Charges (Rs.)",
+              "1,152.00"
+            ],
+            [
+              "Fixed Charges (Rs.)",
+              "210.00"
+            ],
+            [
+              "Taxes and Duty (Rs.)",
+              "134.00"
+            ]
+          ]
+        }
+      },
+      "regions": {}
+    },
+    {
+      "filename": "declaration.png",
+      "doc_type": "declaration",
+      "format": "png",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "person_name": {
+          "value": "Arjun Vikram Desai",
+          "raw": "Arjun Vikram Desai",
+          "page": 0,
+          "bbox": [
+            560,
+            309,
+            829,
+            340
+          ],
+          "label": "Name"
+        },
+        "date_of_birth": {
+          "value": "1989-11-05",
+          "raw": "05-11-1989",
+          "page": 0,
+          "bbox": [
+            560,
+            367,
+            714,
+            391
+          ],
+          "label": "Date of Birth"
+        },
+        "address": {
+          "value": "B-17, Shanti Nagar Society,, Paud Road, Kothrud,, Pune, Maharashtra 411038",
+          "raw": "B-17, Shanti Nagar Society,, Paud Road, Kothrud,, Pune, Maharashtra 411038",
+          "page": 0,
+          "bbox": [
+            560,
+            425,
+            931,
+            541
+          ],
+          "label": "Residential Address"
+        },
+        "employer_name": {
+          "value": "Kestrel Logistics Pvt. Ltd.",
+          "raw": "Kestrel Logistics Pvt. Ltd.",
+          "page": 0,
+          "bbox": [
+            560,
+            571,
+            907,
+            602
+          ],
+          "label": "Employer"
+        },
+        "declared_monthly_income": {
+          "value": "84320.00",
+          "raw": "84,320.00",
+          "page": 0,
+          "bbox": [
+            560,
+            629,
+            692,
+            657
+          ],
+          "label": "Monthly Income (Rs.)"
+        },
+        "declaration_date": {
+          "value": "2026-11-02",
+          "raw": "02-11-2026",
+          "page": 0,
+          "bbox": [
+            330,
+            1131,
+            484,
+            1155
+          ],
+          "label": "Date"
+        },
+        "place": {
+          "value": "Pune",
+          "raw": "Pune",
+          "page": 0,
+          "bbox": [
+            330,
+            1190,
+            396,
+            1213
+          ],
+          "label": "Place"
+        }
+      },
+      "tables": {},
+      "regions": {
+        "signature": {
+          "page": 0,
+          "bbox": [
+            1010,
+            1084,
+            1430,
+            1214
+          ]
+        }
+      }
+    }
+  ],
+  "manipulations": [
+    {
+      "id": "m1",
+      "type": "overwrite",
+      "filename": "salary_slip.png",
+      "page": 0,
+      "bbox": [
+        462,
+        872,
+        671,
+        916
+      ],
+      "expected_detectors": [
+        "visual.overwrite",
+        "visual.font_consistency",
+        "visual.noise",
+        "visual.ela"
+      ],
+      "description": "Net pay retyped from 48,320.00 to 84,320.00 on a local background patch in a different font."
+    },
+    {
+      "id": "m2",
+      "type": "photo_insert",
+      "filename": "id_proof.jpg",
+      "page": 0,
+      "bbox": [
+        212,
+        368,
+        488,
+        704
+      ],
+      "expected_detectors": [
+        "visual.photo_insert",
+        "visual.ela",
+        "visual.noise",
+        "metadata.exif"
+      ],
+      "description": "Printed photo replaced by a sharper image with a different tone, slightly off the original frame. EXIF software differs from the scanner used for the other documents."
+    },
+    {
+      "id": "m3",
+      "type": "signature_reuse",
+      "filename": "declaration.png",
+      "page": 0,
+      "bbox": [
+        1010,
+        1084,
+        1430,
+        1214
+      ],
+      "source_filename": "application_form.png",
+      "source_page": 0,
+      "source_bbox": [
+        1000,
+        1644,
+        1420,
+        1774
+      ],
+      "expected_detectors": [
+        "visual.signature_reuse"
+      ],
+      "description": "Declaration signature is a pixel-identical copy of the application form signature. Genuine signatures vary between documents."
+    },
+    {
+      "id": "m4",
+      "type": "copy_move",
+      "filename": "bank_statement.pdf",
+      "page": 0,
+      "bbox": [
+        334,
+        1528,
+        1328,
+        1568
+      ],
+      "source_bbox": [
+        334,
+        1022,
+        1328,
+        1062
+      ],
+      "expected_detectors": [
+        "visual.copy_move"
+      ],
+      "description": "A salary-credit row was copied over a small debit row, adding an apparent extra credit."
+    }
+  ],
+  "discrepancies": [
+    {
+      "id": "d1",
+      "discrepancy_type": "salary_vs_bank_credit",
+      "documents": [
+        "salary_slip.png",
+        "bank_statement.pdf"
+      ],
+      "description": "Visible net pay 84,320.00; monthly credits 48,320.00."
+    },
+    {
+      "id": "d2",
+      "discrepancy_type": "declared_vs_actual_income",
+      "documents": [
+        "application_form.png",
+        "declaration.png",
+        "bank_statement.pdf"
+      ],
+      "description": "Declared 84,320.00; salary credits 48,320.00, payslip gross 54,000.00."
+    }
+  ],
+  "within_document": [
+    {
+      "id": "w1",
+      "detector": "context.arithmetic_salary",
+      "filename": "salary_slip.png",
+      "description": "Gross 54,000.00 less deductions 5,680.00 is 48,320.00, not the visible 84,320.00. Amount in words also still states the original figure."
+    },
+    {
+      "id": "w2",
+      "detector": "context.arithmetic_balance",
+      "filename": "bank_statement.pdf",
+      "description": "Running balance does not reconcile on the copied row."
+    }
+  ],
+  "benign_variations": []
+}

@@ -1,0 +1,18 @@
+{
+  "sample.docx": {
+    "status": "unsupported",
+    "why": "Word documents are not an accepted format."
+  },
+  "truncated.pdf": {
+    "status": "failed",
+    "why": "The PDF is cut off and cannot be parsed."
+  },
+  "empty.png": {
+    "status": "failed",
+    "why": "The file has no content."
+  },
+  "not_an_image.png": {
+    "status": "unsupported",
+    "why": "Content is text despite the extension."
+  }
+}
