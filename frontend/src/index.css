@@ -33,11 +33,15 @@
 }
 
 html,
-body,
-#root {
+body {
   height: 100%;
-  /* The shell scrolls its own panes. Clip stops scrollIntoView from shifting the whole page. */
-  overflow: clip;
+}
+
+/* The shell scrolls its own panes. Fixing the root stops scrollIntoView from shifting the whole page. */
+#root {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
 }
 
 body {

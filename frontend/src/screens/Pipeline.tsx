@@ -60,8 +60,8 @@ export function PipelineScreen() {
         qc.invalidateQueries({ queryKey: ["case", caseId] });
       },
       onDone: () => {
-        qc.invalidateQueries({ queryKey: ["case", caseId] });
-        qc.invalidateQueries({ queryKey: ["findings", caseId] });
+        // Every derived view is stale once a run ends.
+        qc.invalidateQueries({ predicate: (q) => q.queryKey.includes(caseId) });
       },
       onConnectionLost: () => setStreamLost(true),
     });

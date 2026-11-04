@@ -133,8 +133,9 @@ export function comparisonSources(f: Finding, fieldsById: Map<string, Field>): L
   };
   // Crops come first so a located region keeps its descriptive label; bare measurements don't count as sources.
   const rank = (e: EvidenceItem) => (e.kind === "field_ref" || e.kind === "comparison" ? 0 : e.kind === "crop" ? 1 : 2);
+  const hasFieldRefs = f.evidence.some((e) => e.kind === "field_ref");
   const located = [...f.evidence]
-    .filter((e) => e.kind === "field_ref" || e.kind === "comparison" || e.kind === "crop")
+    .filter((e) => e.kind === "field_ref" || e.kind === "comparison" || (e.kind === "crop" && !hasFieldRefs))
     .sort((a, b) => rank(a) - rank(b));
   for (const ev of located) {
     const field = ev.field_id ? (fieldsById.get(ev.field_id) ?? null) : null;
@@ -168,6 +169,35 @@ export function comparisonSources(f: Finding, fieldsById: Map<string, Field>): L
     });
   }
   return out;
+}
+
+export interface ValueGroup {
+  key: string;
+  value: string | null;
+  sources: LocatedSource[];
+}
+
+/** Groups sources that state the same normalized value, so the disagreement itself stands out. */
+export function groupSources(sources: LocatedSource[]): ValueGroup[] {
+  const groups: ValueGroup[] = [];
+  const index = new Map<string, ValueGroup>();
+  for (const s of sources) {
+    const norm = s.evidence?.data?.normalized;
+    const raw = typeof norm === "string" && norm ? norm : (s.field?.value_norm ?? s.value);
+    if (!raw) {
+      groups.push({ key: s.key, value: s.value, sources: [s] });
+      continue;
+    }
+    const key = raw.toLowerCase().replace(/[\s.,]+/g, " ").trim();
+    const g = index.get(key);
+    if (g) g.sources.push(s);
+    else {
+      const n = { key, value: s.value, sources: [s] };
+      index.set(key, n);
+      groups.push(n);
+    }
+  }
+  return groups;
 }
 
 export function docName(d: Document | undefined, fallback = "Unknown document"): string {

@@ -149,6 +149,11 @@ export function AuditScreen() {
           </p>
         )}
         <AnimatePresence mode="wait">{result && <Verdict v={result} />}</AnimatePresence>
+        {bad !== null && q.data && !q.data.some((e) => e.seq === bad) && (
+          <p className="text-[13px] text-ink-2">
+            Entry #{bad} belongs to another case in the same chain, so it is not listed below. Verification covers the whole chain.
+          </p>
+        )}
         <div className="min-h-[260px] flex-1 overflow-y-auto border-x border-t border-line bg-panel">
           {q.isLoading && <Loading label="Loading audit entries" />}
           {q.isError && <ErrorState title="Audit entries could not load" error={q.error} onRetry={() => q.refetch()} />}

@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import type { Document, Field, Finding } from "@/api/types";
-import { STATUS_META, charDiff, comparisonSources, type DiffPart, type LocatedSource } from "@/lib/findings";
+import { STATUS_META, charDiff, comparisonSources, groupSources, type DiffPart, type LocatedSource, type ValueGroup } from "@/lib/findings";
 import { cn, fmtBBox, humanize, pct } from "@/lib/utils";
 import { PageCrop } from "./PageCrop";
 import { ConfidenceMeter, StatusBadge } from "./StatusBadge";
@@ -35,24 +35,31 @@ function Parts({ parts, tone }: { parts: DiffPart[]; tone: string }) {
   );
 }
 
-function SourceCard({
+function viewerLink(caseId: string, s: LocatedSource) {
+  const q = new URLSearchParams({ doc: s.docId, page: String(s.page) });
+  if (s.field) q.set("field", s.field.id);
+  return { pathname: `/cases/${caseId}/viewer`, search: q.toString() };
+}
+
+function GroupCard({
   caseId,
-  source,
-  doc,
+  group,
+  docs,
   parts,
   stroke,
   tone,
 }: {
   caseId: string;
-  source: LocatedSource;
-  doc: Document | undefined;
+  group: ValueGroup;
+  docs: Map<string, Document>;
   parts: DiffPart[] | null;
   stroke: string;
   tone: string;
 }) {
+  const source = group.sources[0];
+  const others = group.sources.slice(1);
+  const doc = docs.get(source.docId);
   const conf = source.field?.confidence;
-  const q = new URLSearchParams({ doc: source.docId, page: String(source.page) });
-  if (source.field) q.set("field", source.field.id);
   return (
     <div className="flex min-w-0 flex-1 flex-col border border-line bg-raised">
       <div className="flex items-start justify-between gap-2 border-b border-line px-3 py-2">
@@ -61,7 +68,7 @@ function SourceCard({
           <div className="truncate font-mono text-xs text-ink-2">{doc?.filename ?? source.docId}</div>
         </div>
         <Link
-          to={{ pathname: `/cases/${caseId}/viewer`, search: q.toString() }}
+          to={viewerLink(caseId, source)}
           className="flex shrink-0 items-center gap-0.5 text-xs text-ink-2 underline-offset-2 hover:text-ink hover:underline"
         >
           Open source <ArrowUpRight className="size-3" aria-hidden />
@@ -83,6 +90,19 @@ function SourceCard({
         <span>{fmtBBox(source.bbox)}</span>
         {conf !== undefined && <span>OCR conf {pct(conf)}</span>}
       </div>
+      {others.length > 0 && (
+        <div className="border-t border-line px-3 py-2 text-xs">
+          <span className="text-ink-3">Same value also on </span>
+          {others.map((o, i) => (
+            <span key={o.key}>
+              {i > 0 && <span className="text-ink-3">, </span>}
+              <Link to={viewerLink(caseId, o)} className="font-mono text-[11px] text-ink-2 underline-offset-2 hover:text-ink hover:underline">
+                {docs.get(o.docId)?.filename ?? o.docId}
+              </Link>
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -107,18 +127,20 @@ export function ComparisonPanel({
   // Reuse findings flag two regions for being identical, not for differing.
   const sameExpected = /signature_reuse|copy_move/.test(finding.detector);
 
+  const groups = useMemo(() => groupSources(sources), [sources]);
+
   const diff = useMemo(() => {
-    if (sources.length !== 2 || !sources[0].value || !sources[1].value) return null;
-    return charDiff(sources[0].value, sources[1].value);
-  }, [sources]);
+    if (groups.length !== 2 || !groups[0].value || !groups[1].value) return null;
+    return charDiff(groups[0].value, groups[1].value);
+  }, [groups]);
 
   const delta = useMemo(() => {
-    if (sources.length !== 2) return null;
-    const a = num(sources[0].value);
-    const b = num(sources[1].value);
+    if (groups.length !== 2) return null;
+    const a = num(groups[0].value);
+    const b = num(groups[1].value);
     if (a === null || b === null) return null;
     return Math.abs(a - b);
-  }, [sources]);
+  }, [groups]);
 
   return (
     <div className="flex flex-col gap-3">
@@ -136,9 +158,9 @@ export function ComparisonPanel({
         <p className="border border-line bg-raised p-3 text-ink-2">
           This finding records no located source fields, so no side-by-side view is available.
         </p>
-      ) : sources.length === 2 ? (
+      ) : groups.length === 2 ? (
         <div className={cn("flex items-stretch gap-2", compact ? "flex-col" : "flex-col md:flex-row")}>
-          <SourceCard caseId={caseId} source={sources[0]} doc={docs.get(sources[0].docId)} parts={diff?.[0] ?? null} stroke={m.stroke} tone={m.text} />
+          <GroupCard caseId={caseId} group={groups[0]} docs={docs} parts={diff?.[0] ?? null} stroke={m.stroke} tone={m.text} />
           <div className="flex shrink-0 flex-col items-center justify-center gap-1 px-1 py-1">
             <span
               role="img"
@@ -153,12 +175,12 @@ export function ComparisonPanel({
               </span>
             )}
           </div>
-          <SourceCard caseId={caseId} source={sources[1]} doc={docs.get(sources[1].docId)} parts={diff?.[1] ?? null} stroke={m.stroke} tone={m.text} />
+          <GroupCard caseId={caseId} group={groups[1]} docs={docs} parts={diff?.[1] ?? null} stroke={m.stroke} tone={m.text} />
         </div>
       ) : (
         <div className={cn("grid gap-2", compact ? "grid-cols-1" : "md:grid-cols-2 xl:grid-cols-3")}>
-          {sources.map((s) => (
-            <SourceCard key={s.key} caseId={caseId} source={s} doc={docs.get(s.docId)} parts={null} stroke={m.stroke} tone={m.text} />
+          {groups.map((g) => (
+            <GroupCard key={g.key} caseId={caseId} group={g} docs={docs} parts={null} stroke={m.stroke} tone={m.text} />
           ))}
         </div>
       )}

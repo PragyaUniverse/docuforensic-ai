@@ -35,9 +35,12 @@ export function ViewerScreen() {
   const labels = useMemo(() => findingLabels(findingsQ.data ?? []), [findingsQ.data]);
 
   const firstViewable = summaries.find((s) => s.page_count > 0)?.id ?? summaries[0]?.id;
-  const docId = sp.get("doc") ?? firstViewable ?? null;
-  const page = Number(sp.get("page") ?? 0) || 0;
   const selectedId = sp.get("finding");
+  // A link naming only a finding opens at that finding's own location.
+  const linked = !sp.get("doc") && selectedId ? findings.find((f) => f.id === selectedId) : undefined;
+  const linkedLoc = linked ? locationOf(linked) : null;
+  const docId = sp.get("doc") ?? linkedLoc?.docId ?? firstViewable ?? null;
+  const page = Number(sp.get("page") ?? linkedLoc?.page ?? 0) || 0;
   const fieldId = sp.get("field");
   const doc = docId ? byId.get(docId) : undefined;
   const selected = findings.find((f) => f.id === selectedId) ?? null;
@@ -186,6 +189,7 @@ export function ViewerScreen() {
     );
   }
   const notRun = caseQ.data?.case.status !== "complete";
+  const noneAnalysed = summaries.every((s) => s.page_count === 0);
 
   return (
     <div className="grid h-full min-h-[560px] grid-rows-[minmax(0,58fr)_minmax(0,42fr)] lg:grid-cols-[minmax(0,1fr)_360px] lg:grid-rows-1 xl:grid-cols-[minmax(0,1fr)_420px]">
@@ -323,7 +327,7 @@ export function ViewerScreen() {
           {findingsQ.isError && <ErrorState title="Findings could not load" error={findingsQ.error} onRetry={() => findingsQ.refetch()} />}
           {findingsQ.data && listed.length === 0 && (
             <Empty
-              title={findings.length === 0 ? (notRun ? "No findings yet" : "Nothing was flagged") : "No findings match these filters"}
+              title={findings.length === 0 ? (notRun ? "No findings yet" : noneAnalysed ? "No document could be analysed" : "Nothing was flagged") : "No findings match these filters"}
               action={
                 notRun ? (
                   <Button asChild size="sm">
@@ -335,7 +339,9 @@ export function ViewerScreen() {
               {findings.length === 0
                 ? notRun
                   ? "Run the investigation to produce findings."
-                  : "No detector raised a finding on these documents. That is not proof of authenticity."
+                  : noneAnalysed
+                    ? "Every file was unusable, so nothing was examined. See each document's status."
+                    : "No detector raised a finding on these documents. That is not proof of authenticity."
                 : "Adjust the status toggles above."}
             </Empty>
           )}

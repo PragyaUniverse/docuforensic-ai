@@ -159,8 +159,8 @@ export function DataScreen() {
                               </div>
                             )}
                           </td>
-                          <td className="px-4 py-1.5 font-mono text-[11px] text-ink-3">
-                            <div className="break-all text-ink-2">{f.doc_filename}</div>
+                          <td className="whitespace-nowrap px-4 py-1.5 font-mono text-[11px] text-ink-3">
+                            <div className="max-w-44 truncate text-ink-2" title={f.doc_filename}>{f.doc_filename}</div>
                             <div>
                               p{f.page + 1} {fmtBBox(f.bbox)}
                             </div>
