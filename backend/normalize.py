@@ -41,6 +41,29 @@ def money_of(field: Field | None) -> Decimal | None:
     return parse_money(field.value_norm) or parse_money(field.value_raw)
 
 
+_MONEY_SHAPE = re.compile(r"^\d{1,3}(?:,\d{2,3})*(?:\.\d{1,2})?$|^\d+(?:\.\d{1,2})?$")
+
+
+def money_well_formed(raw: str | None) -> bool:
+    """False for fragments such as '26,4', where a reading was cut short by OCR or layout."""
+    if not raw:
+        return False
+    text = re.sub(r"(?i)^\s*(rs\.?|inr|₹)\s*", "", raw.strip())
+    text = re.sub(r"(?i)\s*(cr|dr|/-|only)\s*$", "", text)
+    return bool(_MONEY_SHAPE.match(text))
+
+
+def money_strict(field: Field | None) -> Decimal | None:
+    """The amount, or None if the printed reading isn't a complete number.
+
+    A truncated reading can't support an arithmetic conflict: it would report an error in our
+    reading as if it were a problem with the document.
+    """
+    if field is None or not money_well_formed(field.value_raw):
+        return None
+    return money_of(field)
+
+
 def fmt_money(value: Decimal | None) -> str:
     return "n/a" if value is None else f"{value:,.2f}"
 
@@ -52,10 +75,15 @@ _DATE_FORMATS = (
 )
 
 
+def _ocr_month(text: str) -> str:
+    """OCR commonly reads the letter O in 'Oct' as a zero."""
+    return re.sub(r"(?i)(?<![0-9])0ct", "Oct", text)
+
+
 def parse_date(raw: str | None) -> date | None:
     if not raw:
         return None
-    text = re.sub(r"\s+", " ", raw.strip()).strip(" .,:")
+    text = _ocr_month(re.sub(r"\s+", " ", raw.strip()).strip(" .,:"))
     for fmt in _DATE_FORMATS:
         try:
             return datetime.strptime(text, fmt).date()
@@ -78,7 +106,7 @@ def parse_period(raw: str | None) -> tuple[date, date] | None:
     if not raw:
         return None
     text = re.sub(r"\s+", " ", raw.strip()).strip(" .,:")
-    parts = re.split(r"\s+(?:to|-|–|—|till|until)\s+", text, flags=re.I)
+    parts = re.split(r"\s+(?:to|-|–|—|till|until)\s+|(?<=\d)/(?=\d{4}-)", text, flags=re.I)
     if len(parts) == 2:
         start, end = parse_date(parts[0]), parse_date(parts[1])
         if start and end:
@@ -119,6 +147,8 @@ def compare_names(a: str, b: str) -> Comparison:
     if sorted(ta) == sorted(tb):
         note = None if ta == tb else "same names in a different order"
         return Comparison(True, 100.0, "same tokens", note)
+    if confusable(" ".join(ta), " ".join(tb)):
+        return Comparison(True, 99.0, "characters OCR commonly confuses", "could be one OCR misreading")
     ratio = fuzz.token_sort_ratio(" ".join(ta), " ".join(tb))
     # Surnames must agree before an initial or a dropped middle name is treated as benign.
     short, long_ = (ta, tb) if len(ta) <= len(tb) else (tb, ta)
@@ -158,8 +188,16 @@ _ADDRESS_ABBREV = {
 _ADDRESS_NOISE = {"NUMBER", "THE", "AT", "POST", "INDIA", "PIN", "PINCODE", "CODE"}
 
 
+def clean_address(raw: str) -> str:
+    """Trims text after the PIN code, and phone numbers, that layout extraction can run into."""
+    match = re.search(r"(?<!\d)\d{6}(?!\d)", raw)
+    text = raw[: match.end()] if match else raw
+    text = re.sub(r"\+?91[ -]?\d{5}[ -]?\d{5}|(?<!\d)[6-9]\d{9}(?!\d)", " ", text)
+    return text.strip(" ,;")
+
+
 def norm_address(raw: str) -> str:
-    text = re.sub(r"[^\w\s/-]", " ", raw.upper()).replace("-", " ").replace("/", " ")
+    text = re.sub(r"[^\w\s/-]", " ", clean_address(raw).upper()).replace("-", " ").replace("/", " ")
     tokens: list[str] = []
     for tok in text.split():
         tokens.extend(_ADDRESS_ABBREV.get(tok, tok).split())

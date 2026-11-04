@@ -436,7 +436,7 @@ def _cover(dossier: Dossier, docs: list[Document], findings: list[Finding]) -> l
         tile(str(counts[FindingStatus.OBSERVATION]), "Observations", *STATUS_STYLE["OBSERVATION"][:2]),
     ]], colWidths=[tile_w] * 4)
     tiles.setStyle(TableStyle([("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0)]))
-    review = "Requires human review" if dossier.requires_human_review else "Nothing flagged; sampling review advised"
+    review = "Requires human review"
     return [
         _p("DOCUFORENSIC AI  |  INVESTIGATION DOSSIER", "kicker"), Spacer(1, 5),
         _p(dossier.case_name, "title"), Spacer(1, 4),

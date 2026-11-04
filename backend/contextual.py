@@ -5,12 +5,13 @@ lower confidence and says so; nothing here treats OCR output as ground truth.
 """
 from __future__ import annotations
 
+import re
 from datetime import date, timedelta
 from decimal import Decimal
 
 from backend.normalize import (
-    IFSC_RE, MONEY_TOLERANCE, PAN_RE, date_of, fmt_money, money_of, norm_id, ocr_adjustment,
-    parse_money, parse_period, verhoeff_valid,
+    IFSC_RE, MONEY_TOLERANCE, PAN_RE, date_of, fmt_money, money_of, money_strict, norm_id,
+    ocr_adjustment, parse_money, parse_period, verhoeff_valid,
 )
 from config.settings import settings
 from models.schemas import (
@@ -66,7 +67,7 @@ def _downgrade(sev: Severity, factor: float) -> Severity:
 def _check_salary(doc: Document, fm: dict[str, Field]) -> list[Finding]:
     out: list[Finding] = []
     net, gross, ded = fm.get("net_pay"), fm.get("gross_pay"), fm.get("total_deductions")
-    v_net, v_gross, v_ded = money_of(net), money_of(gross), money_of(ded)
+    v_net, v_gross, v_ded = money_strict(net), money_strict(gross), money_strict(ded)
 
     if v_net is not None and v_gross is not None and v_ded is not None:
         expected = v_gross - v_ded
@@ -85,7 +86,7 @@ def _check_salary(doc: Document, fm: dict[str, Field]) -> list[Finding]:
             ))
 
     components = [fm[n] for n in ("basic_pay", "hra", "other_allowances") if n in fm]
-    values = [money_of(f) for f in components]
+    values = [money_strict(f) for f in components]
     if gross is not None and v_gross is not None and len(components) >= 2 and all(v is not None for v in values):
         total = sum(values, Decimal(0))  # type: ignore[arg-type]
         if "other_allowances" in fm and abs(total - v_gross) > MONEY_TOLERANCE:
@@ -112,14 +113,60 @@ def _column(table: Table, name: str) -> int | None:
     return None
 
 
+def repair_transaction_row(row: list[TableCell], desc_col: int | None, bal_col: int | None) -> None:
+    """Moves a balance that OCR word-splitting left at the end of the description cell.
+
+    '...HOUSE OWNER 1,23,380.' + '25' is one printed balance read across a column edge. Only the
+    assignment changes; no digit is added or altered.
+    """
+    if desc_col is None or bal_col is None or max(desc_col, bal_col) >= len(row):
+        return
+    desc, bal = row[desc_col], row[bal_col]
+    split = re.match(r"^(.*\S)\s+(\d[\d,]*\.)$", desc.text.strip())
+    if split and re.fullmatch(r"\d{1,2}", bal.text.strip()):
+        bal.text, desc.text = split.group(2) + bal.text.strip(), split.group(1)
+        return
+    whole = re.match(r"^(.*\S)\s+(\d[\d,]*\.\d{2})$", desc.text.strip())
+    if whole and not bal.text.strip():
+        bal.text, desc.text = whole.group(2), whole.group(1)
+
+
 def _txn_table(doc: Document) -> Table | None:
-    return next((t for t in doc.tables if t.name == "transactions" and t.rows), None)
+    table = next((t for t in doc.tables if t.name == "transactions" and t.rows), None)
+    if table is not None:
+        desc_col, bal_col = _column(table, "desc"), _column(table, "balance")
+        for row in table.rows:
+            repair_transaction_row(row, desc_col, bal_col)
+    return table
+
+
+_DATE_TOKEN = re.compile(r"^\d{1,2}[-/][A-Za-z0-9]{3}[-/]\d{2,4}$|^\d{1,2}[-/]\d{1,2}[-/]\d{2,4}$")
+
+
+def rows_not_extracted(doc: Document, table: Table) -> int:
+    """Date-shaped words at or below the table's first row, minus the rows extracted.
+
+    If rows are missing, a broken running balance may be our extraction rather than the document.
+    """
+    if not table.rows or table.page >= len(doc.pages):
+        return 0
+    first = next((c.bbox for c in table.rows[0] if c.bbox), None)
+    if first is None:
+        return 0
+    words = doc.pages[table.page].words
+    dates = [w for w in words if _DATE_TOKEN.match(w.text.strip()) and w.bbox.y1 >= first.y0]
+    return max(0, len(dates) - len(table.rows))
 
 
 def _check_balance(doc: Document, fm: dict[str, Field]) -> list[Finding]:
     table = _txn_table(doc)
     if table is None:
         return []
+    missing_rows = rows_not_extracted(doc, table)
+    coverage_note = (
+        f" {missing_rows} row(s) visible on the page were not extracted, so the break may come from "
+        "the extraction and not the document. Check the image." if missing_rows else "")
+    coverage_factor = 0.5 if missing_rows else 1.0
     deb, cre, bal = _column(table, "debit"), _column(table, "credit"), _column(table, "balance")
     if bal is None or (deb is None and cre is None):
         return []
@@ -152,7 +199,8 @@ def _check_balance(doc: Document, fm: dict[str, Field]) -> list[Finding]:
         ocr_based = any(w.source != TextSource.text_layer for p in doc.pages for w in p.words[:1])
         factor = (0.5 if low < settings.low_ocr_confidence else 0.8 + 0.2 * low) if ocr_based else 1.0
         note = (" A low-confidence OCR reading of a balance cell could explain this; check the image."
-                if factor <= 0.5 else "")
+                if factor <= 0.5 else "") + coverage_note
+        factor *= coverage_factor
         rows_text = "; ".join(
             f"row {b['row']}: expected {fmt_money(b['expected'])}, stated {fmt_money(b['stated'])}"
             for b in breaks[:5]
@@ -181,9 +229,10 @@ def _check_balance(doc: Document, fm: dict[str, Field]) -> list[Finding]:
             out.append(_finding(
                 doc, "context.arithmetic_balance", "Closing balance disagrees with the last transaction",
                 f"The last transaction leaves a balance of {fmt_money(last)}, but the stated closing balance "
-                f"is {fmt_money(v_closing)}." + (f" {note}" if note else ""),
-                closing, [closing], severity=_downgrade(Severity.medium, factor),  # type: ignore[list-item]
-                confidence=0.9 * factor,
+                f"is {fmt_money(v_closing)}." + (f" {note}" if note else "") + coverage_note,
+                closing, [closing],  # type: ignore[list-item]
+                severity=_downgrade(Severity.medium, factor * coverage_factor),
+                confidence=0.9 * factor * coverage_factor,
             ))
     return out
 
@@ -210,7 +259,7 @@ def _check_dates(doc: Document, fm: dict[str, Field], today: date) -> list[Findi
             f"{dob.isoformat()}.", doj_f, [dob_f, doj_f])  # type: ignore[list-item,arg-type]
 
     period_f = fm.get("pay_period")
-    period = parse_period(period_f.value_norm or period_f.value_raw) if period_f else None
+    period = (parse_period(period_f.value_raw) or parse_period(period_f.value_norm)) if period_f else None
     if period and doj and doj > period[1]:
         add("Joining date is after the pay period",
             f"The slip covers a pay period ending {period[1].isoformat()}, but the date of joining is "
@@ -231,7 +280,7 @@ def _check_dates(doc: Document, fm: dict[str, Field], today: date) -> list[Findi
                 f, [f, dob_f])  # type: ignore[list-item]
 
     st_f = fm.get("statement_period")
-    statement = parse_period(st_f.value_norm or st_f.value_raw) if st_f else None
+    statement = (parse_period(st_f.value_raw) or parse_period(st_f.value_norm)) if st_f else None
     if st_f and statement and statement[0] > statement[1]:
         add("Statement period ends before it starts",
             f"The period runs from {statement[0].isoformat()} to {statement[1].isoformat()}.", st_f, [st_f])
@@ -355,12 +404,6 @@ def _check_duplicates(doc: Document) -> list[Finding]:
                 f"The document states {label} more than once with different values: {shown}."
                 + (f" {note}" if note else ""),
                 items[1], items, severity=_downgrade(Severity.medium, factor), confidence=0.85 * factor,
-            ))
-        elif name in doc.duplicated_fields:
-            out.append(_finding(
-                doc, "context.duplicate_field", f"{label.capitalize()} appears more than once",
-                f"{label.capitalize()} is printed {len(items)} times with the same value.", items[1], items,
-                status=FindingStatus.OBSERVATION, severity=Severity.info, confidence=0.8,
             ))
     return out
 

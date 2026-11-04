@@ -384,8 +384,8 @@ def _settings_demo() -> bool:
 
 def _apply_answer(finding: Finding, result) -> None:
     answer: InvestigationAnswer = result.data
-    label = "cached AI reasoning" if result.mode == "demo_cache" else "AI reasoning"
-    finding.explanation = f"{finding.explanation.rstrip()} {label.capitalize()} ({result.provider}/{result.model}): {answer.reasoning.strip()}"
+    label = "Cached AI reasoning" if result.mode == "demo_cache" else "AI reasoning"
+    finding.explanation = f"{finding.explanation.rstrip()} {label} ({result.provider}/{result.model}): {answer.reasoning.strip()}"
     finding.benign_alternatives = _merge(finding.benign_alternatives, answer.benign_alternatives[:4])
     verify = [f"To confirm: {v}" for v in answer.what_would_confirm[:3]] + \
              [f"To refute: {v}" for v in answer.what_would_refute[:3]]

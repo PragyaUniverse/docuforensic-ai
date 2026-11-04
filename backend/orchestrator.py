@@ -125,6 +125,52 @@ def _safe_findings(ctx: _Stage, label: str, fn: Callable[[], list[Finding]]) -> 
         return []
 
 
+def _regions_overlap(a: BBox, b: BBox) -> bool:
+    ix, iy = min(a.x1, b.x1) - max(a.x0, b.x0), min(a.y1, b.y1) - max(a.y0, b.y0)
+    return ix > 0 and iy > 0 and ix * iy / max(min(a.area, b.area), 1.0) >= 0.3
+
+
+def apply_visible_readings(docs: list[Document], findings: list[Finding]) -> int:
+    """Where a PDF's text layer disagrees with its pixels, later checks use what a person sees.
+
+    A digital PDF's text layer can hold a value nobody sees. Contextual checks should test the
+    value the document presents, or an overlay would pass them. The hidden value stays recorded
+    in the finding and in doc.metadata['visible_readings'].
+    """
+    by_id = {d.id: d for d in docs}
+    changed = 0
+    for finding in findings:
+        if finding.detector != "pdf.text_vs_pixels" or finding.doc_id not in by_id:
+            continue
+        doc = by_id[finding.doc_id]
+        for item in finding.evidence:
+            visible = item.data.get("rendered_ocr")
+            if not visible or item.bbox is None or not item.data.get("digits_differ", True):
+                continue
+            conf = float(item.data.get("ocr_confidence") or 0.8)
+            page = item.page if item.page is not None else finding.page
+            for field in doc.fields:
+                if field.page == page and _regions_overlap(field.bbox, item.bbox) and field.value_raw != visible:
+                    doc.metadata.setdefault("visible_readings", []).append(
+                        {"field": field.name, "text_layer": field.value_raw, "visible": visible, "finding_id": finding.id})
+                    field.value_raw, field.value_norm = visible, None
+                    field.source, field.confidence = TextSource.ocr_rapid, conf
+                    if field.id not in finding.related_field_ids:
+                        finding.related_field_ids.append(field.id)
+                    changed += 1
+            for table in doc.tables:
+                if table.page != page:
+                    continue
+                for row in table.rows:
+                    for cell in row:
+                        if cell.bbox is not None and _regions_overlap(cell.bbox, item.bbox) and cell.text != visible:
+                            doc.metadata.setdefault("visible_readings", []).append(
+                                {"table": table.name, "text_layer": cell.text, "visible": visible, "finding_id": finding.id})
+                            cell.text, cell.confidence = visible, conf
+                            changed += 1
+    return changed
+
+
 def compute_risk(findings: list[Finding], docs: list[Document]) -> RiskLevel:
     """Rules in docs/CONTRACTS.md section 5. A prioritization aid, not a verdict."""
     if not any(d.status not in _SKIP and d.pages for d in docs):
@@ -137,14 +183,6 @@ def compute_risk(findings: list[Finding], docs: list[Document]) -> RiskLevel:
     if manip or incons:
         return RiskLevel.medium
     return RiskLevel.low
-
-
-def needs_review(findings: list[Finding], docs: list[Document], risk: RiskLevel) -> bool:
-    if risk != RiskLevel.low:
-        return True
-    if any(d.status != ProcessingStatus.ok for d in docs):
-        return True
-    return any(f.status != FindingStatus.OBSERVATION or _RANK[f.severity] >= 2 for f in findings)
 
 
 def _page_path(doc: Document, page: int) -> Path | None:
@@ -347,6 +385,9 @@ def _run(case: Case) -> None:
             f.case_id = case.id
         findings += forensic
         ctx.payload["findings"] = len(forensic)
+        ctx.payload["visible_readings_applied"] = apply_visible_readings(active, forensic)
+        for doc in active:
+            db.save_document(doc)
 
     with run.stage(PipelineStage.contextual_verification) as ctx:
         count = 0
@@ -392,7 +433,8 @@ def _run(case: Case) -> None:
                 doc.status = ProcessingStatus.ok
             db.save_document(doc)
         case.risk_level = compute_risk(findings, docs)
-        case.requires_human_review = needs_review(findings, docs, case.risk_level)
+        # The system never clears a case on its own, whatever a document's text claims.
+        case.requires_human_review = True
         ctx.payload.update({"risk_level": case.risk_level.value,
                             "requires_human_review": case.requires_human_review})
         db.save_case(case)

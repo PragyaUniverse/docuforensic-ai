@@ -13,7 +13,7 @@ from typing import Callable
 
 from backend.contextual import _column, _txn_table, field_ref
 from backend.normalize import (
-    MONEY_TOLERANCE, Comparison, compare_addresses, compare_employers, compare_ids, compare_names,
+    MONEY_TOLERANCE, Comparison, clean_address, compare_addresses, compare_employers, compare_ids, compare_names,
     date_of, fmt_money, money_of, norm_address, norm_employer, norm_id, ocr_adjustment, parse_date,
     parse_money, parse_period,
 )
@@ -85,7 +85,7 @@ def _cluster(spec: EntitySpec, docs: list[Document]) -> list[list[Field]]:
 
 def _canonical(spec: EntitySpec, cluster: list[Field]) -> str:
     best = max(cluster, key=lambda f: (f.confidence, len(f.value_raw)))
-    return best.value_raw.strip()
+    return clean_address(best.value_raw) if spec.key == "address" else best.value_raw.strip()
 
 
 def _entity(case_id: str, spec: EntitySpec, cluster: list[Field], conflict: bool) -> Entity:
@@ -140,11 +140,12 @@ def _conflict(case_id: str, dtype: str, title: str, explanation: str, side_a: li
     )
 
 
-def _sides_text(clusters: list[list[Field]], docs_by_id: dict[str, Document]) -> str:
+def _sides_text(clusters: list[list[Field]], docs_by_id: dict[str, Document],
+                display: Callable[[str], str] = str.strip) -> str:
     parts = []
     for cluster in clusters:
-        where = ", ".join(_doc_label(docs_by_id.get(f.doc_id)) for f in cluster)
-        parts.append(f"'{cluster[0].value_raw.strip()}' on {where}")
+        where = ", ".join(dict.fromkeys(_doc_label(docs_by_id.get(f.doc_id)) for f in cluster))
+        parts.append(f"'{display(cluster[0].value_raw)}' on {where}")
     return "; ".join(parts)
 
 
@@ -204,7 +205,7 @@ def _address_findings(case_id, docs, by_id) -> list[Finding]:
             title = "Subtle address variant across documents" if subtle else "Different addresses across documents"
             out.append(_conflict(
                 case_id, "address_variant", title,
-                f"Address conflict: {_sides_text([a, b], by_id)}. {cmp.reason.capitalize()}. "
+                f"Address conflict: {_sides_text([a, b], by_id, clean_address)}. {cmp.reason.capitalize()}. "
                 f"Abbreviations and formatting were normalized first, so this isn't just 'Rd.' vs 'Road'."
                 + (f" {note}" if note else ""),
                 a, b, by_id, Severity.medium if factor > 0.6 else Severity.low, 0.85 * factor,
@@ -290,6 +291,27 @@ def _credit_evidence(credit: _Credit, label: str) -> EvidenceItem:
     )
 
 
+def _lone_matching_credit(case_id, net_f, net, match, salary_credits, by_id) -> Finding | None:
+    """Net pay reconciles with one credit, while every other month agrees on a different amount."""
+    same = [c for c in salary_credits if abs(c.amount - net) <= MONEY_TOLERANCE]
+    others = [c for c in salary_credits if abs(c.amount - net) > MONEY_TOLERANCE]
+    if len(same) != 1 or len(others) < 2:
+        return None
+    usual = others[0].amount
+    if any(abs(c.amount - usual) > MONEY_TOLERANCE for c in others) or abs(usual - net) / usual < Decimal("0.05"):
+        return None
+    finding = _conflict(
+        case_id, "salary_vs_bank_credit", "Net pay matches only one of the monthly salary credits",
+        f"Net pay {fmt_money(net)} matches only the credit in row {match.row}. The other {len(others)} salary "
+        f"credits on the statement are all {fmt_money(usual)}, so this one month stands apart.",
+        [net_f], [], by_id, Severity.medium, 0.75, primary=net_f,
+        extra=[_credit_evidence(match, "The one matching credit")]
+        + [_credit_evidence(c, f"Usual salary credit, row {c.row}") for c in others[:3]],
+    )
+    finding.related_doc_ids = list(dict.fromkeys(finding.related_doc_ids + [match.doc.id]))
+    return finding
+
+
 def _salary_vs_bank(case_id, docs, by_id) -> list[Finding]:
     slips = [d for d in docs if d.doc_type == DocType.salary_slip]
     statements = [d for d in docs if d.doc_type == DocType.bank_statement]
@@ -311,7 +333,7 @@ def _salary_vs_bank(case_id, docs, by_id) -> list[Finding]:
             return bool(employer) and all(tok in c.description.upper() for tok in employer.split()[:1])
 
         period_f = next((f for f in slip.fields if f.name == "pay_period"), None)
-        period = parse_period(_value(period_f)) if period_f else None
+        period = (parse_period(period_f.value_raw) or parse_period(_value(period_f))) if period_f else None
         salary_credits = [c for c in credits_all if looks_like_salary(c)]
         in_window = salary_credits
         if period and salary_credits:
@@ -338,6 +360,9 @@ def _salary_vs_bank(case_id, docs, by_id) -> list[Finding]:
         closest = min(in_window, key=lambda c: abs(c.amount - net))
         diff = abs(closest.amount - net)
         if diff <= MONEY_TOLERANCE:
+            outlier = _lone_matching_credit(case_id, net_f, net, closest, salary_credits, by_id)
+            if outlier:
+                out.append(outlier)
             continue
         factor, note = ocr_adjustment([net_f], str(net), str(closest.amount))
         if closest.cell.confidence < 0.55:
