@@ -670,7 +670,7 @@ def detect_font_consistency(
         findings.append(
             make_finding(
                 doc, "visual.font_consistency", "Typography differs from other text on the page",
-                f"'{text}' doesn't match comparable text or any style used elsewhere on this page. It differs in: {', '.join(features)}. "
+                f"'{text}' doesn't match comparable text or any style used elsewhere on this page. It differs in: {', '.join(k.replace('_', ' ') for k in features)}. "
                 "A value typed in later often uses a different font, weight or ink.",
                 confidence=conf, page=ctx.index, bbox=box,
                 evidence=[

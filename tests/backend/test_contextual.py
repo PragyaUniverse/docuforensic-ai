@@ -1,5 +1,7 @@
 from datetime import date
 
+import pytest
+
 from backend.contextual import repair_transaction_row, rows_not_extracted, verify_within_document
 from models.schemas import DocType, FindingStatus, Severity, TextSource
 from tests.backend.helpers import make_doc, txn_table
@@ -30,10 +32,29 @@ def test_altered_net_pay_is_an_inconsistency_with_all_fields_linked():
     assert len(f.related_field_ids) == 3 and f.bbox is not None
 
 
-def test_truncated_ocr_value_does_not_raise_an_arithmetic_conflict():
-    doc = make_doc(DocType.salary_slip, {"basic_pay": "44,000.00", "hra": "17,600.00", "other_allowances": "26,4",
+@pytest.mark.parametrize("value", ["26,4", "12,"])
+def test_truncated_reading_is_an_observation_that_names_ocr_not_a_conflict(value):
+    doc = make_doc(DocType.salary_slip, {"basic_pay": "44,000.00", "hra": "17,600.00", "other_allowances": value,
                                          "gross_pay": "88,000.00"}, source=TextSource.ocr_rapid)
-    assert "context.arithmetic_salary" not in detectors(verify_within_document(doc))
+    found = [f for f in verify_within_document(doc) if f.detector == "context.arithmetic_salary"]
+    assert len(found) == 1
+    assert found[0].status == FindingStatus.OBSERVATION and found[0].severity == Severity.low
+    assert "OCR misread" in found[0].explanation and value in found[0].explanation
+
+
+def test_implausibly_small_operand_is_discounted_and_named():
+    doc = make_doc(DocType.salary_slip, {"basic_pay": "44,000.00", "hra": "12.00", "other_allowances": "26,400.00",
+                                         "gross_pay": "88,000.00"}, source=TextSource.ocr_rapid, confidence=0.97)
+    found = next(f for f in verify_within_document(doc) if f.detector == "context.arithmetic_salary")
+    assert found.status == FindingStatus.INCONSISTENCY and found.confidence < 0.5 and found.severity == Severity.low
+    assert "OCR misread is a possible cause" in found.explanation and "HRA" in found.explanation
+
+
+def test_a_clean_text_layer_sum_conflict_keeps_full_weight():
+    doc = make_doc(DocType.salary_slip, {"basic_pay": "44,000.00", "hra": "17,600.00", "other_allowances": "26,400.00",
+                                         "gross_pay": "98,000.00"})
+    found = next(f for f in verify_within_document(doc) if f.detector == "context.arithmetic_salary")
+    assert found.confidence > 0.85 and "OCR" not in found.explanation
 
 
 def test_low_ocr_confidence_lowers_confidence_and_says_so():

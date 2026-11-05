@@ -323,11 +323,35 @@ def edit_distance(a: str, b: str) -> int:
     return Levenshtein.distance(a, b)
 
 
-def ocr_adjustment(fields: list[Field], a: str | None = None, b: str | None = None) -> tuple[float, str | None]:
+def _second_engine_agrees(fields: list[Field], docs: dict) -> bool | None:
+    """Re-read OCR values with an independent engine. True: every value read the same. False: at
+    least one read differently. None: couldn't be checked."""
+    from pipeline.ocr import reread_region
+
+    def squish(text: str) -> str:
+        return re.sub(r"[^0-9a-z]", "", text.casefold())
+
+    results = []
+    for f in fields:
+        doc = docs.get(f.doc_id)
+        if doc is None or f.source in (TextSource.text_layer, TextSource.llm):
+            continue
+        reading = reread_region(doc, f.page, f.bbox)
+        if reading is None:
+            continue
+        results.append(squish(f.value_raw) in squish(reading))
+    if not results:
+        return None
+    return all(results)
+
+
+def ocr_adjustment(fields: list[Field], a: str | None = None, b: str | None = None,
+                   docs: dict | None = None) -> tuple[float, str | None]:
     """How much to discount a conflict because the values came from OCR.
 
     Returns (factor for confidence, note for the explanation). Text-layer values can't be misread,
-    but they aren't assumed to be true either.
+    but they aren't assumed to be true either. With `docs`, values that differ only by confusable
+    characters are re-read by a second OCR engine rather than simply being discounted.
     """
     ocr_fields = [f for f in fields if f.source not in (TextSource.text_layer, TextSource.llm)]
     if not ocr_fields:
@@ -337,6 +361,15 @@ def ocr_adjustment(fields: list[Field], a: str | None = None, b: str | None = No
         return 0.5, (f"OCR confidence on an involved field is low ({low:.2f}), so this could be a "
                      "reading error. Check the source image first.")
     if a is not None and b is not None and confusable(a, b):
+        agrees = _second_engine_agrees(fields, docs) if docs else None
+        if agrees is True:
+            return 0.9, ("The values differ only by characters OCR commonly confuses, but a second, "
+                         "independent OCR engine read the same values, so a reading error is less "
+                         "likely. It is still worth checking the source image.")
+        if agrees is False:
+            return 0.5, ("The values differ only by characters OCR commonly confuses, and a second OCR "
+                         "engine read one of them differently, so this may well be a reading error. "
+                         "Check the source image first.")
         return 0.6, ("The two values differ only by characters OCR commonly confuses, so this could "
                      "be a reading error. Check the source image first.")
     return 0.75 + 0.25 * low, None

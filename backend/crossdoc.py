@@ -158,7 +158,7 @@ def _dob_findings(case_id, docs, by_id) -> list[Finding]:
         for b in clusters[i + 1:]:
             va, vb = _value(a[0]), _value(b[0])
             da, db = parse_date(va) or parse_date(a[0].value_raw), parse_date(vb) or parse_date(b[0].value_raw)
-            factor, note = ocr_adjustment(a + b, a[0].value_raw, b[0].value_raw)
+            factor, note = ocr_adjustment(a + b, a[0].value_raw, b[0].value_raw, docs=by_id)
             extra = ""
             if da and db and da.day == db.month and da.month == db.day:
                 extra = " The day and month are swapped, which can come from a date-format mix-up."
@@ -178,7 +178,7 @@ def _name_findings(case_id, docs, by_id) -> list[Finding]:
     for i, a in enumerate(clusters):
         for b in clusters[i + 1:]:
             cmp = compare_names(a[0].value_raw, b[0].value_raw)
-            factor, note = ocr_adjustment(a + b, a[0].value_raw, b[0].value_raw)
+            factor, note = ocr_adjustment(a + b, a[0].value_raw, b[0].value_raw, docs=by_id)
             close = cmp.score >= 80
             title = "Name spelling varies across documents" if close else "Different names across documents"
             detail = "The names are close, but differ beyond an initial or a dropped middle name." if close \
@@ -240,7 +240,7 @@ def _id_findings(case_id, docs, by_id) -> list[Finding]:
         clusters = _cluster(spec, docs)
         for i, a in enumerate(clusters):
             for b in clusters[i + 1:]:
-                factor, note = ocr_adjustment(a + b, norm_id(a[0].value_raw), norm_id(b[0].value_raw))
+                factor, note = ocr_adjustment(a + b, norm_id(a[0].value_raw), norm_id(b[0].value_raw), docs=by_id)
                 out.append(_conflict(
                     case_id, dtype, f"{label} differs across documents",
                     f"{label} conflict: {_sides_text([a, b], by_id)}." + (f" {note}" if note else ""),
@@ -437,7 +437,7 @@ def _employment_dates(case_id, docs, by_id) -> list[Finding]:
     for i, (fa, da) in enumerate(parsed):
         for fb, db in parsed[i + 1:]:
             if da != db:
-                factor, note = ocr_adjustment([fa, fb], fa.value_raw, fb.value_raw)
+                factor, note = ocr_adjustment([fa, fb], fa.value_raw, fb.value_raw, docs=by_id)
                 out.append(_conflict(
                     case_id, "employment_date_conflict", "Joining date differs across documents",
                     f"Date of joining is {da.isoformat()} on {_doc_label(by_id.get(fa.doc_id))} and "
@@ -496,6 +496,33 @@ def correlate(docs: list[Document], entities: list[Entity], case_id: str) -> lis
 
 
 # ---- evidence graph
+def _conflict_doc_pair(finding: Finding, linked: list[str], entity_docs: dict[str, list[str]],
+                       by_doc: dict[str, Document]) -> tuple[str, str] | None:
+    """The one document pair that shows a finding: its highlighted side and the best opposite side.
+
+    One red edge per finding. If one document disagrees with five others, that's one discrepancy
+    and not five. The entity nodes still show every document on each side.
+    """
+    primary = finding.doc_id
+
+    def authority(doc_id: str) -> int:
+        doc = by_doc.get(doc_id)
+        return _AUTHORITY.get(doc.doc_type, 0) if doc else -1
+
+    opposite: list[str] = []
+    if len(linked) >= 2:
+        side_of_primary = [e for e in linked if primary in entity_docs.get(e, [])]
+        for ent in linked:
+            if ent not in side_of_primary:
+                opposite += entity_docs.get(ent, [])
+    if not opposite:
+        opposite = list(finding.related_doc_ids)
+    opposite = [d for d in dict.fromkeys(opposite) if d != primary]
+    if primary is None or not opposite:
+        return None
+    return primary, max(opposite, key=authority)
+
+
 def build_graph(case_id: str, docs: list[Document], entities: list[Entity],
                 findings: list[Finding]) -> EvidenceGraph:
     nodes: list[GraphNode] = []
@@ -532,6 +559,7 @@ def build_graph(case_id: str, docs: list[Document], entities: list[Entity],
         if a in node_ids and b in node_ids:
             edge(a, b, "agrees", conflict=False, label=", ".join(sorted(set(kinds))))
     entity_docs = {e.id: list(dict.fromkeys(m.doc_id for m in e.mentions)) for e in entities}
+    by_doc = {d.id: d for d in docs}
 
     for finding in findings:
         if finding.category != FindingCategory.cross_document and not finding.related_field_ids and finding.doc_id is None:
@@ -552,23 +580,9 @@ def build_graph(case_id: str, docs: list[Document], entities: list[Entity],
                 for i, a in enumerate(linked):
                     for b in linked[i + 1:]:
                         edge(a, b, "conflicts", conflict=True, label=finding.discrepancy_type, finding_id=finding.id)
-            pairs: set[tuple[str, str]] = set()
-            if len(linked) >= 2:
-                # Only documents on opposite sides of the disagreement get a red edge.
-                for i, ea in enumerate(linked):
-                    for eb in linked[i + 1:]:
-                        for a in entity_docs.get(ea, []):
-                            for b in entity_docs.get(eb, []):
-                                if a != b:
-                                    pairs.add(tuple(sorted((a, b))))
-            else:
-                docs_in = [d for d in finding.related_doc_ids if d in node_ids]
-                for i, a in enumerate(docs_in):
-                    for b in docs_in[i + 1:]:
-                        pairs.add(tuple(sorted((a, b))))
-            for a, b in sorted(pairs):
-                if a in node_ids and b in node_ids:
-                    edge(a, b, "conflicts", conflict=True, label=finding.discrepancy_type, finding_id=finding.id)
+            pair = _conflict_doc_pair(finding, linked, entity_docs, by_doc)
+            if pair and pair[0] in node_ids and pair[1] in node_ids:
+                edge(pair[0], pair[1], "conflicts", conflict=True, label=finding.discrepancy_type, finding_id=finding.id)
         for other in finding.related_finding_ids:
             if finding.id < other:  # one edge per pair
                 edges.append(GraphEdge(id=f"e{len(edges) + 1}", source=fid, target=f"f_{other}", kind="supports",

@@ -213,8 +213,28 @@ def _p(value: Any, style: str = "body") -> Paragraph:
     return Paragraph(_t(value), S[style])
 
 
+_ACRONYMS = {"ifsc": "IFSC", "hra": "HRA", "id": "ID", "pan": "PAN", "pdf": "PDF", "png": "PNG", "jpg": "JPG", "dob": "DOB"}
+
+
 def _human(value: str) -> str:
-    return value.replace("_", " ").strip().capitalize()
+    words = value.replace("_", " ").strip().split()
+    out = [_ACRONYMS.get(w.lower(), w) for w in words]
+    if out and out[0] == words[0]:
+        out[0] = out[0].capitalize()
+    return " ".join(out)
+
+
+_LEAD_INS = ("Why it matters:", "Corroboration:", "Cached AI reasoning", "AI reasoning")
+
+
+def _rich(text: str) -> Paragraph:
+    """Finding text with its parts on separate lines, so measurement and interpretation stay apart."""
+    markup = _t(text)
+    for lead in _LEAD_INS:
+        if lead == "AI reasoning" and "Cached AI reasoning" in markup:
+            continue
+        markup = markup.replace(f" {lead}", f"<br/><b>{lead}</b>")
+    return Paragraph(markup, S["body"])
 
 
 def _pill(text: str, fg, bg, width: float | None = None) -> Table:
@@ -277,23 +297,27 @@ def _crop_image(doc: Document, page: int, bbox: BBox, status: str, max_w: float,
 def _evidence_strip(finding: Finding, docs: dict[str, Document]) -> Table | None:
     """Source regions side by side: both sides of a cross-document conflict."""
     regions: list[tuple[Document, int, BBox, str]] = []
-    seen: set[tuple] = set()
+
+    def overlaps_existing(doc_id, page, bbox) -> bool:
+        for doc, other_page, other, _ in regions:
+            if doc.id == doc_id and other_page == page:
+                ix = min(bbox.x1, other.x1) - max(bbox.x0, other.x0)
+                iy = min(bbox.y1, other.y1) - max(bbox.y0, other.y0)
+                if ix > 0 and iy > 0 and ix * iy / max(min(bbox.area, other.area), 1.0) > 0.3:
+                    return True
+        return False
 
     def add(doc_id, page, bbox, label):
         doc = docs.get(doc_id or "")
-        if not doc or bbox is None or page is None:
-            return
-        key = (doc_id, page, int(bbox.x0), int(bbox.y0))
-        if key not in seen:
-            seen.add(key)
+        if doc and bbox is not None and page is not None and not overlaps_existing(doc_id, page, bbox):
             regions.append((doc, page, bbox, label))
 
+    add(finding.doc_id, finding.page, finding.bbox, "Highlighted region")
     for item in finding.evidence:
         if item.kind in (EvidenceKind.field_ref, EvidenceKind.raw_value):
             value = item.data.get("value") or item.data.get("amount") or item.data.get("stated")
-            add(item.doc_id, item.page, item.bbox, str(value) if value else item.label)
-    if not regions:
-        add(finding.doc_id, finding.page, finding.bbox, "Highlighted region")
+            if value:
+                add(item.doc_id, item.page, item.bbox, str(value))
     regions = regions[:3]
     if not regions:
         return None
@@ -335,7 +359,7 @@ def _finding_block(finding: Finding, docs: dict[str, Document]) -> list[Any]:
     head.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
                               ("RIGHTPADDING", (0, 0), (-1, -1), 4), ("TOPPADDING", (0, 0), (-1, -1), 0),
                               ("BOTTOMPADDING", (0, 0), (-1, -1), 2)]))
-    parts: list[Any] = [head, _p(meta, "small"), Spacer(1, 3), _p(finding.explanation)]
+    parts: list[Any] = [head, _p(meta, "small"), Spacer(1, 3), _rich(finding.explanation)]
     strip = _evidence_strip(finding, docs)
     if strip is not None:
         parts += [Spacer(1, 4), strip]
@@ -354,6 +378,25 @@ def _finding_block(finding: Finding, docs: dict[str, Document]) -> list[Any]:
         ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
     ]))
     return [box, Spacer(1, 10)]
+
+
+def _is_minor(finding: Finding) -> bool:
+    return finding.status == FindingStatus.OBSERVATION and _RANK[finding.severity] <= 1
+
+
+def _minor_table(findings: list[Finding], docs: dict[str, Document]) -> list[Any]:
+    """Low-weight observations in compact form. All are listed, with their locations."""
+    rows = [[_p(h, "th") for h in ("Observation", "Where", "Conf.", "Measured")]]
+    for f in findings:
+        doc = docs.get(f.doc_id or "")
+        where = doc.filename if doc else "Case level"
+        if f.page is not None:
+            where += f", p.{f.page + 1}"
+        if f.bbox:
+            where += f" ({f.bbox.x0:.0f},{f.bbox.y0:.0f})"
+        measured = f.explanation.split(" Why it matters:")[0]
+        rows.append([_p(f.title, "cell"), _p(where, "cell"), _p(f"{f.confidence:.2f}", "cell"), _p(measured[:200], "cell")])
+    return [_grid(rows, [38 * mm, 40 * mm, 11 * mm, CONTENT_W - 89 * mm]), Spacer(1, 8)]
 
 
 def _page_thumbnails(findings: list[Finding], docs: dict[str, Document]) -> list[Any]:
@@ -459,10 +502,10 @@ def render_pdf(dossier: Dossier, out: Path) -> Path:
     for o in dossier.overview:
         status = _human(o.status.value) + (f": {o.status_message}" if o.status_message else "")
         rows.append([
-            _p(o.filename, "cellb"), _p(f"{o.doc_id}<br/>"[:0] + o.doc_id + " " + o.sha256[:16] + "...", "cell"),
+            _p(o.filename, "cellb"), _p(o.doc_id + " " + o.sha256[:16] + "...", "cell"),
             _p(f"{_human(o.doc_type.value)} ({o.doc_type_confidence:.2f})", "cell"), _p(_human(o.format.value), "cell"),
             _p(o.pages, "cell"), _p(status, "cell")])
-    story += [_grid(rows, [36 * mm, 38 * mm, 30 * mm, 19 * mm, 10 * mm, CONTENT_W - 133 * mm]), Spacer(1, 12)]
+    story += [_grid(rows, [36 * mm, 38 * mm, 30 * mm, 19 * mm, 12 * mm, CONTENT_W - 135 * mm]), Spacer(1, 12)]
 
     # 7.2
     story.append(_p("7.2 Extracted Information", "h1"))
@@ -488,14 +531,14 @@ def render_pdf(dossier: Dossier, out: Path) -> Path:
             story += [Spacer(1, 3), _p(f"Structure: sections {names}; tables {table_text}.", "small")]
 
     # 7.3
-    story += [Spacer(1, 12), CondPageBreak(60 * mm), _p("7.3 Contextual Analysis", "h1")]
+    story += [Spacer(1, 12), CondPageBreak(110 * mm), _p("7.3 Contextual Analysis", "h1")]
     story.append(_p("Cross-document discrepancies", "h2"))
     if dossier.cross_document_findings:
         for f in dossier.cross_document_findings:
             story += _finding_block(f, docs)
     else:
         story.append(_p("No conflicts were found between the documents that could be compared.", "note"))
-    story.append(CondPageBreak(40 * mm))
+    story.append(CondPageBreak(80 * mm))
     story.append(_p("Field-level inconsistencies within a document", "h2"))
     contextual = [f for f in dossier.contextual_findings if f.detector not in ("context.missing_field", "context.duplicate_field")]
     if contextual:
@@ -517,28 +560,35 @@ def render_pdf(dossier: Dossier, out: Path) -> Path:
                  else _p("None identified.", "note"))
 
     # 7.4
-    story += [Spacer(1, 12), CondPageBreak(60 * mm), _p("7.4 Visual Forensic Findings", "h1")]
+    story += [Spacer(1, 12), CondPageBreak(90 * mm), _p("7.4 Visual Forensic Findings", "h1")]
     groups = [
         ("Suspicious regions and potential alterations", ("visual.ela", "visual.noise", "visual.overwrite", "visual.copy_move", "fusion")),
         ("Font, alignment and structural inconsistencies", ("visual.font_consistency", "visual.alignment", "pdf.")),
         ("Image manipulation observations", ("visual.photo_insert", "metadata.")),
         ("Signature-related observations", ("visual.signature",)),
     ]
-    remaining = list(dossier.visual_findings)
-    if not remaining:
+    major = [f for f in dossier.visual_findings if not _is_minor(f)]
+    minor = [f for f in dossier.visual_findings if _is_minor(f)]
+    remaining = list(major)
+    if not dossier.visual_findings:
         story.append(_p("The forensic detectors flagged no regions. This doesn't establish authenticity.", "note"))
     for title, prefixes in groups:
         chosen = [f for f in remaining if f.detector.startswith(prefixes)]
         if chosen:
-            story.append(CondPageBreak(40 * mm))
+            story.append(CondPageBreak(80 * mm))
             story.append(_p(title, "h2"))
             for f in chosen:
                 story += _finding_block(f, docs)
             remaining = [f for f in remaining if f not in chosen]
     if remaining:
-        story.append(_p("Other forensic signals", "h2"))
+        story += [CondPageBreak(80 * mm), _p("Other forensic signals", "h2")]
         for f in remaining:
             story += _finding_block(f, docs)
+    if minor:
+        story += [CondPageBreak(40 * mm), _p("Low-weight observations", "h2"),
+                  _p("Measured facts with weak signals. Each is expected to occur on some genuine documents, and "
+                     "alone none of them is a reason for concern.", "note"), Spacer(1, 3)]
+        story += _minor_table(_sort(minor), docs)
 
     # 7.5
     story += [PageBreak(), _p("7.5 Evidence and Traceability", "h1")]

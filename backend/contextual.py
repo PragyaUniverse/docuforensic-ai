@@ -10,7 +10,7 @@ from datetime import date, timedelta
 from decimal import Decimal
 
 from backend.normalize import (
-    IFSC_RE, MONEY_TOLERANCE, PAN_RE, date_of, fmt_money, money_of, money_strict, norm_id,
+    IFSC_RE, MONEY_TOLERANCE, PAN_RE, date_of, fmt_money, money_of, money_well_formed, norm_id,
     ocr_adjustment, parse_money, parse_period, verhoeff_valid,
 )
 from config.settings import settings
@@ -64,40 +64,104 @@ def _downgrade(sev: Severity, factor: float) -> Severity:
 
 
 # ---- salary arithmetic
+SUSPECT_OCR_CONFIDENCE = 0.85
+LABELS = {"basic_pay": "basic pay", "hra": "HRA", "other_allowances": "other allowances", "gross_pay": "gross pay",
+          "total_deductions": "total deductions", "net_pay": "net pay"}
+
+
+def _label(f: Field) -> str:
+    return LABELS.get(f.name, f.name.replace("_", " "))
+
+
+def _unreadable(fields: list[Field]) -> list[Field]:
+    return [f for f in fields if not money_well_formed(f.value_raw)]
+
+
+def _suspect_operands(fields: list[Field]) -> list[Field]:
+    """Complete-looking amounts that could still be misread.
+
+    An OCR reading with low confidence, an amount missing the decimals its neighbours print, or one
+    far smaller than the others (under 1% of the largest), which suggests lost digits.
+    """
+    values = [(f, money_of(f)) for f in fields]
+    largest = max((v for _, v in values if v is not None), default=Decimal(0))
+    decimal_style = sum("." in f.value_raw for f in fields) >= max(2, len(fields) - 1)
+    suspects = []
+    for f, value in values:
+        from_ocr = f.source not in (TextSource.text_layer, TextSource.llm)
+        tiny = value is not None and value > 0 and largest > 0 and value < largest / 100
+        style_break = decimal_style and "." not in f.value_raw
+        if (from_ocr and f.confidence < SUSPECT_OCR_CONFIDENCE) or tiny or (from_ocr and style_break):
+            suspects.append(f)
+    return suspects
+
+
+def _cannot_verify(doc: Document, what: str, involved: list[Field], unreadable: list[Field]) -> Finding:
+    shown = ", ".join(f"{_label(f)} read as '{f.value_raw}'" for f in unreadable)
+    return _finding(
+        doc, "context.arithmetic_salary", f"{what} could not be checked: an amount looks misread",
+        f"This check needs complete amounts, but {shown}. That looks like an OCR misread or a reading cut short, "
+        "so no conflict is claimed. Read the value from the image.",
+        unreadable[0], involved, status=FindingStatus.OBSERVATION, severity=Severity.low, confidence=0.7,
+    )
+
+
+def _sum_conflict(doc: Document, title: str, facts: str, anchor: Field, involved: list[Field], expected: Decimal,
+                  stated: Decimal, base: float, severity: Severity,
+                  extra: list[EvidenceItem] | None = None) -> Finding:
+    factor, note = ocr_adjustment(involved, str(expected), str(stated))
+    suspects = _suspect_operands(involved)
+    if suspects:
+        factor = min(factor, 0.5)
+        names = ", ".join(f"{_label(f)} ('{f.value_raw}', confidence {f.confidence:.2f})" for f in suspects)
+        note = f"An OCR misread is a possible cause: check {names} against the image first."
+    return _finding(
+        doc, "context.arithmetic_salary", title, facts + (f" {note}" if note else ""), anchor, involved,
+        severity=_downgrade(severity, factor), confidence=base * factor, extra=extra,
+    )
+
+
 def _check_salary(doc: Document, fm: dict[str, Field]) -> list[Finding]:
     out: list[Finding] = []
     net, gross, ded = fm.get("net_pay"), fm.get("gross_pay"), fm.get("total_deductions")
-    v_net, v_gross, v_ded = money_strict(net), money_strict(gross), money_strict(ded)
-
-    if v_net is not None and v_gross is not None and v_ded is not None:
-        expected = v_gross - v_ded
-        if abs(expected - v_net) > MONEY_TOLERANCE:
-            involved = [gross, ded, net]  # type: ignore[list-item]
-            factor, note = ocr_adjustment(involved, str(expected), str(v_net))
-            out.append(_finding(
-                doc, "context.arithmetic_salary", "Net pay does not equal gross pay minus deductions",
-                f"Gross pay {fmt_money(v_gross)} minus total deductions {fmt_money(v_ded)} gives "
-                f"{fmt_money(expected)}, but the document states net pay {fmt_money(v_net)} (difference "
-                f"{fmt_money(abs(expected - v_net))})." + (f" {note}" if note else ""),
-                net, involved, severity=_downgrade(Severity.high, factor), confidence=0.95 * factor,
-                extra=[EvidenceItem(kind=EvidenceKind.raw_value, label="Recomputed net pay", doc_id=doc.id,
-                                    data={"expected": str(expected), "stated": str(v_net),
-                                          "difference": str(abs(expected - v_net))})],
-            ))
+    if net is not None and gross is not None and ded is not None:
+        involved = [gross, ded, net]
+        unreadable = _unreadable(involved)
+        if unreadable:
+            out.append(_cannot_verify(doc, "Net pay", involved, unreadable))
+        else:
+            v_net, v_gross, v_ded = money_of(net), money_of(gross), money_of(ded)
+            if v_net is not None and v_gross is not None and v_ded is not None:
+                expected = v_gross - v_ded
+                if abs(expected - v_net) > MONEY_TOLERANCE:
+                    out.append(_sum_conflict(
+                        doc, "Net pay does not equal gross pay minus deductions",
+                        f"Gross pay {fmt_money(v_gross)} minus total deductions {fmt_money(v_ded)} gives "
+                        f"{fmt_money(expected)}, but the document states net pay {fmt_money(v_net)} (difference "
+                        f"{fmt_money(abs(expected - v_net))}).",
+                        net, involved, expected, v_net, 0.95, Severity.high,
+                        extra=[EvidenceItem(kind=EvidenceKind.raw_value, label="Recomputed net pay", doc_id=doc.id,
+                                            data={"expected": str(expected), "stated": str(v_net),
+                                                  "difference": str(abs(expected - v_net))})],
+                    ))
 
     components = [fm[n] for n in ("basic_pay", "hra", "other_allowances") if n in fm]
-    values = [money_strict(f) for f in components]
-    if gross is not None and v_gross is not None and len(components) >= 2 and all(v is not None for v in values):
-        total = sum(values, Decimal(0))  # type: ignore[arg-type]
-        if "other_allowances" in fm and abs(total - v_gross) > MONEY_TOLERANCE:
-            involved = components + [gross]
-            factor, note = ocr_adjustment(involved, str(total), str(v_gross))
-            out.append(_finding(
-                doc, "context.arithmetic_salary", "Gross pay does not equal the sum of its components",
-                f"Listed earnings sum to {fmt_money(total)}, but gross pay is stated as "
-                f"{fmt_money(v_gross)}." + (f" {note}" if note else ""),
-                gross, involved, severity=_downgrade(Severity.medium, factor), confidence=0.9 * factor,
-            ))
+    if gross is not None and len(components) >= 2 and "other_allowances" in fm:
+        involved = components + [gross]
+        unreadable = _unreadable(involved)
+        if unreadable:
+            out.append(_cannot_verify(doc, "Gross pay", involved, unreadable))
+        else:
+            values = [money_of(f) for f in components]
+            v_gross = money_of(gross)
+            if v_gross is not None and all(v is not None for v in values):
+                total = sum(values, Decimal(0))  # type: ignore[arg-type]
+                if abs(total - v_gross) > MONEY_TOLERANCE:
+                    out.append(_sum_conflict(
+                        doc, "Gross pay does not equal the sum of its components",
+                        f"Listed earnings sum to {fmt_money(total)}, but gross pay is stated as {fmt_money(v_gross)}.",
+                        gross, involved, total, v_gross, 0.9, Severity.medium,
+                    ))
     return out
 
 
@@ -216,7 +280,8 @@ def _check_balance(doc: Document, fm: dict[str, Field]) -> list[Finding]:
             doc, "context.arithmetic_balance", "Running balance breaks in the transaction table",
             f"Applying each debit and credit to the previous balance doesn't reproduce the stated balance "
             f"in {len(breaks)} row(s): {rows_text}.{note}",
-            None, [], severity=_downgrade(Severity.high, factor), confidence=0.93 * factor,
+            None, [], severity=Severity.low if missing_rows else _downgrade(Severity.high, factor),
+            confidence=0.93 * factor,
             bbox=first["cell"].bbox or table.bbox, page=table.page, extra=evidence,
         ))
 
@@ -231,7 +296,7 @@ def _check_balance(doc: Document, fm: dict[str, Field]) -> list[Finding]:
                 f"The last transaction leaves a balance of {fmt_money(last)}, but the stated closing balance "
                 f"is {fmt_money(v_closing)}." + (f" {note}" if note else "") + coverage_note,
                 closing, [closing],  # type: ignore[list-item]
-                severity=_downgrade(Severity.medium, factor * coverage_factor),
+                severity=Severity.low if missing_rows else _downgrade(Severity.medium, factor),
                 confidence=0.9 * factor * coverage_factor,
             ))
     return out
@@ -386,6 +451,11 @@ def _check_missing(doc: Document) -> list[Finding]:
     )]
 
 
+def _comparable(f: Field) -> str:
+    money = money_of(f) if f.value_type.value in ("money", "number") else None
+    return str(money) if money is not None else (f.value_norm or f.value_raw).strip().casefold()
+
+
 def _check_duplicates(doc: Document) -> list[Finding]:
     groups: dict[str, list[Field]] = {}
     for f in doc.fields:
@@ -394,7 +464,7 @@ def _check_duplicates(doc: Document) -> list[Finding]:
     for name, items in groups.items():
         if len(items) < 2:
             continue
-        values = {(f.value_norm or f.value_raw).strip().casefold() for f in items}
+        values = {_comparable(f) for f in items}
         label = name.replace("_", " ")
         if len(values) > 1:
             factor, note = ocr_adjustment(items, items[0].value_raw, items[1].value_raw)

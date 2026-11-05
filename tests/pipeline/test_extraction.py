@@ -180,3 +180,28 @@ def test_dataset_field_accuracy(case, dataset, prepare):
 
 
 __all__ = ["norm_address"]
+
+
+def test_digit_misread_in_month_is_repaired():
+    from pipeline.ocr import repair_text
+
+    assert repair_text("03-Ju1-2026") == "03-Jul-2026"
+    assert repair_text("12-0ct-2026") == "12-Oct-2026"
+    assert repair_text("07 Au9 2026") == "07 Aug 2026"
+    # Not a date, so left as read.
+    assert repair_text("Ju1-2026") == "Ju1-2026"
+    assert repair_text("A1B-99-X") == "A1B-99-X"
+
+
+def test_amount_split_by_a_stray_space_is_rejoined():
+    from models.schemas import BBox, TextSource, Word
+    from pipeline.ocr import _join_split_amounts
+
+    def word(text, x0, x1):
+        return Word(text=text, confidence=0.9, bbox=BBox(x0=x0, y0=0, x1=x1, y1=20), page=0, source=TextSource.ocr_rapid)
+
+    joined = _join_split_amounts([word("2,77", 0, 40), word("1.99", 44, 80)], 20)
+    assert [w.text for w in joined] == ["2,771.99"]
+    # Two separate amounts in neighbouring columns stay separate.
+    apart = _join_split_amounts([word("1,310.21", 0, 80), word("5.00", 84, 120)], 20)
+    assert [w.text for w in apart] == ["1,310.21", "5.00"]

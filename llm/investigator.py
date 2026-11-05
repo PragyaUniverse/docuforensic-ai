@@ -382,11 +382,21 @@ def _settings_demo() -> bool:
     return settings.demo_cache
 
 
+# A small local model sometimes lists tampering itself as an innocent explanation. Those are dropped,
+# since offering them under "benign alternatives" would misinform the reviewer.
+NOT_BENIGN_RE = re.compile(
+    r"(?i)tamper|forg(e|ed|ery)\b|manipulat|deliberate|intentional|on purpose|fabricat|falsif|fake|"
+    r"patch|overwrit|paste|\bedit(ed|ing)?\b|\balter(ed|ation|ing)?\b|conceal|mislead|deceiv"
+)
+MAX_BENIGN = 7
+
+
 def _apply_answer(finding: Finding, result) -> None:
     answer: InvestigationAnswer = result.data
     label = "Cached AI reasoning" if result.mode == "demo_cache" else "AI reasoning"
     finding.explanation = f"{finding.explanation.rstrip()} {label} ({result.provider}/{result.model}): {answer.reasoning.strip()}"
-    finding.benign_alternatives = _merge(finding.benign_alternatives, answer.benign_alternatives[:4])
+    innocent = [b for b in answer.benign_alternatives if not NOT_BENIGN_RE.search(b)]
+    finding.benign_alternatives = _merge(finding.benign_alternatives, innocent[:2])[:MAX_BENIGN]
     verify = [f"To confirm: {v}" for v in answer.what_would_confirm[:3]] + \
              [f"To refute: {v}" for v in answer.what_would_refute[:3]]
     finding.recommended_verification = _merge(finding.recommended_verification, verify)

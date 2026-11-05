@@ -21,7 +21,8 @@ from config.settings import settings
 from llm import investigator
 from llm.client import get_client
 from models.schemas import (
-    BBox, Case, CaseStatus, Document, EvidenceItem, EvidenceKind, Finding, FindingStatus, PipelineStage, ProcessingStatus, RiskLevel, Severity, StageProgress, utcnow,
+    BBox, Case, CaseStatus, Document, EvidenceItem, EvidenceKind, Finding, FindingStatus, PipelineStage, ProcessingStatus, RiskLevel, Severity, StageProgress, TextSource,
+    utcnow,
 )
 
 log = logging.getLogger("docuforensic.orchestrator")

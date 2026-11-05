@@ -134,6 +134,33 @@ def test_conflict_splits_entities_and_graph_has_red_edges():
     assert not any(docs[3].id in (e.source, e.target) for e in red)
 
 
+def test_one_disagreeing_document_is_one_red_document_edge():
+    docs = base_docs(slip__person_name="Rohit Verma")
+    entities = build_entities(docs, "c1")
+    findings = correlate(docs, entities, "c1")
+    graph = build_graph("c1", docs, entities, findings)
+    doc_ids = {d.id for d in docs}
+    red_doc_edges = [e for e in graph.edges if e.conflict and e.source in doc_ids and e.target in doc_ids]
+    name = next(f for f in findings if f.discrepancy_type == "name_variant")
+    named = [e for e in red_doc_edges if e.finding_id == name.id]
+    assert len(named) == 1
+    assert docs[2].id in (named[0].source, named[0].target), "the outlier is on the edge"
+    assert docs[1].id in (named[0].source, named[0].target), "paired with the most authoritative other side"
+
+
+def test_every_red_edge_links_a_real_finding():
+    docs = base_docs(idp__date_of_birth="19/07/1984", slip__net_pay="86,400.00", slip__employer_name="Other Corp")
+    entities = build_entities(docs, "c1")
+    findings = correlate(docs, entities, "c1")
+    ids = {f.id for f in findings}
+    graph = build_graph("c1", docs, entities, findings)
+    red = [e for e in graph.edges if e.conflict]
+    assert red and all(e.finding_id in ids for e in red)
+    doc_ids = {d.id for d in docs}
+    doc_red = [e for e in red if e.source in doc_ids and e.target in doc_ids]
+    assert len(doc_red) <= len(findings)
+
+
 def test_no_verdict_language():
     findings = run(base_docs(idp__date_of_birth="19/07/1984", slip__net_pay="86,400.00", slip__person_name="Rohit Verma"))
     text = " ".join(f.title + " " + f.explanation for f in findings).lower()

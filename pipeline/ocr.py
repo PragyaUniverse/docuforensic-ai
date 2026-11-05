@@ -110,11 +110,41 @@ def tesseract_words(img: np.ndarray) -> list[tuple[str, float, BBox]] | None:
     return out
 
 
+_MONTHS = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"}
+_MONTH_CONFUSIONS = str.maketrans({"1": "l", "0": "o", "9": "g", "5": "s"})
+_DATE_WITH_MONTH = re.compile(r"(?<![A-Za-z0-9])(\d{1,2}[-/ .])([A-Za-z0-9]{3})([-/ .]\d{2,4})(?!\d)")
+_MONEY = re.compile(r"^\d{1,3}(,\d{2,3})*\.\d{2}$")
+_NUMERIC_CHARS = set("0123456789,.")
+
+
+def _repair_month(m: re.Match) -> str:
+    """A digit misread inside a month of a date (03-Ju1-2026). Only one reading makes it a date."""
+    token = m.group(2)
+    if not any(c.isdigit() for c in token) or not any(c.isalpha() for c in token):
+        return m.group(0)
+    candidate = token.translate(_MONTH_CONFUSIONS).lower()
+    return m.group(1) + candidate.capitalize() + m.group(3) if candidate in _MONTHS else m.group(0)
+
+
+def reread_region(doc: Document, page: int, bbox: BBox) -> str | None:
+    """Independent second reading of one region with Tesseract. None if it can't be read."""
+    try:
+        with Image.open(from_rel(doc.pages[page].image_path)) as im:
+            crop = im.convert("L").crop((int(bbox.x0) - 6, int(bbox.y0) - 6, int(bbox.x1) + 6, int(bbox.y1) + 6))
+        crop = crop.resize((crop.width * 2, crop.height * 2), Image.Resampling.LANCZOS)
+        text = pytesseract.image_to_string(crop, config="--psm 7", timeout=20)
+    except Exception as exc:
+        log.warning("Second OCR reading failed: %s", type(exc).__name__)
+        return None
+    return text.strip() or None
+
+
 def repair_text(text: str) -> str:
     """Fix OCR confusions that have only one sensible reading. Everything else stays as read."""
     text = text.translate(str.maketrans({"，": ",", "：": ":", "．": ".", "（": "(", "）": ")", "；": ";"}))
     # A digit zero inside a month name: 12-0ct-2026.
-    return re.sub(r"(?<![A-Za-z0-9])0ct(?![a-z])|(?<=[-/\s\d])0ct(?![a-z])", "Oct", text)
+    text = re.sub(r"(?<![A-Za-z0-9])0ct(?![a-z])|(?<=[-/\s\d])0ct(?![a-z])", "Oct", text)
+    return _DATE_WITH_MONTH.sub(_repair_month, text)
 
 
 def merge_fragments(lines: list[OcrLine], tess: list[tuple[str, float, BBox]]) -> list[OcrLine]:
@@ -189,10 +219,12 @@ def _line_to_words(line: OcrLine, tess: list[tuple[str, float, BBox]], page: int
     groups: list[list[int]] = [[0]]
     for i in range(1, len(chars)):
         gap = chars[i][2].x0 - chars[i - 1][2].x1
+        # Tesseract often splits a number at its punctuation. RapidOCR read it whole, so keep it whole.
+        same_number = chars[i][0] in _NUMERIC_CHARS and chars[i - 1][0] in _NUMERIC_CHARS
         boundary = (
             (i - 1) in spaces_after
-            or (owner[i] != owner[i - 1])
-            or (all(o is None for o in owner) and gap > 0.45 * height)
+            or (owner[i] != owner[i - 1] and not same_number)
+            or ((same_number or all(o is None for o in owner)) and gap > 0.45 * height)
         )
         if boundary:
             groups.append([i])
@@ -210,13 +242,32 @@ def _line_to_words(line: OcrLine, tess: list[tuple[str, float, BBox]], page: int
         text = "".join(chars[i][0] for i in g)
         conf = float(np.mean([chars[i][1] for i in g]))
         o = owner[g[0]]
-        if o is not None and used_counts.get(o) == 1:
+        if o is not None and used_counts.get(o) == 1 and all(owner[i] == o for i in g):
             box = inside[o][2]  # Tesseract's box is tight on the ink
         else:
             cb = [chars[i][2] for i in g]
             box = BBox(x0=min(b.x0 for b in cb), y0=line.bbox.y0, x1=max(b.x1 for b in cb), y1=line.bbox.y1)
         words.append(Word(text=text, confidence=round(conf, 4), bbox=box, page=page, source=TextSource.ocr_rapid))
-    return words
+    return _join_split_amounts(words, height)
+
+
+def _join_split_amounts(words: list[Word], height: float) -> list[Word]:
+    """A stray space inside an amount ("2,77 1.99"): rejoin when only the joined form is an amount."""
+    out: list[Word] = []
+    for w in words:
+        prev = out[-1] if out else None
+        if (
+            prev is not None
+            and w.bbox.x0 - prev.bbox.x1 < 0.5 * height
+            and "," in prev.text  # an unfinished amount; a plain "12" could be a separate quantity
+            and not _MONEY.match(prev.text)
+            and _MONEY.match(prev.text + w.text)
+        ):
+            box = BBox(x0=prev.bbox.x0, y0=min(prev.bbox.y0, w.bbox.y0), x1=w.bbox.x1, y1=max(prev.bbox.y1, w.bbox.y1))
+            out[-1] = prev.model_copy(update={"text": prev.text + w.text, "bbox": box, "confidence": min(prev.confidence, w.confidence)})
+        else:
+            out.append(w)
+    return out
 
 
 def ocr_image(img: np.ndarray, page: int = 0) -> tuple[list[Word], TextSource | None]:
