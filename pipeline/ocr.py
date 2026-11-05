@@ -60,7 +60,9 @@ def rapid_lines(img: np.ndarray) -> list[OcrLine] | None:
         return None
     try:
         with _lock:
-            result = engine(img, return_word_box=True)[0]
+            # Lines on a document are upright. The per-line orientation classifier occasionally flips
+            # one, turning 6,000.00 into 00°000'9, so it stays off.
+            result = engine(img, use_cls=False, return_word_box=True)[0]
     except Exception as exc:
         log.warning("RapidOCR failed: %s", type(exc).__name__)
         return None

@@ -323,3 +323,17 @@ def test_signature_copy_is_found_when_crop_bounds_differ():
     assert _native_corr(sig, trimmed) >= IDENTICAL_CORR
     other = np.asarray(draw_signature(seed=8, size=(400, 90)))
     assert _pixel_corr(sig, other) < IDENTICAL_CORR
+
+
+def test_second_engine_overrules_a_single_misread_of_the_render():
+    from PIL import ImageDraw
+
+    from pipeline.forensics_pdf import _second_engine_matches_layer
+    from tests.pipeline.fixtures import font
+
+    im = Image.new("RGB", (500, 90), "white")
+    ImageDraw.Draw(im).text((30, 20), "6,000.00", font=font(size=40), fill=(20, 20, 20))
+    arr, box = np.asarray(im), BBox(x0=20, y0=10, x1=300, y1=75)
+    assert _second_engine_matches_layer(arr, box, "6,000.00")
+    # The pixels really do say something else: the mismatch must stand.
+    assert not _second_engine_matches_layer(arr, box, "8,000.00")

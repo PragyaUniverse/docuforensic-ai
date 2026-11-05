@@ -15,6 +15,7 @@ import cv2
 import numpy as np
 import pikepdf
 import pymupdf
+import pytesseract
 from PIL import ExifTags, Image
 from rapidfuzz import fuzz
 
@@ -121,6 +122,23 @@ def _visible_value(vtype: ValueType, text: str) -> str | None:
     return text.strip() or None
 
 
+def _second_engine_matches_layer(img: np.ndarray, box: BBox, layer_text: str) -> bool:
+    crop = img[max(int(box.y0) - 6, 0) : int(box.y1) + 6, max(int(box.x0) - 6, 0) : int(box.x1) + 6]
+    if crop.size == 0:
+        return False
+    try:
+        scaled = cv2.resize(crop, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+        reading = pytesseract.image_to_string(Image.fromarray(scaled), config="--psm 7", timeout=20).strip()
+    except Exception:
+        return False  # can't confirm, so the mismatch stands and says OCR may be at fault
+    if not reading:
+        return False
+    digits = _digits(layer_text)
+    if digits and _digits(reading) != digits:
+        return False
+    return fuzz.ratio(_comparable(reading), _comparable(layer_text)) >= 85
+
+
 def text_vs_pixels(doc: Document, pdf: pymupdf.Document, page_index: int, workdir: Path) -> list[Finding]:
     img = load_page_rgb(doc, page_index)
     layer = _text_layer_words(pdf[page_index])
@@ -154,6 +172,10 @@ def text_vs_pixels(doc: Document, pdf: pymupdf.Document, page_index: int, workdi
         if ln.confidence < 0.8:
             continue
         if digit_diff or ratio < 80:
+            # One engine misreading the render must not read as tampering. If an independent engine
+            # sees what the text layer says, the pixels and the text layer agree after all.
+            if _second_engine_matches_layer(img, ln.bbox, layer_text):
+                continue
             mismatches += 1
             rows.append({"ocr": ln.text, "layer": layer_text, "ratio": ratio, "ocr_conf": ln.confidence, "digit_diff": digit_diff, "bbox": ln.bbox, "words": inside})
 
