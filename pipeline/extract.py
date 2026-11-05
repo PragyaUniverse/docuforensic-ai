@@ -8,6 +8,9 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
+import pytesseract
+from PIL import Image
+
 from models.schemas import (
     BBox,
     Document,
@@ -18,7 +21,7 @@ from models.schemas import (
     TextSource,
     ValueType,
 )
-from pipeline.common import is_processable, log, union_bbox
+from pipeline.common import from_rel, is_processable, log, union_bbox
 from pipeline.layout import Line, doc_lines, squish
 from pipeline.normalize import (
     looks_like_date,
@@ -252,8 +255,9 @@ def _fit_value(raw: str, vtype: ValueType, name: str) -> tuple[int, int] | None:
         return 0, len(squished)
 
     if vtype == M:
-        m = MONEY_RE.search(raw)
-        return spaced(m) if m and norm_money(m.group(0)) else None
+        # Search the space-free text: OCR can split one number into pieces.
+        m = MONEY_RE.search(squished)
+        return (m.start(), m.end()) if m and norm_money(m.group(0)) else None
     if vtype == D:
         m = DATE_RE.search(raw)
         return spaced(m) if m and norm_date(m.group(0)) else None
@@ -351,6 +355,8 @@ class _Extractor:
             raw = _repair_name(raw)
         if name == "pan_number":
             raw = repair_pan(raw) or raw
+        if vtype == M:
+            raw = re.sub(r"(?<=[\d,.])\s+(?=[\d,.])", "", raw)
         field = Field(
             doc_id=self.doc.id,
             name=name,
@@ -807,6 +813,60 @@ def _pay_row(table: Table | None, words: list) -> None:
     )
 
 
+WELL_FORMED_MONEY = re.compile(r"(?:(?:rs\.?|inr|₹)\s*)?(?:\d{1,3}(?:,\d{2,3})*|\d+)(?:\.\d{2})?(?:/-)?", re.I)
+LOW_CONFIDENCE_CAP = 0.3
+
+
+def _reread_money(doc: Document, field: Field) -> tuple[str, float, BBox] | None:
+    """Read an amount again with the other OCR engine, on a crop wide enough to hold all of it."""
+    h = max(field.bbox.y1 - field.bbox.y0, 10.0)
+    page = doc.pages[field.page]
+    x0, y0 = max(int(field.bbox.x0 - 8), 0), max(int(field.bbox.y0 - 6), 0)
+    x1, y1 = min(int(field.bbox.x1 + 7 * h), page.width), min(int(field.bbox.y1 + 6), page.height)
+    if x1 - x0 < 8 or y1 - y0 < 8:
+        return None
+    try:
+        with Image.open(from_rel(page.image_path)) as im:
+            crop = im.convert("L").crop((x0, y0, x1, y1))
+        data = pytesseract.image_to_data(crop, config="--psm 7", output_type=pytesseract.Output.DICT, timeout=15)
+    except Exception:
+        return None
+    for i, text in enumerate(data["text"]):
+        text = (text or "").strip()
+        conf = float(data["conf"][i])
+        if conf < 50 or not WELL_FORMED_MONEY.fullmatch(text) or "." not in text:
+            continue
+        box = BBox(x0=x0 + data["left"][i], y0=y0 + data["top"][i], x1=x0 + data["left"][i] + data["width"][i], y1=y0 + data["top"][i] + data["height"][i])
+        return text, conf / 100.0, box
+    return None
+
+
+def _check_amounts(doc: Document) -> None:
+    """An amount that doesn't look complete ('12,', or no decimals among decimal amounts) is re-read.
+    If that fails its confidence drops, so arithmetic checks can discount it instead of reporting
+    an inconsistency that OCR caused."""
+    money = [f for f in doc.fields if f.value_type == ValueType.money]
+    with_decimals = sum("." in f.value_raw for f in money)
+    expect_decimals = len(money) >= 3 and with_decimals >= 0.7 * len(money)
+    notes: list[dict] = []
+    for f in money:
+        well_formed = bool(WELL_FORMED_MONEY.fullmatch(f.value_raw.strip())) and f.value_norm is not None
+        if well_formed and (not expect_decimals or "." in f.value_raw):
+            continue
+        reread = _reread_money(doc, f)
+        if reread and norm_money(reread[0]) and norm_money(reread[0]) != f.value_norm:
+            text, conf, box = reread
+            notes.append({"field_id": f.id, "name": f.name, "first_read": f.value_raw, "reread": text, "action": "replaced by second OCR engine"})
+            f.value_raw, f.value_norm, f.bbox = text, norm_money(text), box
+            f.confidence = round(min(conf, 0.85), 3)
+            f.source = TextSource.ocr_tesseract
+        else:
+            notes.append({"field_id": f.id, "name": f.name, "first_read": f.value_raw, "action": "confidence lowered: amount looks incomplete"})
+            f.confidence = min(f.confidence, LOW_CONFIDENCE_CAP)
+    if notes:
+        doc.metadata["amount_rereads"] = notes
+
+
 def extract_fields(doc: Document) -> Document:
     if not is_processable(doc):
         return doc
@@ -817,6 +877,7 @@ def extract_fields(doc: Document) -> Document:
                 ex.run_page(page.index)
         ex.fallbacks()
         doc.fields = _dedupe(ex.fields)
+        _check_amounts(doc)
         if doc.doc_type == DocType.bank_statement:
             doc.tables = _extract_transactions(doc)
         elif doc.doc_type == DocType.salary_slip:

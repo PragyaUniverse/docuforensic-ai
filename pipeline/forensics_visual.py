@@ -202,7 +202,16 @@ def _noise_map(ctx: PageCtx, block: int = 24) -> tuple[np.ndarray, np.ndarray]:
     hp = gray - cv2.GaussianBlur(gray, (0, 0), 1.6)
     valid = ~(cv2.dilate(_structure_mask(ctx), np.ones((9, 9), np.uint8)).astype(bool))
     means, ok = _grid(hp * hp, valid, block, 0.55)
-    return np.sqrt(means), ok
+    # Strong grain trips the ink and edge masks, which would hide the noisiest pasted regions from
+    # the measurement meant to reveal them. White grain has almost no low-frequency energy, whereas
+    # text and other structure have plenty, so blocks that are pure grain are measured unmasked.
+    everywhere = np.ones_like(valid)
+    raw, raw_ok = _grid(hp * hp, everywhere, block, 0.5)
+    band = cv2.GaussianBlur(gray, (0, 0), 3.0) - cv2.GaussianBlur(gray, (0, 0), 8.0)
+    low, _ = _grid(band * band, everywhere, block, 0.5)
+    grain = raw_ok & ~ok & (raw >= 16.0) & (low < 0.05 * raw)
+    means = np.where(grain, raw, means)
+    return np.sqrt(means), ok | grain
 
 
 def _structure_mask(ctx: PageCtx) -> np.ndarray:
@@ -615,7 +624,13 @@ def detect_font_consistency(
             continue
         dev = _style_deviation(s, peers)
         # A whole row printed bold or large is design. Discount shape features its mates share.
-        mates = [m for m in by_row[s.row] if m is not s]
+        # Words right next to this one are part of the same value ("Rs. 93,600.00"), and would be
+        # altered together with it, so they can't show that the row was designed this way.
+        adjacent = 3 * ctx.median_word_h
+        mates = [
+            m for m in by_row[s.row]
+            if m is not s and max(m.word.bbox.x0 - s.word.bbox.x1, s.word.bbox.x0 - m.word.bbox.x1) >= adjacent
+        ]
         for m in mates:
             mp = [p for p in styles if p.numeric == m.numeric and p.row != m.row and p is not m]
             if len(mp) >= 3:
@@ -629,7 +644,7 @@ def detect_font_consistency(
         dev["edge_sharpness"] = ink_sharp
         strong = {k: v for k, v in dev.items() if v > 0}
         score = sum(min(v, 2.0) for v in strong.values())
-        has_ink = dev["ink_darkness"] > 0 or dev["edge_sharpness"] > 0
+        has_ink = dev["ink_darkness"] > 0 and (dev["edge_sharpness"] > 0 or dev["chroma"] > 0)
         # Shape alone is common in templates, so it needs to be much further out to be reported.
         if (has_ink and score >= 0.9 and len(strong) >= 2) or (not has_ink and score >= 3.0):
             flagged.append((s, score, dev, len(peers)))
@@ -648,7 +663,7 @@ def detect_font_consistency(
         top = max(group, key=lambda i: i[1])
         s, score, dev, n_peers = top
         features = [k for k, v in dev.items() if v > 0]
-        has_ink = "ink_darkness" in features or "edge_sharpness" in features
+        has_ink = "ink_darkness" in features and ("edge_sharpness" in features or "chroma" in features)
         conf = min(0.88, 0.35 + score / 5.0) if has_ink else min(0.4, 0.2 + score / 20.0)
         crop = save_crop(ctx.rgb, box, workdir, doc, f"font_p{ctx.index}_{int(box.x0)}_{int(box.y0)}", margin=24)
         text = " ".join(i[0].word.text for i in group)
@@ -830,6 +845,10 @@ def detect_copy_move(ctx: PageCtx, doc: Document, workdir: Path) -> list[Finding
     struct = cv2.dilate(_structure_mask(ctx), np.ones((5, 5), np.uint8))
     results: list[dict] = []
 
+    # With no paper grain, separately printed repeats are legitimately pixel-identical. With grain,
+    # an exact match including the grain is the strongest clone evidence there is.
+    grain, grain_ok = _noise_map(ctx)
+    grainy_page = bool(grain_ok.any()) and float(np.median(grain[grain_ok])) >= 0.25
     measured = []
     for text, a, b in _repeated_runs(ctx):
         m = _align_compare(ctx, hp, struct, a, b)
@@ -841,13 +860,15 @@ def detect_copy_move(ctx: PageCtx, doc: Document, workdir: Path) -> list[Finding
             others = np.delete(diffs, measured.index((text, a, b, m)))
             typical = float(np.median(others)) if len(others) else None
             noise = m["noise_corr"]
-            if m["pixel_corr"] < 0.985 or noise is None or noise < 0.75 or m["mean_abs_diff"] < 0.3:
+            if m["pixel_corr"] < 0.985 or noise is None or noise < 0.5:
+                continue
+            if m["mean_abs_diff"] < 0.3 and not grainy_page:
                 continue
             if typical is not None and m["mean_abs_diff"] > 0.5 * typical:
                 continue
             if typical is None and noise < 0.9:
                 continue
-            results.append({"a": a, "b": b, "conf": min(0.93, 0.6 + 0.35 * noise), "kind": "text", "text": text, **m, "typical_repeat_diff": typical})
+            results.append({"a": a, "b": b, "conf": min(0.93, 0.62 + 0.4 * noise), "kind": "text", "text": text, **m, "typical_repeat_diff": typical})
 
     results += _keypoint_clones(ctx, hp, struct)
     if not results:

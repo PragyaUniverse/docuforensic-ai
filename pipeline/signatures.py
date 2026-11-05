@@ -175,7 +175,7 @@ def _placement_findings(reg: SigRegion, workdir: Path) -> list[Finding]:
                 doc, "visual.signature_placement", "No signature ink found near this signature label",
                 f"The label '{reg.label}' is printed here, but no pen-like ink was found around it.",
                 confidence=0.45, page=reg.page, bbox=reg.label_box,
-                evidence=[measurement("Signature search", doc, reg.page, reg.label_box, label=reg.label, ink_found=False)],
+                evidence=[measurement("Signature search", doc, reg.page, reg.label_box, signature_label=reg.label, ink_found=False)],
                 benign=["The signature may be faint, or on a page that wasn't submitted.", "The form may not require a signature at this stage."],
                 verify=["Check the physical document for a signature."],
             )
@@ -203,7 +203,7 @@ def _placement_findings(reg: SigRegion, workdir: Path) -> list[Finding]:
                 doc, "visual.signature_placement", "Signature placement looks unusual",
                 f"The signature ink is unusually placed: {reason}.",
                 confidence=0.4, page=reg.page, bbox=reg.bbox,
-                evidence=[measurement("Signature placement", doc, reg.page, reg.bbox, gap_to_label_px=gap, overlapped_words=len(overlap_words), label=reg.label)],
+                evidence=[measurement("Signature placement", doc, reg.page, reg.bbox, gap_to_label_px=gap, overlapped_words=len(overlap_words), signature_label=reg.label)],
                 benign=["Signatures often stray from the signing line.", "Layouts vary across issuers."],
                 verify=["Check the physical document."],
             )

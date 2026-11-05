@@ -122,7 +122,7 @@ def merge_fragments(lines: list[OcrLine], tess: list[tuple[str, float, BBox]]) -
     When one confident Tesseract word covers several pieces, it replaces them."""
     out = list(lines)
     for text, conf, box in tess:
-        if conf < 0.8 or sum(c.isalnum() for c in text) < 3:
+        if conf < 0.5 or sum(c.isalnum() for c in text) < 3:
             continue
         pieces = [ln for ln in out if _center_inside(ln.bbox, box, slack=6) and (ln.bbox.x1 - ln.bbox.x0) < (box.x1 - box.x0)]
         if len(pieces) < 2:
