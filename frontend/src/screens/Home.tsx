@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ErrorState, Loading } from "@/components/ui/states";
 import { Mascot } from "@/components/Mascot";
 import { RiskPlate } from "@/components/StatusBadge";
+import { openDocChat } from "@/lib/assistant";
 import { fmtTime } from "@/lib/utils";
 
 const EXAMPLES: Record<string, { title: string; text: string }> = {
@@ -57,9 +58,9 @@ export function HomeScreen() {
               anything worth a second look. You make the final call.
             </p>
           </div>
-          <div className="hidden shrink-0 sm:block">
+          <button type="button" onClick={openDocChat} title="Ask Doc a question" aria-label="Ask Doc a question" className="hidden shrink-0 cursor-pointer sm:block">
             <Mascot mood={create.isPending || load.isPending ? "thinking" : "hello"} size={104} />
-          </div>
+          </button>
         </div>
         <form
           className="mt-4 flex flex-wrap gap-2"
@@ -80,7 +81,12 @@ export function HomeScreen() {
           </Button>
         </form>
         {create.isError && <ErrorState title="Could not create the case" error={create.error} />}
-        <p className="mt-2 text-[13px] text-ink-3">Only use documents you're allowed to process.</p>
+        <p className="mt-2 text-[13px] text-ink-3">
+          Only use documents you're allowed to process. Not sure where to begin?{" "}
+          <button type="button" className="link cursor-pointer" onClick={openDocChat}>
+            Ask Doc
+          </button>
+        </p>
       </section>
 
       <section aria-labelledby="demo-h">

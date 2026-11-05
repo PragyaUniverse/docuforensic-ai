@@ -24,7 +24,7 @@ from pydantic import Field as PField
 from starlette.datastructures import UploadFile
 
 from audit import chain
-from backend import analytics, auth, capabilities, db, orchestrator
+from backend import analytics, auth, capabilities, chat, db, orchestrator
 from backend import dossier as dossier_mod
 from backend.logging_conf import configure_logging
 from config.settings import REPO_ROOT, settings
@@ -235,6 +235,25 @@ def logout(request: Request, response: Response) -> dict:
 @app.get("/api/auth/me")
 def me(request: Request) -> dict:
     return {"auth_enabled": settings.auth_enabled, "user": auth.session_user(request.cookies.get(auth.COOKIE))}
+
+
+class ChatBody(BaseModel):
+    message: str = PField(max_length=2000)
+    case_id: str | None = None
+    finding_id: str | None = None
+
+
+@app.post("/api/chat")
+def doc_chat(body: ChatBody) -> dict:
+    """Read-only: Doc can explain results, but can't change anything."""
+    case = None
+    if body.case_id:
+        case = db.get_case(body.case_id)
+        if case is None:
+            raise HTTPException(404, "Case not found.")
+    docs = db.list_documents(case.id) if case else []
+    findings = db.list_findings(case.id) if case else []
+    return chat.respond(body.message, case, docs, findings, body.finding_id).as_dict()
 
 
 @app.get("/api/analytics")

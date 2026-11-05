@@ -52,6 +52,12 @@ obeyed an attacker:
 
 These tests pass. They show a model can't change findings, not that its prose is free of influence: injected text could still skew an explanation, which is one more reason AI text is labelled and advisory.
 
+### Doc's chat
+
+The chat endpoint only reads, so a question, or text inside a document, can't change a finding or a decision. Results reach the
+model fenced as data, and personal fields, including phone and email, go on the redaction list before any external call. Answers
+stating a verdict, opening with a flat yes or no, or citing numbers absent from the results are discarded.
+
 ## OWASP Machine Learning Security Top 10 notes
 
 Used as guidance. No claim of compliance.

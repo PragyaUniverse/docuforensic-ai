@@ -24,7 +24,7 @@
 | 4:35 | README benchmark table, degraded row highlighted | "On synthetic held-out data: every manipulation found, no false flags. On degraded scans, about a quarter. That's a real limitation, and it's published alongside the rest. It hasn't been tested on real documents." | Honest numbers |
 
 **Rules for the recording**
-- Doc, the animated character, is a guide and not the detection system. If it appears on camera, describe it that way. Drag it clear of anything you're showing, or hide it.
+- Doc, the animated character, is a guide you can chat with, not the detection system. Describe it that way on camera. A good moment: ask "Is this fake?" and show it refuse, then ask "explain #2" and follow the link. Drag it clear of anything you're showing, or hide it.
 - The opening line is the hook you chose. It's fine as narration because we injected that edit ourselves and know it's altered. Everywhere else, use the system's wording: "potential manipulation", never "this is forged".
 - Show the "SYNTHETIC" watermark in at least one shot.
 - Never say "works on real documents" or quote the held-out numbers without saying they're synthetic.

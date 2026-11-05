@@ -190,8 +190,8 @@ export function Shell() {
           <Outlet />
         </div>
       </main>
-      {/* Home and the progress screen have their own, larger Doc. */}
-      {!MOCK_MODE && location.pathname !== "/" && !location.pathname.endsWith("/pipeline") && <Assistant />}
+      {/* Home and the progress screen show a larger Doc of their own, which opens the same chat. */}
+      {!MOCK_MODE && <Assistant floating={location.pathname !== "/" && !location.pathname.endsWith("/pipeline")} />}
     </div>
   );
 }

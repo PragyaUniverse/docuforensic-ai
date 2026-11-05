@@ -32,7 +32,22 @@ export interface Analytics {
   recent: { id: string; name: string; status: string; risk_level: string; created_at: string; documents: number; to_review: number }[];
 }
 
+export interface ChatReply {
+  answer: string;
+  links: { label: string; to: string }[];
+  suggestions: string[];
+  source: "results" | "guide" | "live_llm";
+  provider: string | null;
+  model: string | null;
+}
+
 export const accountApi = {
+  chat: (message: string, caseId?: string, findingId?: string | null) =>
+    send<ChatReply>("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, case_id: caseId ?? null, finding_id: findingId ?? null }),
+    }),
   me: () => send<Me>("/auth/me"),
   login: (username: string, password: string) =>
     send<{ user: string }>("/auth/login", {

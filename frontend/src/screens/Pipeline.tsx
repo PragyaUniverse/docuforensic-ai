@@ -11,6 +11,7 @@ import { ErrorState, Loading } from "@/components/ui/states";
 import { PageHeading } from "@/components/Shell";
 import { Mascot } from "@/components/Mascot";
 import { ProcBadge } from "@/components/StatusBadge";
+import { openDocChat } from "@/lib/assistant";
 import { cn, fmtMs } from "@/lib/utils";
 
 const STAGES: { id: PipelineStage; label: string }[] = [
@@ -128,7 +129,9 @@ export function PipelineScreen() {
         {status === "failed" && <p className="text-ink-2">The messages below say why. Nothing was made up for the steps that didn't run.</p>}
 
         <div className="flex items-center gap-4 rounded-xl border border-line bg-panel p-4 shadow-sm">
-          <Mascot mood={running ? "thinking" : status === "complete" ? "happy" : status === "failed" ? "oops" : "idle"} size={84} className="shrink-0" />
+          <button type="button" onClick={openDocChat} title="Ask Doc a question" aria-label="Ask Doc a question" className="shrink-0 cursor-pointer">
+            <Mascot mood={running ? "thinking" : status === "complete" ? "happy" : status === "failed" ? "oops" : "idle"} size={84} />
+          </button>
           <div className="min-w-0 flex-1" aria-live="polite">
             <p className="font-medium">
               {running

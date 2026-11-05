@@ -81,6 +81,8 @@ def matrix() -> list[dict[str, str]]:
          "notes": "Detected by shape, and read by OCR plus a local vision model. 61 of 80 values exact on distorted handwriting-style text, and never tested on real handwriting. Every value is marked for checking."},
         {"capability": "Hindi and English documents", "status": "Partial",
          "notes": "Printed Hindi with common field labels. Other Indian languages aren't supported."},
+        {"capability": "Doc, the guide you can chat with", "status": "Implemented",
+         "notes": "Answers from this case's results and a built-in guide, with no AI needed. Unusual questions can go to an AI model, labelled as such. It can't change anything."},
         {"capability": "Analytics across cases", "status": "Implemented", "notes": "Counts by finding type, check and reviewer decision."},
         {"capability": "Login", "status": "Implemented",
          "notes": "Optional, off by default. All signed-in users share the same cases, with no per-user permissions."},
