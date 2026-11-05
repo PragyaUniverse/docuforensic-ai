@@ -165,7 +165,7 @@ Visual and structural: `visual.ela`, `visual.noise`, `visual.copy_move`, `visual
 `visual.signature_placement`, `pdf.text_vs_pixels`, `pdf.incremental_update`,
 `pdf.producer_mismatch`, `pdf.overlay_object`, `metadata.exif`, `metadata.pdf_dates`.
 
-Within-document: `context.arithmetic_salary`, `context.arithmetic_balance`,
+Within-document: `context.arithmetic_salary`, `context.amount_in_words`, `context.arithmetic_balance`,
 `context.date_order`, `context.id_checksum`, `context.missing_field`, `context.duplicate_field`.
 
 Cross-document (`discrepancy_type` values; rubric wants 5+ distinct): `dob_mismatch`,

@@ -43,6 +43,20 @@ SIGNALS: dict[str, Signal] = {
     "metadata.exif": Signal("metadata", 0.3),
 }
 
+DETECTOR_NAMES = {
+    "visual.ela": "Error level analysis",
+    "visual.noise": "Noise residual",
+    "visual.overwrite": "Background patch check",
+    "visual.font_consistency": "Typography check",
+    "visual.alignment": "Alignment check",
+    "visual.copy_move": "Clone check",
+    "visual.photo_insert": "Photo check",
+    "pdf.text_vs_pixels": "Text layer against pixels",
+    "pdf.incremental_update": "PDF revision history",
+    "pdf.overlay_object": "PDF overlay check",
+    "metadata.exif": "Image metadata",
+}
+
 CORROBORATION_MIN_CONF = 0.3  # a family counts as corroborating only above this
 POTENTIAL_MIN_SCORE = 0.6
 STANDALONE_MIN_CONF = 0.85
@@ -144,8 +158,10 @@ def _merge(cluster: list[Finding], doc_fields: list) -> Finding:
     explanation = lead.explanation
     others = [f for f in cluster if f is not lead and f.detector != lead.detector]
     if others:
-        details = "; ".join(f"{f.detector} (confidence {f.confidence:.2f}): {f.explanation}" for f in others[:4])
-        explanation = f"{lead.explanation} Other signals on this region: {details}"
+        details = " ".join(
+            f"{DETECTOR_NAMES.get(f.detector, f.detector)} (confidence {f.confidence:.2f}): {f.explanation}" for f in others[:4]
+        )
+        explanation = f"{lead.explanation} Other signals on this region. {details}"
     benign, verify = [], []
     for f in cluster:
         for b in f.benign_alternatives:

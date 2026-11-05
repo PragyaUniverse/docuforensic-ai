@@ -1399,6 +1399,12 @@
       "detector": "context.arithmetic_balance",
       "filename": "bank_statement.pdf",
       "description": "The balance column reflects the original October credit, not the overlay."
+    },
+    {
+      "id": "w3",
+      "detector": "context.amount_in_words",
+      "filename": "salary_slip.pdf",
+      "description": "The words still state 62,400.00, the visible figure says 86,400.00."
     }
   ],
   "benign_variations": []

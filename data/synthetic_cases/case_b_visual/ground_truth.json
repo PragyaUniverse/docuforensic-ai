@@ -1439,6 +1439,12 @@
       "detector": "context.arithmetic_balance",
       "filename": "bank_statement.pdf",
       "description": "Running balance does not reconcile on the copied row."
+    },
+    {
+      "id": "w3",
+      "detector": "context.amount_in_words",
+      "filename": "salary_slip.png",
+      "description": "The words still state 48,320.00, the figure says 84,320.00."
     }
   ],
   "benign_variations": []

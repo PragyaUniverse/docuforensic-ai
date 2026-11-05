@@ -1347,6 +1347,8 @@ def gen_case_b():
                             "also still states the original figure."},
             {"id": "w2", "detector": "context.arithmetic_balance", "filename": bank.path.name,
              "description": "Running balance does not reconcile on the copied row."},
+            {"id": "w3", "detector": "context.amount_in_words", "filename": slip.path.name,
+             "description": f"The words still state {inr(p.net)}, the figure says {inr(forged_net)}."},
         ])
 
     built = build_case(case, p, tamper_raster=tamper)
@@ -1475,6 +1477,8 @@ def gen_case_d():
                         f"not the visible {inr(forged_net)}."},
         {"id": "w2", "detector": "context.arithmetic_balance", "filename": bank.path.name,
          "description": "The balance column reflects the original October credit, not the overlay."},
+        {"id": "w3", "detector": "context.amount_in_words", "filename": slip.path.name,
+         "description": f"The words still state {inr(p.net)}, the visible figure says {inr(forged_net)}."},
     ])
     discrepancies = [
         {"id": "d1", "discrepancy_type": "salary_vs_bank_credit",

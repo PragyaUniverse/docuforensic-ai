@@ -157,3 +157,21 @@ def test_agreeing_repeats_are_not_flagged_but_conflicting_repeats_are():
     assert "context.duplicate_field" not in detectors(verify_within_document(doc))
     doc.fields[1].value_raw = "C D"
     assert "context.duplicate_field" in detectors(verify_within_document(doc))
+
+
+def test_amount_words_parse_with_or_without_spaces():
+    from backend.contextual import parse_amount_words as parse
+
+    assert parse("Rupees Forty Eight Thousand Three Hundred Twenty Only") == 48320
+    assert parse("RupeesFortyEightThousandThreeHundredTwentyOnly") == 48320
+    assert parse("One Lakh Twenty Five Thousand") == 125000
+    assert parse("Two Crore Five Lakh") == 20500000
+    assert parse("Fourteen Thousand Sixty") == 14060
+
+
+def test_amount_words_refuse_to_guess_on_a_misread():
+    from backend.contextual import parse_amount_words as parse
+
+    assert parse("Rupees Fo7ty Thousand Only") is None
+    assert parse("Rupees Only") is None
+    assert parse("") is None

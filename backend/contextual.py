@@ -14,6 +14,7 @@ from backend.normalize import (
     ocr_adjustment, parse_money, parse_period, verhoeff_valid,
 )
 from config.settings import settings
+from pipeline.layout import doc_lines
 from models.schemas import (
     BBox, Document, DocType, EvidenceItem, EvidenceKind, Field, Finding, FindingCategory,
     FindingStatus, Severity, Table, TableCell, TextSource,
@@ -61,6 +62,73 @@ def _downgrade(sev: Severity, factor: float) -> Severity:
         return sev
     order = [Severity.info, Severity.low, Severity.medium, Severity.high]
     return order[max(0, order.index(sev) - 1)]
+
+
+# ---- figures against the same amount written in words
+_NUMBER_WORDS = {
+    "zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9,
+    "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13, "fourteen": 14, "fifteen": 15, "sixteen": 16,
+    "seventeen": 17, "eighteen": 18, "nineteen": 19, "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50,
+    "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90,
+}
+_SCALES = {"hundred": 100, "thousand": 1000, "lakhs": 100000, "lakh": 100000, "lacs": 100000, "lac": 100000,
+           "crores": 10000000, "crore": 10000000}
+_FILLER = ("rupees", "rupee", "rs", "and", "only", "inr")
+_TOKENS = sorted([*_NUMBER_WORDS, *_SCALES, *_FILLER], key=len, reverse=True)
+
+
+def parse_amount_words(text: str) -> int | None:
+    """'Rupees Forty Eight Thousand Three Hundred Twenty Only' -> 48320. Spaces may be missing, as OCR
+    often drops them. None unless every part of the text is understood, so a misread can't produce
+    a wrong number."""
+    rest = re.sub(r"[^a-z]", "", text.casefold())
+    total, current, seen = 0, 0, False
+    while rest:
+        token = next((t for t in _TOKENS if rest.startswith(t)), None)
+        if token is None:
+            return None
+        rest = rest[len(token):]
+        if token in _NUMBER_WORDS:
+            current += _NUMBER_WORDS[token]
+            seen = True
+        elif token == "hundred":
+            current = max(current, 1) * 100
+            seen = True
+        elif token in _SCALES:
+            total += max(current, 1) * _SCALES[token]
+            current, seen = 0, True
+    return total + current if seen else None
+
+
+def _check_amount_in_words(doc: Document, fm: dict[str, Field]) -> list[Finding]:
+    net = fm.get("net_pay")
+    figure = money_of(net)
+    if net is None or figure is None:
+        return []
+    for page in doc.pages:
+        for line in doc_lines(doc, page.index):
+            match = re.search(r"inwords:?(.*)$", line.squished)
+            if not match:
+                continue
+            stated = parse_amount_words(match.group(1))
+            if stated is None or abs(Decimal(stated) - figure) <= 1:
+                return []
+            factor, note = ocr_adjustment([net], str(figure), str(stated))
+            gross, ded = money_of(fm.get("gross_pay")), money_of(fm.get("total_deductions"))
+            agrees = gross is not None and ded is not None and abs(gross - ded - stated) <= 1
+            detail = (f" The words agree with gross pay minus deductions ({fmt_money(gross - ded)}), so it is the "
+                      "figure that stands apart." if agrees else "")
+            return [_finding(
+                doc, "context.amount_in_words", "Net pay in figures differs from net pay in words",
+                f"Net pay is printed as {fmt_money(figure)} in figures, but as {fmt_money(Decimal(stated))} in words "
+                f"on the same document.{detail}" + (f" {note}" if note else ""),
+                net, [net], severity=_downgrade(Severity.high, factor), confidence=0.95 * factor,
+                extra=[EvidenceItem(
+                    kind=EvidenceKind.raw_value, label="Net pay written in words", doc_id=doc.id, page=page.index,
+                    bbox=line.bbox, data={"text": line.text, "value_in_words": stated, "value_in_figures": str(figure)},
+                )],
+            )]
+    return []
 
 
 # ---- salary arithmetic
@@ -485,6 +553,7 @@ def verify_within_document(doc: Document, today: date | None = None) -> list[Fin
     findings: list[Finding] = []
     checks = [
         lambda: _check_salary(doc, fm) if doc.doc_type in (DocType.salary_slip, DocType.unknown) else [],
+        lambda: _check_amount_in_words(doc, fm),
         lambda: _check_balance(doc, fm),
         lambda: _check_dates(doc, fm, today),
         lambda: _check_ids(doc, fm),

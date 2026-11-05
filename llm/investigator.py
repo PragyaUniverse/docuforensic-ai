@@ -115,6 +115,10 @@ PLAYBOOK: dict[str, tuple[str, list[str], list[str]]] = {
         "Creation and modification dates that differ, or that don't fit the document date, show later handling.",
         ["Re-saving or printing to PDF updates these dates.", "Wrong system clock on the issuing machine."],
         ["Compare the dates with the expected issuing workflow."]),
+    "context.amount_in_words": (
+        "A document's words and figures state the same amount, and an edit to the figure often leaves the words behind.",
+        ["A typing error when the document was prepared.", "An OCR misreading of the figure or the words."],
+        ["Read both values on the original document.", "Compare with the salary credit at the bank."]),
     "context.arithmetic_salary": (
         "Payroll systems compute these totals, so a broken sum can mean one figure was changed separately.",
         ["Unlisted deductions or a rounding policy.", "An OCR misreading of one digit."],
