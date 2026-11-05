@@ -14,8 +14,8 @@ import { cn, fmtMs } from "@/lib/utils";
 
 const STAGES: { id: PipelineStage; label: string; detail: string }[] = [
   { id: "submission", label: "Document submission", detail: "Hash, sniff real type, render pages" },
-  { id: "classification", label: "Classification", detail: "Identify document type and structure" },
-  { id: "ocr_extraction", label: "OCR & extraction", detail: "Words with confidence and boxes, then fields" },
+  { id: "classification", label: "Classification", detail: "Read each page (OCR), then identify the document type" },
+  { id: "ocr_extraction", label: "OCR & extraction", detail: "Turn words, with confidence and boxes, into fields and tables" },
   { id: "structure", label: "Structural understanding", detail: "Sections, missing and duplicated fields" },
   { id: "visual_forensics", label: "Visual forensics", detail: "Pixel and PDF-structure detectors, region fusion" },
   { id: "contextual_verification", label: "Contextual verification", detail: "Arithmetic, dates and checksums within a document" },
