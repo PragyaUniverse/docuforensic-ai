@@ -22,7 +22,13 @@ from pipeline.forensics_visual import (
 )
 from pipeline.fusion import fuse_regions
 from pipeline.signatures import analyze_signatures
-from tests.pipeline.fixtures import add_signature, draw_signature, overwrite_value, salary_slip, write_pdf_text
+from tests.pipeline.fixtures import (
+    add_signature,
+    draw_signature,
+    overwrite_value,
+    salary_slip,
+    write_pdf_text,
+)
 
 
 def _overlap(found: BBox, truth: tuple) -> bool:

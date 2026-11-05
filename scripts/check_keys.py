@@ -7,9 +7,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from config.settings import mask, settings  # noqa: E402
-from llm.client import get_client  # noqa: E402
-from llm.providers import PROVIDERS  # noqa: E402
+from config.settings import mask, settings
+from llm.client import get_client
+from llm.providers import PROVIDERS
 
 LINKS = {
     "gemini": "https://aistudio.google.com/apikey", "groq": "https://console.groq.com/keys",

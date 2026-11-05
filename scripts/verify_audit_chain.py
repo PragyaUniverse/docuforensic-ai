@@ -7,7 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from audit import chain  # noqa: E402
+from audit import chain
 
 
 def main() -> int:

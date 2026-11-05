@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import io
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 
 import cv2
@@ -21,8 +21,8 @@ from rapidfuzz import fuzz
 from config.settings import settings
 from models.schemas import (
     BBox,
-    Document,
     DocFormat,
+    Document,
     EvidenceItem,
     EvidenceKind,
     Finding,
@@ -59,7 +59,7 @@ VERIFY_PDF = [
 EDITOR_RE = re.compile(
     r"(photoshop|gimp|illustrator|inkscape|acrobat\s+(pro|standard)|foxit\s*phantom|pdf\s*xchange|ilovepdf|smallpdf|"
     r"sejda|pdfescape|nitro|pdfelement|wondershare|pdf-?xchange|canva|libreoffice\s+draw|pdfsam|pypdf|pikepdf|pymupdf|mupdf)",
-    re.I,
+    re.IGNORECASE,
 )
 _CONFUSABLE = str.maketrans({"O": "0", "o": "0", "I": "1", "l": "1", "|": "1", "S": "5", "B": "8", "Z": "2", "—": "-", "–": "-"})
 
@@ -448,7 +448,7 @@ def _parse_pdf_date(value: str | None) -> datetime | None:
         return None
     y, mo, d, hh, mm, ss = (int(m.group(i) or default) for i, default in zip(range(1, 7), (0, 1, 1, 0, 0, 0)))
     try:
-        tz = timezone.utc
+        tz = UTC
         if m.group(7) in ("+", "-") and m.group(8):
             offset = timedelta(hours=int(m.group(8)), minutes=int(m.group(9) or 0))
             tz = timezone(offset if m.group(7) == "+" else -offset)

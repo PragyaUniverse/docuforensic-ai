@@ -11,7 +11,7 @@ import hashlib
 import json
 import sqlite3
 import threading
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from config.settings import settings
@@ -64,7 +64,7 @@ def _row_to_entry(row: sqlite3.Row) -> AuditEntry:
 def append(action: str, actor: str = "system", case_id: str | None = None,
            payload: dict[str, Any] | None = None) -> AuditEntry:
     payload_json = canonical_json(payload or {})
-    ts = datetime.now(timezone.utc).isoformat()
+    ts = datetime.now(UTC).isoformat()
     with _lock:
         conn = _connect()
         try:

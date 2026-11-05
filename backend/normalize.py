@@ -6,10 +6,10 @@ rounding) never raises a conflict, while real differences do.
 from __future__ import annotations
 
 import re
+from calendar import monthrange
 from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
-from calendar import monthrange
 
 from rapidfuzz import fuzz
 from rapidfuzz.distance import Levenshtein
@@ -106,7 +106,7 @@ def parse_period(raw: str | None) -> tuple[date, date] | None:
     if not raw:
         return None
     text = re.sub(r"\s+", " ", raw.strip()).strip(" .,:")
-    parts = re.split(r"\s+(?:to|-|–|—|till|until)\s+|(?<=\d)/(?=\d{4}-)", text, flags=re.I)
+    parts = re.split(r"\s+(?:to|-|–|—|till|until)\s+|(?<=\d)/(?=\d{4}-)", text, flags=re.IGNORECASE)
     if len(parts) == 2:
         start, end = parse_date(parts[0]), parse_date(parts[1])
         if start and end:
@@ -229,7 +229,7 @@ def compare_addresses(a: str, b: str) -> Comparison:
                           "one version omits city, state or PIN")
     if ratio >= 95:
         return Comparison(True, ratio, "near-identical text", "minor spelling variation")
-    only = sorted((ta ^ tb))
+    only = sorted(ta ^ tb)
     return Comparison(False, ratio, "address words differ: " + ", ".join(only[:6]))
 
 

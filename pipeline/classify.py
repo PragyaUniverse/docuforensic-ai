@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import re
 
-from models.schemas import BBox, Document, DocType
+from models.schemas import BBox, DocType, Document
 from pipeline.common import is_processable, log
 from pipeline.layout import doc_lines, squish
 
@@ -120,4 +120,4 @@ def classify(doc: Document) -> Document:
     return doc
 
 
-__all__ = ["classify", "BBox"]
+__all__ = ["BBox", "classify"]

@@ -39,7 +39,7 @@ from pipeline.common import (
 from pipeline.forensics_visual import ink_mask
 from pipeline.layout import doc_lines
 
-LABEL_RE = re.compile(r"(signature|signatory|signed\s*by|sign\.?$|^sign\b|sign\s+here|thumb\s*impression)", re.I)
+LABEL_RE = re.compile(r"(signature|signatory|signed\s*by|sign\.?$|^sign\b|sign\s+here|thumb\s*impression)", re.IGNORECASE)
 PHASH_MAX_DISTANCE = 14
 IDENTICAL_CORR = 0.93
 

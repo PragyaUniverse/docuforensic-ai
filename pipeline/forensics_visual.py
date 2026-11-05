@@ -17,7 +17,16 @@ import cv2
 import numpy as np
 from scipy import ndimage as ndi
 
-from models.schemas import BBox, Document, DocFormat, EvidenceItem, EvidenceKind, Finding, FindingCategory, Word
+from models.schemas import (
+    BBox,
+    DocFormat,
+    Document,
+    EvidenceItem,
+    EvidenceKind,
+    Finding,
+    FindingCategory,
+    Word,
+)
 from pipeline.common import (
     clip_bbox,
     crop_evidence,

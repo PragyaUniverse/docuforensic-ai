@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import sqlite3
 import threading
-from typing import Iterable
+from collections.abc import Iterable
 
 from config.settings import settings
 from models.schemas import Case, Document, Dossier, Entity, EvidenceGraph, Finding

@@ -1,4 +1,14 @@
-from models.schemas import BBox, Document, DocFormat, DocType, Field, ProcessingStatus, Table, TableCell, TextSource
+from models.schemas import (
+    BBox,
+    DocFormat,
+    DocType,
+    Document,
+    Field,
+    ProcessingStatus,
+    Table,
+    TableCell,
+    TextSource,
+)
 
 
 def box(y=100):

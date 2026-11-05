@@ -19,19 +19,34 @@ from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field as PField
+from pydantic import BaseModel
+from pydantic import Field as PField
 from starlette.datastructures import UploadFile
 
 from audit import chain
-from backend import capabilities, db, dossier as dossier_mod, orchestrator
+from backend import capabilities, db, orchestrator
+from backend import dossier as dossier_mod
 from backend.logging_conf import configure_logging
 from config.settings import REPO_ROOT, settings
 from llm.client import get_client
 from llm.providers import PROVIDERS
 from models.schemas import (
-    AuditEntry, AuditVerification, Case, CaseStatus, DocFormat, Document, Dossier, Entity,
-    EvidenceGraph, Finding, FindingCategory, FindingStatus, ProcessingStatus, ReviewDecision,
-    ReviewRecord, utcnow,
+    AuditEntry,
+    AuditVerification,
+    Case,
+    CaseStatus,
+    DocFormat,
+    Document,
+    Dossier,
+    Entity,
+    EvidenceGraph,
+    Finding,
+    FindingCategory,
+    FindingStatus,
+    ProcessingStatus,
+    ReviewDecision,
+    ReviewRecord,
+    utcnow,
 )
 
 VERSION = "0.1.0"

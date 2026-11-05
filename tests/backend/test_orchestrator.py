@@ -1,6 +1,14 @@
 from backend.orchestrator import apply_visible_readings, compute_risk
 from models.schemas import (
-    BBox, EvidenceItem, EvidenceKind, Finding, FindingCategory, FindingStatus, DocType, ProcessingStatus, Severity,
+    BBox,
+    DocType,
+    EvidenceItem,
+    EvidenceKind,
+    Finding,
+    FindingCategory,
+    FindingStatus,
+    ProcessingStatus,
+    Severity,
     TextSource,
 )
 from tests.backend.helpers import make_doc, txn_table

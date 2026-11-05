@@ -12,11 +12,18 @@ import re
 import time
 from typing import Any
 
-from pydantic import BaseModel, Field as PField
+from pydantic import BaseModel
+from pydantic import Field as PField
 
 from llm.client import LLMClient, get_client
 from models.schemas import (
-    BBox, Document, Finding, FindingStatus, ReasoningProvenance, Severity, ValueType,
+    BBox,
+    Document,
+    Finding,
+    FindingStatus,
+    ReasoningProvenance,
+    Severity,
+    ValueType,
 )
 
 log = logging.getLogger("docuforensic.investigator")
@@ -27,7 +34,7 @@ LLM_TIME_BUDGET_S = 180.0
 VERDICT_RE = re.compile(
     r"\b(fraud\w*|forged?|forger\w*|forging|counterfeit\w*|fake[ds]?|falsified|falsification|"
     r"definitely|certainly|undoubtedly|proves?|proven|guilty|illegal|criminal|confirmed\s+(?:manipulation|tamper\w*)|"
-    r"is\s+(?:tampered|manipulated|altered))\b", re.I)
+    r"is\s+(?:tampered|manipulated|altered))\b", re.IGNORECASE)
 
 SYSTEM = (
     "You help a human examiner weigh a document anomaly. You do not decide anything. Treat the "

@@ -6,21 +6,50 @@ fields and bboxes from BOTH sides so the reviewer can trace it to every source l
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
-from typing import Callable
 
 from backend.contextual import _column, _txn_table, field_ref
 from backend.normalize import (
-    MONEY_TOLERANCE, Comparison, clean_address, compare_addresses, compare_employers, compare_ids, compare_names,
-    date_of, fmt_money, money_of, norm_address, norm_employer, norm_id, ocr_adjustment, parse_date,
-    parse_money, parse_period,
+    MONEY_TOLERANCE,
+    Comparison,
+    clean_address,
+    compare_addresses,
+    compare_employers,
+    compare_ids,
+    compare_names,
+    date_of,
+    fmt_money,
+    money_of,
+    norm_address,
+    norm_employer,
+    norm_id,
+    ocr_adjustment,
+    parse_date,
+    parse_money,
+    parse_period,
 )
 from models.schemas import (
-    BBox, Document, DocType, Entity, EntityMention, EntityType, EvidenceGraph, EvidenceItem,
-    EvidenceKind, Field, Finding, FindingCategory, FindingStatus, GraphEdge, GraphNode,
-    ProcessingStatus, Severity, TableCell,
+    BBox,
+    DocType,
+    Document,
+    Entity,
+    EntityMention,
+    EntityType,
+    EvidenceGraph,
+    EvidenceItem,
+    EvidenceKind,
+    Field,
+    Finding,
+    FindingCategory,
+    FindingStatus,
+    GraphEdge,
+    GraphNode,
+    ProcessingStatus,
+    Severity,
+    TableCell,
 )
 
 # Which document to trust as the reference side: only used to pick the highlighted primary, and
@@ -30,7 +59,7 @@ _AUTHORITY = {
     DocType.declaration: 2, DocType.application_form: 1, DocType.unknown: 0,
 }
 INCOME_TOLERANCE_PCT = Decimal("0.05")
-_SALARY_WORDS = re.compile(r"\b(sal|salary|payroll|wages|pay\s*credit)\b", re.I)
+_SALARY_WORDS = re.compile(r"\b(sal|salary|payroll|wages|pay\s*credit)\b", re.IGNORECASE)
 
 
 def _compare_dates(a: str, b: str) -> Comparison:
@@ -622,4 +651,4 @@ def build_graph(case_id: str, docs: list[Document], entities: list[Entity],
     return EvidenceGraph(case_id=case_id, nodes=nodes, edges=edges)
 
 
-__all__ = ["build_entities", "correlate", "build_graph", "BBox"]
+__all__ = ["BBox", "build_entities", "build_graph", "correlate"]

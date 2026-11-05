@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 import logging
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from llm.redact import scrub_secrets
 
@@ -12,7 +12,7 @@ from llm.redact import scrub_secrets
 class JsonFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         entry = {
-            "ts": datetime.fromtimestamp(record.created, timezone.utc).isoformat(),
+            "ts": datetime.fromtimestamp(record.created, UTC).isoformat(),
             "level": record.levelname, "logger": record.name, "msg": scrub_secrets(record.getMessage()),
         }
         if record.exc_info and record.exc_info[0]:

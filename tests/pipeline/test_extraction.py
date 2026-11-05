@@ -10,7 +10,14 @@ from pipeline.extract import _check_amounts, extract_fields, repair_pan
 from pipeline.ingest import ingest_file
 from pipeline.layout import group_lines
 from pipeline.normalize import norm_address, norm_date, norm_money, norm_period
-from pipeline.ocr import _line_to_words, OcrLine, estimate_skew_deg, extract_words, merge_fragments, repair_text
+from pipeline.ocr import (
+    OcrLine,
+    _line_to_words,
+    estimate_skew_deg,
+    extract_words,
+    merge_fragments,
+    repair_text,
+)
 from tests.pipeline.fixtures import salary_slip, write_pdf_text
 
 

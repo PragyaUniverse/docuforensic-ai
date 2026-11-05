@@ -122,7 +122,7 @@ def norm_number(raw: str) -> str | None:
 
 
 def looks_like_money(text: str) -> bool:
-    return bool(re.fullmatch(r"(?:(?:rs\.?|inr|₹)\s*)?\d[\d,]*(?:\.\d{1,2})?(?:/-)?", text.strip(), re.I))
+    return bool(re.fullmatch(r"(?:(?:rs\.?|inr|₹)\s*)?\d[\d,]*(?:\.\d{1,2})?(?:/-)?", text.strip(), re.IGNORECASE))
 
 
 def looks_like_date(text: str) -> bool:

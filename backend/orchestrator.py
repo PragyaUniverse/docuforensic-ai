@@ -9,19 +9,33 @@ import hashlib
 import importlib
 import logging
 import time
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Callable, Iterator
 
 from PIL import Image, ImageDraw
 
 from audit import chain
-from backend import contextual, crossdoc, db, dossier as dossier_mod
+from backend import contextual, crossdoc, db
+from backend import dossier as dossier_mod
 from config.settings import settings
 from llm import investigator
 from llm.client import get_client
 from models.schemas import (
-    BBox, Case, CaseStatus, Document, EvidenceItem, EvidenceKind, Finding, FindingStatus, PipelineStage, ProcessingStatus, RiskLevel, Severity, StageProgress, TextSource,
+    BBox,
+    Case,
+    CaseStatus,
+    Document,
+    EvidenceItem,
+    EvidenceKind,
+    Finding,
+    FindingStatus,
+    PipelineStage,
+    ProcessingStatus,
+    RiskLevel,
+    Severity,
+    StageProgress,
+    TextSource,
     utcnow,
 )
 
@@ -84,7 +98,7 @@ class Run:
         failure = None
         try:
             yield ctx
-        except Exception as exc:  # noqa: BLE001 - later stages still run on what exists
+        except Exception as exc:
             log.exception("stage failed stage=%s", stage.value)
             failure = f"{type(exc).__name__} in this stage; later stages used the results available."
         progress.duration_ms = int((time.monotonic() - start) * 1000)
@@ -109,7 +123,7 @@ def _for_each_doc(docs: list[Document], ctx: _Stage, label: str, fn: Callable[[D
             continue
         try:
             docs[i] = fn(doc)
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             log.exception("%s failed", label)
             doc.status = ProcessingStatus.degraded
             doc.status_message = f"{label} could not complete ({type(exc).__name__})."
@@ -120,7 +134,7 @@ def _for_each_doc(docs: list[Document], ctx: _Stage, label: str, fn: Callable[[D
 def _safe_findings(ctx: _Stage, label: str, fn: Callable[[], list[Finding]]) -> list[Finding]:
     try:
         return fn() or []
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         log.exception("%s failed", label)
         ctx.degrade(f"{label} did not complete ({type(exc).__name__}); its absence isn't a clean result.")
         return []
@@ -289,7 +303,7 @@ def run_case(case_id: str) -> None:
     try:
         _run(case)
         case.status = CaseStatus.complete
-    except Exception as exc:  # noqa: BLE001 - the case records the failure; the server keeps running
+    except Exception as exc:
         log.exception("case run failed")
         case.status = CaseStatus.failed
         chain.append("case.failed", "system", case_id, {"error": type(exc).__name__})

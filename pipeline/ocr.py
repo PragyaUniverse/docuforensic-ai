@@ -20,7 +20,7 @@ import pytesseract
 from PIL import Image
 
 from config.settings import settings
-from models.schemas import BBox, Document, DocFormat, Page, ProcessingStatus, TextSource, Word
+from models.schemas import BBox, DocFormat, Document, Page, ProcessingStatus, TextSource, Word
 from pipeline.common import from_rel, is_processable, log, set_degraded, source_path
 
 _engine = None

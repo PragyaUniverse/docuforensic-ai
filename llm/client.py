@@ -47,7 +47,7 @@ class LLMResult:
 
 def _extract_json(text: str) -> str:
     text = text.strip()
-    fence = re.match(r"^```(?:json)?\s*(.*?)\s*```$", text, re.S)
+    fence = re.match(r"^```(?:json)?\s*(.*?)\s*```$", text, re.DOTALL)
     if fence:
         return fence.group(1)
     start, end = text.find("{"), text.rfind("}")
@@ -240,7 +240,7 @@ class LLMClient:
                 text = redaction.restore(reply.text) if redaction else reply.text
                 try:
                     data = schema.model_validate_json(_extract_json(text))
-                except ValidationError as exc:
+                except ValidationError:
                     last = ProviderError("bad_output", f"{provider.name} output failed validation")
                     send_prompt += "\n\nYour previous reply was not valid JSON for the schema. " \
                                    "Reply with only the corrected JSON object."
@@ -297,9 +297,8 @@ class LLMClient:
             except (ProviderError, ValidationError) as exc:
                 self._note(name, False, str(exc))
                 detail = scrub_secrets(str(exc))
-        else:
-            if provider.needs_key and not self._keys(provider):
-                return {"ok": False, "detail": "no key", "model": provider.model_for("fast")}
+        if provider.needs_key and not self._keys(provider):
+            return {"ok": False, "detail": "no key", "model": provider.model_for("fast")}
         return {"ok": False, "detail": detail, "model": provider.model_for("fast")}
 
     def any_live_provider(self) -> bool:

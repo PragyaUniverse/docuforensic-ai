@@ -13,11 +13,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from backend import db, orchestrator  # noqa: E402
-from backend.app import _ingest, _manifest  # noqa: E402
-from config.settings import settings  # noqa: E402
-from llm.client import get_client  # noqa: E402
-from models.schemas import Case  # noqa: E402
+from backend import db, orchestrator
+from backend.app import _ingest, _manifest
+from config.settings import settings
+from llm.client import get_client
+from models.schemas import Case
 
 
 def main() -> int:

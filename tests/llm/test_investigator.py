@@ -4,10 +4,19 @@ import pytest
 
 from llm.client import LLMResult
 from llm.investigator import (
-    PLAYBOOK, InvestigationAnswer, correlate_findings, investigate, summarize_case, validate_answer,
+    PLAYBOOK,
+    InvestigationAnswer,
+    correlate_findings,
+    investigate,
+    summarize_case,
+    validate_answer,
 )
 from models.schemas import (
-    BBox, Finding, FindingCategory, FindingStatus, Severity,
+    BBox,
+    Finding,
+    FindingCategory,
+    FindingStatus,
+    Severity,
 )
 
 

@@ -5,7 +5,7 @@ import re
 
 import numpy as np
 
-from models.schemas import BBox, Document, DocType, Section
+from models.schemas import BBox, DocType, Document, Section
 from pipeline.common import is_processable, log
 from pipeline.layout import Line, doc_lines
 

@@ -3,12 +3,13 @@ from __future__ import annotations
 
 import io
 import logging
-from datetime import timezone
+from datetime import UTC
 from pathlib import Path
 from typing import Any
 from xml.sax.saxutils import escape
 
-from PIL import Image as PILImage, ImageDraw
+from PIL import Image as PILImage
+from PIL import ImageDraw
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.pagesizes import A4
@@ -16,8 +17,17 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas as rl_canvas
 from reportlab.platypus import (
-    BaseDocTemplate, CondPageBreak, Frame, Image, KeepTogether, PageBreak, PageTemplate, Paragraph,
-    Spacer, Table, TableStyle,
+    BaseDocTemplate,
+    CondPageBreak,
+    Frame,
+    Image,
+    KeepTogether,
+    PageBreak,
+    PageTemplate,
+    Paragraph,
+    Spacer,
+    Table,
+    TableStyle,
 )
 
 from audit import chain
@@ -25,8 +35,17 @@ from backend import db
 from config.settings import settings
 from llm import investigator
 from models.schemas import (
-    BBox, Document, Dossier, DossierDocumentOverview, EvidenceKind, Finding, FindingCategory,
-    FindingStatus, ProcessingStatus, RiskLevel, Severity,
+    BBox,
+    Document,
+    Dossier,
+    DossierDocumentOverview,
+    EvidenceKind,
+    Finding,
+    FindingCategory,
+    FindingStatus,
+    ProcessingStatus,
+    RiskLevel,
+    Severity,
 )
 
 log = logging.getLogger("docuforensic.dossier")
@@ -460,7 +479,7 @@ class _NumberedCanvas(rl_canvas.Canvas):
 
 def _cover(dossier: Dossier, docs: list[Document], findings: list[Finding]) -> list[Any]:
     fg, bg = RISK_STYLE[dossier.risk_level]
-    generated = dossier.generated_at.astimezone(timezone.utc).strftime("%d %b %Y, %H:%M UTC")
+    generated = dossier.generated_at.astimezone(UTC).strftime("%d %b %Y, %H:%M UTC")
     counts = {s: sum(1 for f in findings if f.status == s) for s in FindingStatus}
     tile_w = CONTENT_W / 4
 
@@ -657,4 +676,4 @@ def render_pdf(dossier: Dossier, out: Path) -> Path:
     return out
 
 
-__all__ = ["build_dossier", "render_pdf", "KeepTogether"]
+__all__ = ["KeepTogether", "build_dossier", "render_pdf"]

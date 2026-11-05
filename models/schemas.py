@@ -8,16 +8,17 @@ Rules (see docs/CONTRACTS.md):
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 from uuid import uuid4
 
-from pydantic import BaseModel, Field as PydanticField
+from pydantic import BaseModel
+from pydantic import Field as PydanticField
 
 
 def utcnow() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 def new_id(prefix: str) -> str:
@@ -112,7 +113,7 @@ class BBox(BaseModel):
     x1: float
     y1: float
 
-    def iou(self, other: "BBox") -> float:
+    def iou(self, other: BBox) -> float:
         ix0, iy0 = max(self.x0, other.x0), max(self.y0, other.y0)
         ix1, iy1 = min(self.x1, other.x1), min(self.y1, other.y1)
         inter = max(0.0, ix1 - ix0) * max(0.0, iy1 - iy0)
@@ -182,7 +183,7 @@ class Section(BaseModel):
     page: int
     bbox: BBox
     field_ids: list[str] = PydanticField(default_factory=list)
-    children: list["Section"] = PydanticField(default_factory=list)
+    children: list[Section] = PydanticField(default_factory=list)
 
 
 class Document(BaseModel):

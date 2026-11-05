@@ -13,8 +13,8 @@ from PIL import Image
 
 from models.schemas import (
     BBox,
-    Document,
     DocType,
+    Document,
     Field,
     Table,
     TableCell,
@@ -131,7 +131,7 @@ PAN_RE = re.compile(r"[A-Z]{5}\d{4}[A-Z]")
 AADHAAR_RE = re.compile(r"\b\d{4}\s?\d{4}\s?\d{4}\b")
 IFSC_RE = re.compile(r"[A-Z]{4}0[A-Z0-9]{6}")
 EMAIL_RE = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
-MONEY_RE = re.compile(r"(?:(?:rs\.?|inr|₹)\s*)?\d[\d,]*(?:\.\d{1,2})?(?:/-)?", re.I)
+MONEY_RE = re.compile(r"(?:(?:rs\.?|inr|₹)\s*)?\d[\d,]*(?:\.\d{1,2})?(?:/-)?", re.IGNORECASE)
 DATE_RE = re.compile(
     r"\d{4}-\d{1,2}-\d{1,2}|\d{1,2}\s*[-/.]\s*\d{1,2}\s*[-/.]\s*\d{2,4}|\d{1,2}(?:st|nd|rd|th)?[\s\-]*[A-Za-z]{3,9}[\s\-,]*\d{2,4}"
 )
@@ -220,14 +220,14 @@ def _accept_position(line: Line, i: int, end: int) -> bool:
 def _colon_follows(line: Line, end: int) -> bool:
     """A colon right after the label, allowing 'No.' and '(Rs.)' style tails."""
     tail = "".join(c.ch for c in line.chars[end : end + 9])
-    return bool(re.match(r"\.?(\((rs|inr|₹)\.?\))?\.?[:：=]", tail, re.I))
+    return bool(re.match(r"\.?(\((rs|inr|₹)\.?\))?\.?[:：=]", tail, re.IGNORECASE))
 
 
 def _value_span(line: Line, hit: LabelHit, next_start: int) -> tuple[int, int]:
     """Value characters to the right of a label, up to the next label or a wide gap."""
     i = hit.end
     tail = "".join(c.ch for c in line.chars[i : i + 9])
-    m = re.match(r"\.?(\((rs|inr|₹)\.?\))?", tail, re.I)
+    m = re.match(r"\.?(\((rs|inr|₹)\.?\))?", tail, re.IGNORECASE)
     if m:
         i += len(m.group(0))
     while i < next_start and line.chars[i].ch in ":：-–=.|":
@@ -266,7 +266,7 @@ def _fit_value(raw: str, vtype: ValueType, name: str) -> tuple[int, int] | None:
         if m:
             return m.start(), m.end()
         if name == "pan_number":
-            for i in range(0, max(len(squished) - 9, 0)):
+            for i in range(max(len(squished) - 9, 0)):
                 if repair_pan(squished[i : i + 10]):
                     return i, i + 10
         return None
@@ -542,7 +542,7 @@ class _Extractor:
         chunks = [c for c in chunks if sum(ch.ch.isalpha() for ch in c[0].chars[c[1] : c[2]]) >= 4
                   and not re.search(r"(?i)statement|slip|bill\b|application|declaration", c[0].span_text(c[1], c[2]))]
         if pattern:
-            matching = [c for c in chunks if re.search(pattern, c[0].span_text(c[1], c[2]), re.I)]
+            matching = [c for c in chunks if re.search(pattern, c[0].span_text(c[1], c[2]), re.IGNORECASE)]
             chunks = matching or chunks
         if chunks:
             line, a, b = max(chunks, key=lambda c: c[0].height)
@@ -550,7 +550,7 @@ class _Extractor:
 
     def _id_proof_fallbacks(self, lines: list[Line], have: set[str]) -> None:
         if "id_type" not in have:
-            pattern = re.compile(r"(aadhaar|aadhar|pan|voter|passport|national)[-\s]*(style|format|id|card)?", re.I)
+            pattern = re.compile(r"(aadhaar|aadhar|pan|voter|passport|national)[-\s]*(style|format|id|card)?", re.IGNORECASE)
             for line in lines:
                 if not any(k in line.squished for k in ("aadhaar", "aadhar", "permanentaccountnumber", "nationalid", "voter", "passport", "pan-style", "panstyle", "pan-format")):
                     continue
@@ -599,7 +599,7 @@ class _Extractor:
         for name, vtype, pattern in patterns:
             if name in have_names:
                 continue
-            m = re.search(pattern, stream, flags=re.S)
+            m = re.search(pattern, stream, flags=re.DOTALL)
             if not m:
                 continue
             s, e = m.start(1), m.end(1)
@@ -625,7 +625,7 @@ class _Extractor:
 
 def _token_is_numeric(text: str) -> bool:
     t = text.strip().replace(",", "").replace("₹", "")
-    t = re.sub(r"^(rs\.?|inr)", "", t, flags=re.I)
+    t = re.sub(r"^(rs\.?|inr)", "", t, flags=re.IGNORECASE)
     t = t.replace("/-", "")
     return bool(re.fullmatch(r"-?\d+(\.\d+)?", t)) or t in ("-", "--", "—")
 
@@ -813,7 +813,7 @@ def _pay_row(table: Table | None, words: list) -> None:
     )
 
 
-WELL_FORMED_MONEY = re.compile(r"(?:(?:rs\.?|inr|₹)\s*)?(?:\d{1,3}(?:,\d{2,3})*,\d{3}|\d+)(?:\.\d{2})?(?:/-)?", re.I)
+WELL_FORMED_MONEY = re.compile(r"(?:(?:rs\.?|inr|₹)\s*)?(?:\d{1,3}(?:,\d{2,3})*,\d{3}|\d+)(?:\.\d{2})?(?:/-)?", re.IGNORECASE)
 LOW_CONFIDENCE_CAP = 0.3
 
 

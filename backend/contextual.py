@@ -10,15 +10,36 @@ from datetime import date, timedelta
 from decimal import Decimal
 
 from backend.normalize import (
-    IFSC_RE, MONEY_TOLERANCE, PAN_RE, date_of, fmt_money, money_of, money_well_formed, norm_id,
-    ocr_adjustment, parse_money, parse_period, verhoeff_valid,
+    IFSC_RE,
+    MONEY_TOLERANCE,
+    PAN_RE,
+    date_of,
+    fmt_money,
+    money_of,
+    money_well_formed,
+    norm_id,
+    ocr_adjustment,
+    parse_money,
+    parse_period,
+    verhoeff_valid,
 )
 from config.settings import settings
-from pipeline.layout import doc_lines
 from models.schemas import (
-    BBox, Document, DocType, EvidenceItem, EvidenceKind, Field, Finding, FindingCategory,
-    FindingStatus, Severity, Table, TableCell, TextSource,
+    BBox,
+    DocType,
+    Document,
+    EvidenceItem,
+    EvidenceKind,
+    Field,
+    Finding,
+    FindingCategory,
+    FindingStatus,
+    Severity,
+    Table,
+    TableCell,
+    TextSource,
 )
+from pipeline.layout import doc_lines
 
 MIN_WORKING_AGE_YEARS = 14
 _DOC_DATE_FIELDS = ("application_date", "bill_date", "declaration_date", "document_date")

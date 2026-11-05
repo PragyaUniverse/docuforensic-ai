@@ -3,8 +3,17 @@ from decimal import Decimal
 import pytest
 
 from backend.normalize import (
-    clean_address, compare_addresses, compare_employers, compare_ids, compare_names, confusable,
-    money_well_formed, parse_date, parse_money, parse_period, verhoeff_valid,
+    clean_address,
+    compare_addresses,
+    compare_employers,
+    compare_ids,
+    compare_names,
+    confusable,
+    money_well_formed,
+    parse_date,
+    parse_money,
+    parse_period,
+    verhoeff_valid,
 )
 
 

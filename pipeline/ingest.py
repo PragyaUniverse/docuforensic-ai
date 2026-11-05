@@ -14,7 +14,7 @@ import pymupdf
 from PIL import Image, ImageOps
 
 from config.settings import settings
-from models.schemas import Document, DocFormat, Page, ProcessingStatus, new_id
+from models.schemas import DocFormat, Document, Page, ProcessingStatus, new_id
 from pipeline.common import log, to_rel
 
 pymupdf.TOOLS.mupdf_display_errors(False)

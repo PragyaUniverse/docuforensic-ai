@@ -44,7 +44,6 @@ def make(handler):
 def down_ollama(request):
     if "ollama.test" in request.url.host:
         raise httpx.ConnectError("refused")
-    return None
 
 
 def test_no_keys_and_no_ollama_is_deterministic_without_error():

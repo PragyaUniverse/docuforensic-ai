@@ -542,11 +542,10 @@ def run_pipeline(key: str, files: list[Path], workroot: Path) -> CaseRun:
     from pipeline.forensics_pdf import analyze_pdf
     from pipeline.forensics_visual import analyze_visual
     from pipeline.fusion import fuse_regions
-    from pipeline.signatures import analyze_signatures
-    from pipeline.structure import analyze_structure
-
     from pipeline.ingest import ingest_file
     from pipeline.ocr import extract_words
+    from pipeline.signatures import analyze_signatures
+    from pipeline.structure import analyze_structure
 
     start = time.perf_counter()
     case_id = new_id("bench")
