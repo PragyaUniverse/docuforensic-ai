@@ -23,8 +23,8 @@ export const STATUS_META: Record<
     text: "text-obs",
     bg: "bg-obs-dim",
     border: "border-obs",
-    stroke: "#5aa9ff",
-    meaning: "A measurable fact about the document. It makes no claim about intent.",
+    stroke: "#1f5a96",
+    meaning: "Something we measured. On its own it means little.",
   },
   INCONSISTENCY: {
     label: "Inconsistency",
@@ -33,8 +33,8 @@ export const STATUS_META: Record<
     text: "text-inc",
     bg: "bg-inc-dim",
     border: "border-inc",
-    stroke: "#f6b12d",
-    meaning: "Two values disagree, within a document or across documents.",
+    stroke: "#c07f0a",
+    meaning: "Two values that should match don't.",
   },
   POTENTIAL_MANIPULATION: {
     label: "Potential manipulation",
@@ -43,17 +43,17 @@ export const STATUS_META: Record<
     text: "text-man",
     bg: "bg-man-dim",
     border: "border-man",
-    stroke: "#ff5a4f",
-    meaning: "A hypothesis from forensic signals. It needs human review and is not confirmed.",
+    stroke: "#b3261e",
+    meaning: "Signs the document may have been altered. A person needs to check it. It isn't confirmed.",
   },
 };
 
 export const CATEGORY_LABEL: Record<FindingCategory, string> = {
-  visual: "Visual",
-  structural: "Structural",
-  contextual: "Contextual",
-  cross_document: "Cross-document",
-  metadata: "Metadata",
+  visual: "On the page",
+  structural: "In the file",
+  contextual: "Within a document",
+  cross_document: "Across documents",
+  metadata: "File details",
 };
 
 const SEV: Record<Severity, number> = { high: 3, medium: 2, low: 1, info: 0 };
@@ -70,7 +70,7 @@ export function sortFindings(list: Finding[]): Finding[] {
 
 export function findingLabels(list: Finding[]): Map<string, string> {
   const m = new Map<string, string>();
-  sortFindings(list).forEach((f, i) => m.set(f.id, `F-${String(i + 1).padStart(2, "0")}`));
+  sortFindings(list).forEach((f, i) => m.set(f.id, `#${i + 1}`));
   return m;
 }
 

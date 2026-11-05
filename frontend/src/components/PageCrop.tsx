@@ -10,7 +10,7 @@ export function PageCrop({
   doc,
   page,
   bbox,
-  stroke = "#eceae4",
+  stroke = "#20242a",
   pad = 28,
   className,
   title,
@@ -38,7 +38,7 @@ export function PageCrop({
     return (
       <div className={cn("flex items-center justify-center gap-2 bg-raised p-4 text-ink-3", className)}>
         <ImageOff className="size-4" aria-hidden />
-        <span className="text-xs">Source page unavailable</span>
+        <span className="text-[13px]">Source page unavailable</span>
       </div>
     );
   }

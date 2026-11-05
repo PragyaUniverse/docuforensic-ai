@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Download, FileJson, FileText } from "lucide-react";
 import { api } from "@/api";
 import { useCaseDocuments } from "@/api/hooks";
 import type { Dossier, Field, Finding } from "@/api/types";
@@ -12,6 +11,12 @@ import { Provenance } from "@/components/FindingCard";
 import { ConfidenceMeter, HumanReviewPlate, ProcBadge, ReviewBadge, RiskPlate, StatusBadge } from "@/components/StatusBadge";
 import { cn, fmtBBox, fmtTime, humanize, shortHash } from "@/lib/utils";
 
+function reasoningNote(modes: string[]): string {
+  if (modes.some((m) => m.startsWith("live_llm"))) return "Explanations include notes from an AI model.";
+  if (modes.some((m) => m.startsWith("demo_cache"))) return "Explanations include AI notes recorded in an earlier run.";
+  return "Explanations were written from fixed rules, with no AI.";
+}
+
 const SECTIONS = [
   ["s71", "7.1", "Document Overview"],
   ["s72", "7.2", "Extracted Information"],
@@ -21,10 +26,9 @@ const SECTIONS = [
   ["s76", "7.6", "Investigation Summary"],
 ] as const;
 
-function H({ id, n, title }: { id: string; n: string; title: string }) {
+function H({ id, title }: { id: string; n: string; title: string }) {
   return (
     <h2 id={id} className="display mb-3 flex scroll-mt-4 items-baseline gap-3 border-b border-line-strong pb-1.5 text-[18px]">
-      <span className="font-mono text-[13px] font-medium text-ink-3">{n}</span>
       {title}
     </h2>
   );
@@ -46,7 +50,7 @@ function FindingRow({ f, docName, caseId }: { f: Finding; docName: string; caseI
         </span>
       </div>
       <p className="mt-1 leading-relaxed text-ink-2">{f.explanation}</p>
-      <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] text-ink-3">
+      <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[13px] text-ink-3">
         <span>{docName}</span>
         {f.page !== null && <span>p{f.page + 1}</span>}
         {f.bbox && <span>{fmtBBox(f.bbox)}</span>}
@@ -94,48 +98,45 @@ export function DossierScreen() {
   if (q.isError) {
     return (
       <div className="flex flex-col">
-        <PageHeading eyebrow="Step 10 · Dossier" title="Investigation dossier" />
-        <ErrorState title="The dossier is not available" error={q.error} onRetry={() => q.refetch()} />
+        <PageHeading title="Report" />
+        <ErrorState title="The report isn't available" error={q.error} onRetry={() => q.refetch()} />
         <p className="px-6 text-ink-3">
-          A dossier exists once the investigation has finished.{" "}
-          <Link className="underline" to={`/cases/${caseId}/pipeline`}>
-            Go to pipeline
+          The report appears once the check has finished.{" "}
+          <Link className="link" to={`/cases/${caseId}`}>
+            Go to overview
           </Link>
         </p>
       </div>
     );
   }
-  if (!d) return <Empty title="No dossier yet" className="h-full" />;
+  if (!d) return <Empty title="No report yet" className="h-full" />;
 
   return (
     <div className="flex flex-col">
       <PageHeading
-        eyebrow="Step 10 · Dossier"
         title={d.case_name}
         actions={
           <>
             <Button asChild variant="primary">
               <a href={api.dossierPdfUrl(caseId)} download>
-                <Download aria-hidden /> <FileText aria-hidden /> PDF
+                Download PDF
               </a>
             </Button>
             <Button onClick={() => downloadJson(d)}>
-              <Download aria-hidden /> <FileJson aria-hidden /> JSON
+              Download JSON
             </Button>
           </>
         }
       >
-        Generated {fmtTime(d.generated_at)}. Text produced by:{" "}
-        <span className="font-mono text-[13px]">{d.reasoning_modes.join(", ") || "not recorded"}</span>.
+        Generated {fmtTime(d.generated_at)}. {reasoningNote(d.reasoning_modes)}
       </PageHeading>
 
       <div className="grid gap-8 px-6 py-6 xl:grid-cols-[190px_minmax(0,1fr)]">
-        <nav aria-label="Dossier sections" className="hidden xl:block">
+        <nav aria-label="Report sections" className="hidden xl:block">
           <ul className="sticky top-4 flex flex-col gap-1">
-            {SECTIONS.map(([id, n, t]) => (
+            {SECTIONS.map(([id, , t]) => (
               <li key={id}>
-                <a href={`#${id}`} className="flex gap-2 px-1 py-0.5 text-[13px] text-ink-2 hover:text-ink">
-                  <span className="font-mono text-ink-3">{n}</span>
+                <a href={`#${id}`} className="block px-1 py-0.5 text-[14px] text-ink-2 hover:text-ink hover:underline">
                   {t}
                 </a>
               </li>
@@ -144,13 +145,13 @@ export function DossierScreen() {
         </nav>
 
         <article className="flex min-w-0 max-w-[920px] flex-col gap-10">
-          <div className="flex flex-col gap-2 border border-line bg-panel p-4">
+          <div className="flex flex-col gap-2 rounded-md border border-line bg-panel p-4">
             <div className="flex flex-wrap items-center gap-2">
               <RiskPlate risk={d.risk_level} large />
               <HumanReviewPlate />
             </div>
             <p className="text-ink-2">{d.disclaimer}</p>
-            {d.audit_head_hash && <p className="font-mono text-[11px] text-ink-3">Audit head at generation: {shortHash(d.audit_head_hash, 32)}</p>}
+            {d.audit_head_hash && <p className="font-mono text-[13px] text-ink-3">History checkpoint: {shortHash(d.audit_head_hash, 32)}</p>}
           </div>
 
           <section>
@@ -170,18 +171,18 @@ export function DossierScreen() {
                 <tbody>
                   {d.overview.map((o) => (
                     <tr key={o.doc_id} className="border-b border-line align-top">
-                      <td className="py-1.5 pr-3 font-mono text-xs">{o.filename}</td>
+                      <td className="py-1.5 pr-3 font-mono text-[13px]">{o.filename}</td>
                       <td className="py-1.5 pr-3">
-                        {humanize(o.doc_type)} <span className="font-mono text-[11px] text-ink-3">{Math.round(o.doc_type_confidence * 100)}%</span>
+                        {humanize(o.doc_type)} <span className="font-mono text-[13px] text-ink-3">{Math.round(o.doc_type_confidence * 100)}%</span>
                       </td>
-                      <td className="py-1.5 pr-3 font-mono text-xs">{o.format}</td>
-                      <td className="py-1.5 pr-3 font-mono text-xs">{o.pages}</td>
-                      <td className="py-1.5 pr-3 font-mono text-[11px] text-ink-3" title={o.sha256}>
+                      <td className="py-1.5 pr-3 text-[13px]">{humanize(o.format)}</td>
+                      <td className="py-1.5 pr-3 font-mono text-[13px]">{o.pages}</td>
+                      <td className="py-1.5 pr-3 font-mono text-[13px] text-ink-3" title={o.sha256}>
                         {shortHash(o.sha256, 14)}
                       </td>
                       <td className="py-1.5">
                         <ProcBadge status={o.status} />
-                        {o.status_message && <div className="mt-1 max-w-56 text-xs text-ink-3">{o.status_message}</div>}
+                        {o.status_message && <div className="mt-1 max-w-56 text-[13px] text-ink-3">{o.status_message}</div>}
                       </td>
                     </tr>
                   ))}
@@ -199,8 +200,8 @@ export function DossierScreen() {
                 const tables = d.tables?.[o.doc_id] ?? [];
                 return (
                   <div key={o.doc_id}>
-                    <h3 className="mb-1 font-mono text-xs text-ink-2">{o.filename}</h3>
-                    {secs.length > 0 && <p className="mb-1 text-xs text-ink-3">Structure: {secs.map((s) => humanize(s.name)).join(" › ")}</p>}
+                    <h3 className="mb-1 font-mono text-[13px] text-ink-2">{o.filename}</h3>
+                    {secs.length > 0 && <p className="mb-1 text-[13px] text-ink-3">Structure: {secs.map((s) => humanize(s.name)).join(" › ")}</p>}
                     {fields.length === 0 ? (
                       <p className="text-ink-3">No fields extracted from this document.</p>
                     ) : (
@@ -210,13 +211,11 @@ export function DossierScreen() {
                             {fields.map((f) => (
                               <tr key={f.id} className="border-b border-line align-baseline">
                                 <td className="w-48 py-1 pr-3 text-ink-2">{humanize(f.name)}</td>
-                                <td className="py-1 pr-3 font-mono text-xs">{f.value_raw}</td>
+                                <td className="py-1 pr-3 font-mono text-[13px]">{f.value_raw}</td>
                                 <td className="w-20 whitespace-nowrap py-1 pr-3">
                                   <ConfidenceMeter value={f.confidence} low={f.confidence < 0.55} />
                                 </td>
-                                <td className="w-44 whitespace-nowrap py-1 font-mono text-[11px] text-ink-3">
-                                  p{f.page + 1} {fmtBBox(f.bbox)}
-                                </td>
+                                <td className="w-20 whitespace-nowrap py-1 text-[13px] text-ink-3">page {f.page + 1}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -224,7 +223,7 @@ export function DossierScreen() {
                       </div>
                     )}
                     {tables.map((t) => (
-                      <p key={t.id} className="mt-1 text-xs text-ink-3">
+                      <p key={t.id} className="mt-1 text-[13px] text-ink-3">
                         Table “{humanize(t.name)}”: {t.rows.length} rows, {t.headers.join(", ")}
                       </p>
                     ))}
@@ -264,7 +263,7 @@ export function DossierScreen() {
                 {Object.entries(d.missing_or_duplicated).map(([id, v]) =>
                   (v.missing?.length ?? 0) + (v.duplicated?.length ?? 0) > 0 ? (
                     <li key={id}>
-                      <span className="font-mono text-xs text-ink-2">{nameOf(id)}</span>
+                      <span className="font-mono text-[13px] text-ink-2">{nameOf(id)}</span>
                       {v.missing?.length ? <span className="ml-2 text-ink-2">missing {v.missing.join(", ")}</span> : null}
                       {v.duplicated?.length ? <span className="ml-2 text-ink-2">duplicated {v.duplicated.join(", ")}</span> : null}
                     </li>
@@ -293,7 +292,7 @@ export function DossierScreen() {
               <p className="text-ink-3">No traceability records.</p>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[640px] text-left font-mono text-[11px]">
+                <table className="w-full min-w-[640px] text-left font-mono text-[13px]">
                   <thead>
                     <tr className="eyebrow border-b border-line">
                       {Object.keys(d.traceability[0]).map((k) => (

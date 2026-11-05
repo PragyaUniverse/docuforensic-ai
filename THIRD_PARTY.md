@@ -51,8 +51,6 @@ not vendored into this repository.
 
 | Package | Version | License | Used for |
 |---|---|---|---|
-| @fontsource-variable/archivo | 5.3.0 | OFL-1.1 | runtime |
-| @fontsource/ibm-plex-mono | 5.3.0 | OFL-1.1 | runtime |
 | @radix-ui/react-dialog | 1.3.1 | MIT | runtime |
 | @radix-ui/react-slider | 1.6.1 | MIT | runtime |
 | @radix-ui/react-slot | 1.5.0 | MIT | runtime |

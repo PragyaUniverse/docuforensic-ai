@@ -1,34 +1,35 @@
 @import "tailwindcss";
-@import "@fontsource-variable/archivo/wdth.css";
-@import "@fontsource/ibm-plex-mono/400.css";
-@import "@fontsource/ibm-plex-mono/500.css";
 
-/* Instrument palette. Status colors carry meaning and are never decorative. */
+/* Plain and readable: paper-coloured page, white sheets, one blue accent.
+   Red, amber and blue are kept for finding status, and always sit beside a word. */
 @theme {
-  --font-sans: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-sans);
 
-  --color-ground: #0a0c0f;
-  --color-panel: #101317;
-  --color-raised: #171b21;
-  --color-hover: #1e232b;
-  --color-line: #262c35;
-  --color-line-strong: #3a424e;
-  --color-ink: #eceae4;
-  --color-ink-2: #b4b9c1;
-  --color-ink-3: #868e9a;
+  --color-ground: #f6f5f1;
+  --color-panel: #ffffff;
+  --color-raised: #f3f1ec;
+  --color-hover: #efedE7;
+  --color-line: #e3e0d8;
+  --color-line-strong: #c8c4ba;
+  --color-ink: #20242a;
+  --color-ink-2: #474d55;
+  --color-ink-3: #6b7078;
 
-  --color-obs: #5aa9ff;
-  --color-obs-dim: #10253c;
-  --color-inc: #f6b12d;
-  --color-inc-dim: #33260a;
-  --color-man: #ff5a4f;
-  --color-man-dim: #3a1412;
-  --color-ok: #41d39a;
-  --color-ok-dim: #0d2e22;
+  --color-accent: #1f5a96;
+  --color-accent-dark: #17467a;
 
-  --radius-sm: 3px;
-  --radius-md: 5px;
+  --color-obs: #1f5a96;
+  --color-obs-dim: #e9f0f8;
+  --color-inc: #8f5f06;
+  --color-inc-dim: #faf1dc;
+  --color-man: #b3261e;
+  --color-man-dim: #fbeae8;
+  --color-ok: #1b7350;
+  --color-ok-dim: #e5f3ec;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
   --radius-lg: 8px;
 }
 
@@ -48,35 +49,47 @@ body {
   background: var(--color-ground);
   color: var(--color-ink);
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.45;
+  font-size: 15px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   font-feature-settings: "tnum" 1;
 }
 
 .display {
-  font-stretch: 118%;
-  font-weight: 640;
-  letter-spacing: -0.012em;
+  font-weight: 600;
 }
 
+/* A small plain label above a group of things. */
 .eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--color-ink-3);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-ink-2);
+}
+
+/* Only for things that really are code: hashes and raw identifiers. */
+.code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+a.link,
+.link {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.link:hover {
+  color: var(--color-accent-dark);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-ink);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
   border-radius: 2px;
 }
 
 ::selection {
-  background: #3b4553;
+  background: #cfe0f2;
 }
 
 * {
@@ -84,7 +97,19 @@ body {
   scrollbar-color: var(--color-line-strong) transparent;
 }
 
-/* Selected-region pulse on the document viewer. */
+input[type="checkbox"] {
+  accent-color: var(--color-accent);
+}
+
+details > summary {
+  cursor: pointer;
+  color: var(--color-accent);
+}
+details > summary:hover {
+  text-decoration: underline;
+}
+
+/* The selected region on the document viewer. */
 @keyframes region-pulse {
   0%,
   100% {
@@ -105,7 +130,7 @@ body {
   display: none;
 }
 .react-flow__controls-button {
-  background: var(--color-raised) !important;
+  background: var(--color-panel) !important;
   border-color: var(--color-line) !important;
   fill: var(--color-ink-2) !important;
   color: var(--color-ink-2) !important;
@@ -118,6 +143,5 @@ body {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
   }
 }

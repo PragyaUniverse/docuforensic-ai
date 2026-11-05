@@ -112,5 +112,5 @@ error in a rare case. We fixed the one we found. Others are likely to exist.
 - `requirements.txt` sets minimum versions. `requirements.lock` records the exact versions tested.
 - Tested on Apple Silicon macOS with Python 3.12 only. CI for Linux is configured but hasn't run yet,
   because the repository isn't on GitHub yet.
-- The UI was checked on desktop, and on tablet for the main screens. It wasn't designed for phones.
+- The UI was checked on desktop, and on tablet for the Findings screen. It wasn't designed for phones.
 - **PyMuPDF is AGPL-3.0.** See `THIRD_PARTY.md` before distributing or hosting a combined application.

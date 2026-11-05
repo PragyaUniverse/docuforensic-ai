@@ -46,13 +46,13 @@ function DocNode({ data }: NodeProps<Node<NodeData>>) {
     <div className={cn("w-[210px] border bg-raised px-2.5 py-2 transition-opacity", data.selected ? "border-ink" : "border-line-strong", data.dim && "opacity-30")}>
       <Handle type="source" position={Position.Right} className={handleCls} />
       <Handle type="target" position={Position.Right} className={handleCls} />
-      <div className="eyebrow flex items-center justify-between gap-1 !text-[10px]">
+      <div className="eyebrow flex items-center justify-between gap-1 !text-[13px]">
         <span className="flex items-center gap-1 truncate">
           <FileText className="size-3 shrink-0" aria-hidden /> {data.sub}
         </span>
         {!!data.count && <span className="shrink-0 text-man">{data.count} conflict{data.count === 1 ? "" : "s"}</span>}
       </div>
-      <div className="mt-0.5 truncate font-mono text-xs text-ink">{data.label}</div>
+      <div className="mt-0.5 truncate font-mono text-[13px] text-ink">{data.label}</div>
     </div>
   );
 }
@@ -63,11 +63,11 @@ function RingNode({ data }: NodeProps<Node<NodeData>>) {
     <div className={cn("w-[190px] cursor-pointer border bg-raised px-2.5 py-2 transition-opacity", data.selected ? "border-ink" : data.count ? "border-man" : "border-line-strong", data.dim && "opacity-30")}>
       <Handle type="source" position={Position.Top} className={hiddenHandle} />
       <Handle type="target" position={Position.Top} className={hiddenHandle} />
-      <div className="eyebrow flex items-center gap-1 truncate !text-[10px]">
+      <div className="eyebrow flex items-center gap-1 truncate !text-[13px]">
         <FileText className="size-3 shrink-0" aria-hidden /> {data.sub}
       </div>
-      <div className="mt-0.5 truncate font-mono text-xs text-ink">{data.label}</div>
-      <div className={cn("mt-1 font-mono text-[10.5px]", data.count ? "text-man" : "text-ink-3")}>
+      <div className="mt-0.5 truncate font-mono text-[13px] text-ink">{data.label}</div>
+      <div className={cn("mt-1 font-mono text-[13px]", data.count ? "text-man" : "text-ink-3")}>
         {data.count ? `${data.count} conflict${data.count === 1 ? "" : "s"}` : "no conflicts"}
       </div>
     </div>
@@ -81,13 +81,13 @@ function EntityNode({ data }: NodeProps<Node<NodeData>>) {
       <Handle type="source" position={Position.Right} className={handleCls} />
       <Handle id="t" type="target" position={Position.Top} className={hiddenHandle} />
       <Handle id="b" type="source" position={Position.Bottom} className={hiddenHandle} />
-      <div className="eyebrow flex items-center justify-between !text-[10px]">
+      <div className="eyebrow flex items-center justify-between !text-[13px]">
         <span className="flex items-center gap-1">
           <Fingerprint className="size-3" aria-hidden /> {data.sub}
         </span>
         {data.conflict && <span className="text-man">Conflict</span>}
       </div>
-      <div className="mt-0.5 line-clamp-2 text-xs leading-snug text-ink">{data.label}</div>
+      <div className="mt-0.5 line-clamp-2 text-[13px] leading-snug text-ink">{data.label}</div>
     </div>
   );
 }
@@ -99,9 +99,9 @@ function FindingNode({ data }: NodeProps<Node<NodeData>>) {
       <Handle type="source" position={Position.Left} className={handleCls} />
       <div className="flex items-center justify-between gap-2">
         {data.status && <StatusBadge status={data.status} compact />}
-        <span className="font-mono text-[10px] text-ink-3">{data.sub}</span>
+        <span className="font-mono text-[13px] text-ink-3">{data.sub}</span>
       </div>
-      <div className="mt-1 line-clamp-2 text-xs leading-snug text-ink">{data.label}</div>
+      <div className="mt-1 line-clamp-2 text-[13px] leading-snug text-ink">{data.label}</div>
     </div>
   );
 }
@@ -129,7 +129,7 @@ function FloatingEdge({ id, source, target, label, style, data, selected }: Edge
           <div
             style={{ transform: `translate(-50%,-50%) translate(${lx}px,${ly}px)` }}
             className={cn(
-              "nodrag nopan pointer-events-none absolute border bg-ground px-1 py-px font-mono text-[10px]",
+              "nodrag nopan pointer-events-none absolute border bg-ground px-1 py-px font-mono text-[13px]",
               data?.on || selected ? "border-man text-man" : "border-transparent text-man",
             )}
           >
@@ -298,7 +298,7 @@ export default function GraphScreen() {
             label,
             data: { dim, on, labelAt: 0.38 + (i % 3) * 0.12 },
             style: {
-              stroke: p.conflict ? "#ff5a4f" : "#3a424e",
+              stroke: p.conflict ? "#b3261e" : "#c8c4ba",
               strokeWidth: p.conflict ? Math.min(1.5 + p.findingIds.length * 0.75, 4) : 1,
               strokeDasharray: p.conflict ? undefined : "2 4",
               opacity: dim ? 0.12 : 1,
@@ -346,7 +346,7 @@ export default function GraphScreen() {
     const edges: Edge[] = e.edges.map((x) => {
       const on = x.id === selectedEdge || (!!selectedId && (x.source === selectedId || x.target === selectedId));
       const dim = !!neighbors && !on;
-      const color = x.conflict ? "#ff5a4f" : on ? "#b4b9c1" : "#3a424e";
+      const color = x.conflict ? "#b3261e" : on ? "#6b7078" : "#c8c4ba";
       const entityPair = kinds.get(x.source) === "entity" && kinds.get(x.target) === "entity";
       // Same-column entity links run vertically, top to bottom, between adjacent values.
       const swap = entityPair && (pos.get(x.source)?.y ?? 0) > (pos.get(x.target)?.y ?? 0);
@@ -357,8 +357,8 @@ export default function GraphScreen() {
         sourceHandle: entityPair ? "b" : undefined,
         targetHandle: entityPair ? "t" : undefined,
         label: x.conflict && on ? humanize(x.label ?? "conflict") : undefined,
-        labelStyle: { fill: "#ff5a4f", fontFamily: "var(--font-mono)", fontSize: 10 },
-        labelBgStyle: { fill: "#0a0c0f" },
+        labelStyle: { fill: "#b3261e", fontFamily: "var(--font-mono)", fontSize: 10 },
+        labelBgStyle: { fill: "#ffffff" },
         labelBgPadding: [4, 2] as [number, number],
         style: {
           stroke: color,
@@ -414,12 +414,15 @@ export default function GraphScreen() {
   return (
     <div className={cn("grid h-full min-h-[560px]", sel ? "grid-rows-[minmax(0,1fr)_minmax(0,50%)] lg:grid-cols-[minmax(0,1fr)_400px] lg:grid-rows-1 xl:grid-cols-[minmax(0,1fr)_460px]" : "grid-cols-1")}>
       <div className="relative min-h-0">
-        <div className="absolute left-3 top-3 z-10 flex flex-col gap-2 border border-line bg-panel p-2.5">
+        <div className="absolute left-3 top-3 z-10 flex flex-col gap-2 rounded-md border border-line bg-panel p-2.5">
+          <Link className="link text-[14px]" to={`/cases/${caseId}/conflicts`}>
+            Back to the list
+          </Link>
           <div className="flex gap-1" role="group" aria-label="Graph view">
             {(
               [
-                ["documents", "Document conflicts"],
-                ["evidence", "Full evidence"],
+                ["documents", "By document"],
+                ["evidence", "Everything"],
               ] as [View, string][]
             ).map(([v, l]) => (
               <button
@@ -430,13 +433,13 @@ export default function GraphScreen() {
                   setView(v);
                   setSel(null);
                 }}
-                className={cn("cursor-pointer border px-1.5 py-0.5 text-xs", view === v ? "border-ink bg-ink text-ground" : "border-line-strong text-ink-2 hover:bg-hover hover:text-ink")}
+                className={cn("cursor-pointer border px-1.5 py-0.5 text-[13px]", view === v ? "border-accent bg-accent text-white" : "border-line-strong text-ink-2 hover:bg-hover hover:text-ink")}
               >
                 {l}
               </button>
             ))}
           </div>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] text-ink-2">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[13px] text-ink-2">
             <span className="flex items-center gap-1.5">
               <span aria-hidden className="block h-[2px] w-5 bg-man" /> conflict
             </span>
@@ -456,12 +459,12 @@ export default function GraphScreen() {
             )}
           </div>
           {view === "documents" ? (
-            <p className="max-w-64 text-xs text-ink-3">
-              {conflictPairs} document pair{conflictPairs === 1 ? "" : "s"} in conflict. Select a red line to see the source values.
+            <p className="max-w-64 text-[13px] text-ink-3">
+              {conflictPairs} document pair{conflictPairs === 1 ? "" : "s"} in conflict. Click a red line to see the source values.
             </p>
           ) : (
-            <label className="flex items-center gap-1.5 text-xs text-ink-2">
-              <input type="checkbox" checked={showObs} onChange={(e) => setShowObs(e.target.checked)} className="accent-[#eceae4]" />
+            <label className="flex items-center gap-1.5 text-[13px] text-ink-2">
+              <input type="checkbox" checked={showObs} onChange={(e) => setShowObs(e.target.checked)} className="accent-[#20242a]" />
               Show observations{!showObs && hiddenObs > 0 ? ` (${hiddenObs} hidden)` : ""}
             </label>
           )}
@@ -472,7 +475,7 @@ export default function GraphScreen() {
           edges={edges}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
-          colorMode="dark"
+          colorMode="light"
           fitView
           fitViewOptions={{ padding: 0.14 }}
           minZoom={0.15}
@@ -484,7 +487,7 @@ export default function GraphScreen() {
           style={{ background: "transparent" }}
           aria-label="Evidence graph of documents, entities and findings"
         >
-          <Background color="#1c2128" gap={18} size={1} />
+          <Background color="#dcd9d1" gap={18} size={1} />
           <Controls showInteractive={false} position="bottom-left" />
         </ReactFlow>
       </div>
@@ -534,17 +537,17 @@ function EntityDetail({ caseId, e, docs }: { caseId: string; e: Entity; docs: Do
           return (
             <li key={m.field_id} className="border border-line bg-raised">
               <div className="flex items-center justify-between gap-2 px-2 py-1.5">
-                <span className="truncate font-mono text-[11px] text-ink-2">{d?.filename ?? m.doc_id}</span>
+                <span className="truncate font-mono text-[13px] text-ink-2">{d?.filename ?? m.doc_id}</span>
                 <Link
                   to={{ pathname: `/cases/${caseId}/viewer`, search: new URLSearchParams({ doc: m.doc_id, page: String(m.page), field: m.field_id }).toString() }}
-                  className="flex shrink-0 items-center gap-0.5 text-xs text-ink-2 hover:text-ink hover:underline"
+                  className="flex shrink-0 items-center gap-0.5 text-[13px] text-ink-2 hover:text-ink hover:underline"
                 >
                   Open <ArrowUpRight className="size-3" aria-hidden />
                 </Link>
               </div>
               <div className="px-2 pb-1.5 font-mono text-[13px]">{m.value_raw}</div>
               <PageCrop caseId={caseId} doc={d} page={m.page} bbox={m.bbox} className="max-h-28" />
-              <div className="px-2 py-1 font-mono text-[10.5px] text-ink-3">
+              <div className="px-2 py-1 font-mono text-[13px] text-ink-3">
                 p{m.page + 1} {fmtBBox(m.bbox)}
               </div>
             </li>
@@ -611,7 +614,7 @@ function SelectionDetail({
     const nameOf = (id: string) => docs.get(graph.nodes.find((n) => n.id === id)?.ref_id ?? "")?.filename ?? id;
     return (
       <div className="flex flex-col gap-3">
-        <p className="font-mono text-xs text-ink-2">
+        <p className="font-mono text-[13px] text-ink-2">
           {nameOf(p.a)} ↔ {nameOf(p.b)}
         </p>
         {p.conflict ? (
@@ -632,7 +635,7 @@ function SelectionDetail({
     const entity = ent ? entById.get(ent.ref_id) : undefined;
     return (
       <div className="flex flex-col gap-3">
-        <p className="font-mono text-xs text-ink-2">
+        <p className="font-mono text-[13px] text-ink-2">
           {src?.label} → {e.kind} → {dst?.label}
         </p>
         {entity && <EntityDetail caseId={caseId} e={entity} docs={docs} />}

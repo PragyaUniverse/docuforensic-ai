@@ -1,9 +1,8 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpRight } from "lucide-react";
 import type { Document, Field, Finding } from "@/api/types";
 import { STATUS_META, charDiff, comparisonSources, groupSources, type DiffPart, type LocatedSource, type ValueGroup } from "@/lib/findings";
-import { cn, fmtBBox, humanize, pct } from "@/lib/utils";
+import { cn, humanize, pct } from "@/lib/utils";
 import { PageCrop } from "./PageCrop";
 import { ConfidenceMeter, StatusBadge } from "./StatusBadge";
 import { DataList } from "./DataList";
@@ -61,23 +60,23 @@ function GroupCard({
   const doc = docs.get(source.docId);
   const conf = source.field?.confidence;
   return (
-    <div className="flex min-w-0 flex-1 flex-col border border-line bg-raised">
+    <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-md border border-line bg-panel">
       <div className="flex items-start justify-between gap-2 border-b border-line px-3 py-2">
         <div className="min-w-0">
           <div className="eyebrow">{humanize(doc?.doc_type ?? "document")}</div>
-          <div className="truncate font-mono text-xs text-ink-2">{doc?.filename ?? source.docId}</div>
+          <div className="truncate font-mono text-[13px] text-ink-2">{doc?.filename ?? source.docId}</div>
         </div>
         <Link
           to={viewerLink(caseId, source)}
-          className="flex shrink-0 items-center gap-0.5 text-xs text-ink-2 underline-offset-2 hover:text-ink hover:underline"
+          className="link shrink-0 text-[13px]"
         >
-          Open source <ArrowUpRight className="size-3" aria-hidden />
+          Show in document
         </Link>
       </div>
       <div className="px-3 pb-2 pt-3">
-        <div className="text-xs text-ink-3">{source.label}</div>
+        <div className="text-[13px] text-ink-3">{source.label}</div>
         {(parts || source.value) && (
-          <div className="mt-0.5 break-words font-mono text-[19px] font-medium leading-snug text-ink">
+          <div className="mt-0.5 break-words text-[19px] font-semibold leading-snug text-ink">
             {parts ? <Parts parts={parts} tone={tone} /> : source.value}
           </div>
         )}
@@ -85,18 +84,17 @@ function GroupCard({
       <div className="mt-auto border-t border-line">
         <PageCrop caseId={caseId} doc={doc} page={source.page} bbox={source.bbox} stroke={stroke} className="max-h-44" />
       </div>
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-line px-3 py-1.5 font-mono text-[11px] text-ink-3">
-        <span>page {source.page + 1}</span>
-        <span>{fmtBBox(source.bbox)}</span>
-        {conf !== undefined && <span>OCR conf {pct(conf)}</span>}
+      <div className="border-t border-line px-3 py-1.5 text-[13px] text-ink-3">
+        Page {source.page + 1}
+        {conf !== undefined && `, read with ${pct(conf)} confidence`}
       </div>
       {others.length > 0 && (
-        <div className="border-t border-line px-3 py-2 text-xs">
-          <span className="text-ink-3">Same value also on </span>
+        <div className="border-t border-line px-3 py-2 text-[13px]">
+          <span className="text-ink-3">Same value on </span>
           {others.map((o, i) => (
             <span key={o.key}>
               {i > 0 && <span className="text-ink-3">, </span>}
-              <Link to={viewerLink(caseId, o)} className="font-mono text-[11px] text-ink-2 underline-offset-2 hover:text-ink hover:underline">
+              <Link to={viewerLink(caseId, o)} className="font-mono text-[13px] text-ink-2 underline-offset-2 hover:text-ink hover:underline">
                 {docs.get(o.docId)?.filename ?? o.docId}
               </Link>
             </span>
@@ -147,9 +145,9 @@ export function ComparisonPanel({
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-2">
-        {label && <span className="font-mono text-xs text-ink-3">{label}</span>}
+        {label && <span className="font-mono text-[13px] text-ink-3">{label}</span>}
         <StatusBadge status={finding.status} />
-        {finding.discrepancy_type && <span className="font-mono text-[11px] text-ink-2">{finding.discrepancy_type}</span>}
+        
         <span className="ml-auto">
           <ConfidenceMeter value={finding.confidence} />
         </span>
@@ -172,7 +170,7 @@ export function ComparisonPanel({
               {sameExpected ? "=" : "≠"}
             </span>
             {delta !== null && delta > 0 && (
-              <span className={cn("font-mono text-[11px]", m.text)}>
+              <span className={cn("font-mono text-[13px]", m.text)}>
                 {delta.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
             )}
@@ -196,7 +194,7 @@ export function ComparisonPanel({
             .filter((e) => Object.keys(e.data ?? {}).length > 0 && e.kind === "raw_value")
             .map((e, i) => (
               <div key={i}>
-                <div className="mb-1 text-xs text-ink-3">{e.label}</div>
+                <div className="mb-1 text-[13px] text-ink-3">{e.label}</div>
                 <DataList data={e.data} />
               </div>
             ))}

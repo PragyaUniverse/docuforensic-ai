@@ -1,20 +1,19 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronLeft, ChevronRight, FileX, Link2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, FileX } from "lucide-react";
 import { api } from "@/api";
 import { useCase, useCaseDocuments, useFindings } from "@/api/hooks";
 import type { BBox, Finding, FindingStatus } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
 import { Empty, ErrorState, Loading } from "@/components/ui/states";
 import { ComparisonPanel } from "@/components/ComparisonPanel";
 import { DocCanvas } from "@/components/DocCanvas";
 import { FindingCard } from "@/components/FindingCard";
-import { ProcBadge, StatusBadge } from "@/components/StatusBadge";
-import { STATUS_META, STATUS_ORDER, comparisonSources, findingLabels, regionsForPage, sortFindings } from "@/lib/findings";
+import { ProcBadge } from "@/components/StatusBadge";
+import { comparisonSources, findingLabels, regionsForPage, sortFindings } from "@/lib/findings";
 import { cn, humanize } from "@/lib/utils";
 
 export function locationOf(f: Finding): { docId: string; page: number; bbox: BBox | null } | null {
@@ -46,18 +45,19 @@ export function ViewerScreen() {
   const selected = findings.find((f) => f.id === selectedId) ?? null;
   const field = fieldId ? fieldsById.get(fieldId) : undefined;
 
-  const [statuses, setStatuses] = useState<Record<FindingStatus, boolean>>({
-    OBSERVATION: true,
-    INCONSISTENCY: true,
-    POTENTIAL_MANIPULATION: true,
-  });
+  // Minor observations stay out of the way until someone asks for them.
+  const [showMinor, setShowMinor] = useState(false);
+  const minorOpen = showMinor || selected?.status === "OBSERVATION";
+  const statuses = useMemo<Record<FindingStatus, boolean>>(
+    () => ({ OBSERVATION: minorOpen, INCONSISTENCY: true, POTENTIAL_MANIPULATION: true }),
+    [minorOpen],
+  );
   const [heatKind, setHeatKind] = useState<string | null>(null);
   const [heatOpacity, setHeatOpacity] = useState(70);
   const [showLinks, setShowLinks] = useState(true);
   const [onlyThisDoc, setOnlyThisDoc] = useState(false);
   const [focusNonce, setFocusNonce] = useState(0);
   const [compare, setCompare] = useState<Finding | null>(null);
-  const [openGroups, setOpenGroups] = useState<Set<string>>(new Set());
 
   const overlays = useQuery({
     queryKey: ["overlays", caseId, docId, page],
@@ -128,57 +128,26 @@ export function ViewerScreen() {
     return null;
   }, [field, selected, docId, page]);
 
-  const counts = useMemo(() => {
-    const c: Record<FindingStatus, number> = { OBSERVATION: 0, INCONSISTENCY: 0, POTENTIAL_MANIPULATION: 0 };
-    findings.forEach((f) => c[f.status]++);
-    return c;
-  }, [findings]);
-
-  const listed = useMemo(
-    () =>
-      findings.filter((f) => {
-        if (!statuses[f.status]) return false;
-        if (onlyThisDoc && docId) {
-          return f.doc_id === docId || f.related_doc_ids.includes(docId) || f.evidence.some((e) => e.doc_id === docId);
-        }
-        return true;
-      }),
-    [findings, statuses, onlyThisDoc, docId],
+  const matchesDoc = useCallback(
+    (f: Finding) =>
+      !onlyThisDoc || !docId || f.doc_id === docId || f.related_doc_ids.includes(docId) || f.evidence.some((e) => e.doc_id === docId),
+    [onlyThisDoc, docId],
   );
-
-  // Routine observations repeat; group them so the hypotheses and conflicts stay in view.
-  const groups = useMemo(() => {
-    const out: { key: string; items: Finding[] }[] = [];
-    const seen = new Map<string, { key: string; items: Finding[] }>();
-    for (const f of listed) {
-      if (f.status !== "OBSERVATION") {
-        out.push({ key: f.id, items: [f] });
-        continue;
-      }
-      const key = `${f.detector}|${f.title}`;
-      const g = seen.get(key);
-      if (g) g.items.push(f);
-      else {
-        const n = { key, items: [f] };
-        seen.set(key, n);
-        out.push(n);
-      }
-    }
-    return out;
-  }, [listed]);
+  const important = useMemo(() => findings.filter((f) => f.status !== "OBSERVATION" && matchesDoc(f)), [findings, matchesDoc]);
+  const minor = useMemo(() => findings.filter((f) => f.status === "OBSERVATION" && matchesDoc(f)), [findings, matchesDoc]);
 
   const docCounts = useCallback(
     (id: string) =>
-      findings.filter((f) => f.doc_id === id || f.evidence.some((e) => e.doc_id === id)).length,
+      findings.filter((f) => f.status !== "OBSERVATION" && (f.doc_id === id || f.evidence.some((e) => e.doc_id === id))).length,
     [findings],
   );
 
-  if (caseQ.isLoading || docsLoading) return <Loading label="Loading documents and findings" className="h-full" />;
+  if (caseQ.isLoading || docsLoading) return <Loading label="Loading" className="h-full" />;
   if (docsError) return <ErrorState title="Documents could not load" error={docsError} />;
   if (summaries.length === 0) {
     return (
       <Empty
-        title="No documents in this case"
+        title="No documents yet"
         className="h-full"
         action={
           <Button asChild>
@@ -188,13 +157,30 @@ export function ViewerScreen() {
       />
     );
   }
+  const renderCard = (f: Finding) => (
+    <FindingCard
+      key={f.id}
+      finding={f}
+      label={labels.get(f.id) ?? ""}
+      caseId={caseId}
+      docs={byId}
+      labelsById={labels}
+      selected={f.id === selectedId}
+      onSelect={() => selectFinding(f, true)}
+      onSelectRelated={(id) => {
+        const r = findings.find((x) => x.id === id);
+        if (r) selectFinding(r, true);
+      }}
+      onCompare={comparisonSources(f, fieldsById).length >= 2 ? () => setCompare(f) : undefined}
+    />
+  );
   const notRun = caseQ.data?.case.status !== "complete";
   const noneAnalysed = summaries.every((s) => s.page_count === 0);
 
   return (
-    <div className="grid h-full min-h-[560px] grid-rows-[minmax(0,58fr)_minmax(0,42fr)] lg:grid-cols-[minmax(0,1fr)_360px] lg:grid-rows-1 xl:grid-cols-[minmax(0,1fr)_420px]">
+    <div className="grid h-full min-h-[560px] grid-rows-[minmax(0,55fr)_minmax(0,45fr)] lg:grid-cols-[minmax(0,1fr)_400px] lg:grid-rows-1 xl:grid-cols-[minmax(0,1fr)_420px]">
       <div className="flex min-h-0 min-w-0 flex-col border-b border-line lg:border-b-0 lg:border-r">
-        <div role="tablist" aria-label="Documents" className="flex shrink-0 overflow-x-auto border-b border-line bg-panel">
+        <div role="tablist" aria-label="Documents" className="flex shrink-0 gap-1 overflow-x-auto border-b border-line bg-panel px-2">
           {summaries.map((s) => {
             const active = s.id === docId;
             const n = docCounts(s.id);
@@ -204,61 +190,61 @@ export function ViewerScreen() {
                 role="tab"
                 aria-selected={active}
                 type="button"
+                title={s.filename}
                 onClick={() => update({ doc: s.id, page: "0", field: null })}
                 className={cn(
-                  "flex max-w-[210px] shrink-0 cursor-pointer flex-col gap-0.5 border-b-2 border-r border-r-line px-3 py-1.5 text-left hover:bg-hover",
-                  active ? "border-b-ink bg-raised" : "border-b-transparent",
+                  "shrink-0 cursor-pointer border-b-2 px-2.5 py-2 text-[14px]",
+                  active ? "border-accent font-medium text-ink" : "border-transparent text-ink-2 hover:text-ink",
                 )}
               >
-                <span className="truncate font-mono text-xs text-ink">{s.filename}</span>
-                <span className="flex items-center gap-1.5 text-[11px] text-ink-3">
-                  {s.page_count === 0 ? <ProcBadge status={s.status} /> : <span className="truncate">{humanize(s.doc_type)}</span>}
-                  {n > 0 && <span className="font-mono text-ink-2">{n} finding{n === 1 ? "" : "s"}</span>}
-                </span>
+                {s.doc_type === "unknown" ? s.filename : humanize(s.doc_type)}
+                {n > 0 && <span className="ml-1.5 text-[13px] font-normal text-ink-3">{n}</span>}
               </button>
             );
           })}
         </div>
 
-        <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-line bg-panel px-3 py-1.5">
-          {doc && doc.pages.length > 1 && (
-            <div className="flex items-center gap-1">
-              <Button size="icon" variant="ghost" aria-label="Previous page" disabled={page <= 0} onClick={() => update({ page: String(page - 1) })}>
-                <ChevronLeft aria-hidden />
-              </Button>
-              <span className="font-mono text-xs text-ink-2">
-                {page + 1}/{doc.pages.length}
-              </span>
-              <Button size="icon" variant="ghost" aria-label="Next page" disabled={page >= doc.pages.length - 1} onClick={() => update({ page: String(page + 1) })}>
-                <ChevronRight aria-hidden />
-              </Button>
-            </div>
-          )}
-          <fieldset className="flex items-center gap-1.5">
-            <legend className="sr-only">Forensic overlay</legend>
-            <span className="eyebrow">Overlay</span>
-            <div className="flex flex-wrap gap-1">
-              <Chip active={!heatKind} onClick={() => setHeatKind(null)}>
-                None
-              </Chip>
-              {overlays.data?.map((o) => (
-                <Chip key={o.kind} active={heatKind === o.kind} onClick={() => setHeatKind(o.kind)}>
-                  {o.label}
-                </Chip>
-              ))}
-              {overlays.isError && <span className="text-xs text-ink-3">Overlays unavailable</span>}
-              {overlays.data?.length === 0 && <span className="self-center text-xs text-ink-3">None generated for this page</span>}
-            </div>
-          </fieldset>
-          {heatKind && <Slider value={heatOpacity} onChange={setHeatOpacity} label="Overlay opacity" />}
-          {links.length > 0 && (
-            <label className="flex items-center gap-1.5 text-xs text-ink-2">
-              <Link2 className="size-3.5" aria-hidden />
-              Copy-move links
-              <Switch checked={showLinks} onCheckedChange={setShowLinks} label="Show copy-move links" />
-            </label>
-          )}
-        </div>
+        {doc && doc.pages.length > 0 && (
+          <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-1.5 border-b border-line bg-panel px-3 py-1.5 text-[14px]">
+            {doc.pages.length > 1 && (
+              <div className="flex items-center gap-1">
+                <Button size="icon" variant="ghost" aria-label="Previous page" disabled={page <= 0} onClick={() => update({ page: String(page - 1) })}>
+                  <ChevronLeft aria-hidden />
+                </Button>
+                <span className="text-ink-2">
+                  Page {page + 1} of {doc.pages.length}
+                </span>
+                <Button size="icon" variant="ghost" aria-label="Next page" disabled={page >= doc.pages.length - 1} onClick={() => update({ page: String(page + 1) })}>
+                  <ChevronRight aria-hidden />
+                </Button>
+              </div>
+            )}
+            {!!overlays.data?.length && (
+              <label className="flex items-center gap-1.5 text-ink-2">
+                Show
+                <select
+                  value={heatKind ?? ""}
+                  onChange={(e) => setHeatKind(e.target.value || null)}
+                  className="h-8 rounded-md border border-line-strong bg-panel px-1.5 text-ink"
+                >
+                  <option value="">The document</option>
+                  {overlays.data.map((o) => (
+                    <option key={o.kind} value={o.kind}>
+                      {o.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+            {heatKind && <Slider value={heatOpacity} onChange={setHeatOpacity} label="Overlay strength" />}
+            {links.length > 0 && (
+              <label className="flex items-center gap-1.5 text-ink-2">
+                <input type="checkbox" checked={showLinks} onChange={(e) => setShowLinks(e.target.checked)} />
+                Show copied-region links
+              </label>
+            )}
+          </div>
+        )}
 
         {doc && doc.pages.length > 0 ? (
           <DocCanvas
@@ -282,119 +268,71 @@ export function ViewerScreen() {
         ) : (
           <div className="flex flex-1 flex-col items-center justify-center gap-2 bg-ground p-8 text-center">
             <FileX className="size-6 text-ink-3" aria-hidden />
-            <p className="font-medium">This document has no viewable pages</p>
+            <p className="font-medium">We can't show this file</p>
             {doc && <ProcBadge status={doc.status} />}
-            <p className="max-w-md text-ink-2">{doc?.status_message ?? "It was not rendered, and no analysis was run on it."}</p>
+            <p className="max-w-md text-ink-2">{doc?.status_message ?? "It couldn't be opened, so it wasn't checked."}</p>
           </div>
         )}
       </div>
 
       <aside aria-label="Findings" className="flex min-h-0 flex-col bg-panel">
-        <div className="shrink-0 border-b border-line p-2">
-          <div className="grid grid-cols-3 gap-1">
-            {STATUS_ORDER.map((s) => {
-              const m = STATUS_META[s];
-              const Icon = m.icon;
-              const on = statuses[s];
-              return (
-                <button
-                  key={s}
-                  type="button"
-                  aria-pressed={on}
-                  title={m.meaning}
-                  onClick={() => setStatuses((v) => ({ ...v, [s]: !v[s] }))}
-                  className={cn(
-                    "flex cursor-pointer flex-col gap-0.5 border px-2 py-1 text-left",
-                    on ? cn(m.border, m.bg) : "border-line opacity-55 hover:opacity-100",
-                  )}
-                >
-                  <span className={cn("flex items-center gap-1 font-mono text-[15px] font-medium", m.text)}>
-                    <Icon className="size-3.5" aria-hidden />
-                    {counts[s]}
-                  </span>
-                  <span className="text-[11px] leading-tight text-ink-2">{m.label}</span>
-                </button>
-              );
-            })}
-          </div>
-          <label className="mt-2 flex items-center justify-between gap-2 px-0.5 text-xs text-ink-2">
-            Only findings touching this document
-            <Switch checked={onlyThisDoc} onCheckedChange={setOnlyThisDoc} label="Only findings touching this document" />
+        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-line px-4 py-2.5">
+          <h1 className="text-[17px] font-semibold">
+            Findings{findingsQ.data ? <span className="ml-1.5 font-normal text-ink-3">{important.length}</span> : null}
+          </h1>
+          <label className="flex items-center gap-1.5 text-[13px] text-ink-2">
+            <input type="checkbox" checked={onlyThisDoc} onChange={(e) => setOnlyThisDoc(e.target.checked)} />
+            This document only
           </label>
         </div>
         <div className="relative min-h-0 flex-1 overflow-y-auto">
           {findingsQ.isLoading && <Loading label="Loading findings" />}
           {findingsQ.isError && <ErrorState title="Findings could not load" error={findingsQ.error} onRetry={() => findingsQ.refetch()} />}
-          {findingsQ.data && listed.length === 0 && (
+          {findingsQ.data && important.length + minor.length === 0 && (
             <Empty
-              title={findings.length === 0 ? (notRun ? "No findings yet" : noneAnalysed ? "No document could be analysed" : "Nothing was flagged") : "No findings match these filters"}
+              title={findings.length === 0 ? (notRun ? "Not checked yet" : noneAnalysed ? "None of these files could be read" : "Nothing stood out") : "Nothing on this document"}
               action={
                 notRun ? (
                   <Button asChild size="sm">
-                    <Link to={`/cases/${caseId}/pipeline`}>Go to pipeline</Link>
+                    <Link to={`/cases/${caseId}`}>Go to overview</Link>
                   </Button>
                 ) : undefined
               }
             >
               {findings.length === 0
                 ? notRun
-                  ? "Run the investigation to produce findings."
+                  ? "Run the check to see findings here."
                   : noneAnalysed
-                    ? "Every file was unusable, so nothing was examined. See each document's status."
-                    : "No detector raised a finding on these documents. That is not proof of authenticity."
-                : "Adjust the status toggles above."}
+                    ? "The overview says what went wrong with each file."
+                    : "That doesn't prove the documents are genuine."
+                : "Untick \"This document only\" to see the rest."}
             </Empty>
           )}
-          {groups.map((g) => {
-            const renderCard = (f: Finding) => (
-              <FindingCard
-                key={f.id}
-                finding={f}
-                label={labels.get(f.id) ?? ""}
-                caseId={caseId}
-                docs={byId}
-                labelsById={labels}
-                selected={f.id === selectedId}
-                onSelect={() => selectFinding(f, true)}
-                onSelectRelated={(id) => {
-                  const r = findings.find((x) => x.id === id);
-                  if (r) selectFinding(r, true);
-                }}
-                onCompare={comparisonSources(f, fieldsById).length >= 2 ? () => setCompare(f) : undefined}
-              />
-            );
-            if (g.items.length === 1) return renderCard(g.items[0]);
-            const open = openGroups.has(g.key) || g.items.some((f) => f.id === selectedId);
-            return (
-              <div key={g.key}>
-                <button
-                  type="button"
-                  aria-expanded={open}
-                  onClick={() =>
-                    setOpenGroups((prev) => {
-                      const n = new Set(prev);
-                      if (n.has(g.key)) n.delete(g.key);
-                      else n.add(g.key);
-                      return n;
-                    })
-                  }
-                  className="flex w-full cursor-pointer items-center gap-2 border-b border-line px-3 py-2 text-left hover:bg-hover"
-                >
-                  <ChevronRight className={cn("size-3.5 shrink-0 text-ink-3 transition-transform", open && "rotate-90")} aria-hidden />
-                  <StatusBadge status={g.items[0].status} compact />
-                  <span className="min-w-0 flex-1 truncate text-[13px] text-ink-2">{g.items[0].title}</span>
-                  <span className="font-mono text-xs text-ink-3">{g.items.length}</span>
-                </button>
-                {open && <div className="border-l border-line-strong">{g.items.map(renderCard)}</div>}
-              </div>
-            );
-          })}
+          {findingsQ.data && important.length === 0 && minor.length > 0 && (
+            <p className="border-b border-line px-4 py-3 text-[14px] text-ink-2">Nothing here needs attention. A clean result doesn't prove the documents are genuine.</p>
+          )}
+          {important.map(renderCard)}
+          {minor.length > 0 && (
+            <>
+              <button
+                type="button"
+                aria-expanded={minorOpen}
+                onClick={() => setShowMinor((v) => !v)}
+                className="flex w-full cursor-pointer items-center gap-1.5 border-b border-line bg-raised px-4 py-2.5 text-left text-[14px] text-ink-2 hover:bg-hover"
+              >
+                <ChevronRight className={cn("size-4 shrink-0 text-ink-3", minorOpen && "rotate-90")} aria-hidden />
+                {minor.length} minor observation{minor.length === 1 ? "" : "s"}
+                <span className="text-ink-3">, usually nothing to worry about</span>
+              </button>
+              {minorOpen && minor.map(renderCard)}
+            </>
+          )}
         </div>
       </aside>
 
       <Dialog open={!!compare} onOpenChange={(o) => !o && setCompare(null)}>
         {compare && (
-          <DialogContent title="Source comparison" description="Each source region shown side by side.">
+          <DialogContent title="Side by side" description="The original regions from each document.">
             <div className="p-5">
               <ComparisonPanel caseId={caseId} finding={compare} docs={byId} fieldsById={fieldsById} label={labels.get(compare.id)} />
             </div>
@@ -405,18 +343,3 @@ export function ViewerScreen() {
   );
 }
 
-function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className={cn(
-        "cursor-pointer border px-1.5 py-0.5 text-xs",
-        active ? "border-ink bg-ink text-ground" : "border-line-strong text-ink-2 hover:bg-hover hover:text-ink",
-      )}
-    >
-      {children}
-    </button>
-  );
-}

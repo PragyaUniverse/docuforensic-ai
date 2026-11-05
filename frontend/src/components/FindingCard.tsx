@@ -1,53 +1,60 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  ArrowUpCircle,
-  Bot,
-  Check,
-  Columns2,
-  Cpu,
-  Database,
-  Link2,
-  MapPin,
-  X,
-} from "lucide-react";
 import { api } from "@/api";
 import type { Document, EvidenceItem, Finding, ReasoningProvenance, ReviewDecision } from "@/api/types";
 import { CATEGORY_LABEL, STATUS_META, splitExplanation } from "@/lib/findings";
 import { getReviewer, setReviewer } from "@/lib/reviewer";
 import { cn, fmtBBox, fmtTime } from "@/lib/utils";
 import { Button } from "./ui/button";
-import { ConfidenceMeter, ReviewBadge, SeverityText, StatusBadge } from "./StatusBadge";
+import { ConfidenceMeter, ReviewBadge, StatusBadge } from "./StatusBadge";
 import { DataList } from "./DataList";
 import { PageCrop } from "./PageCrop";
 
 export function Provenance({ r }: { r: ReasoningProvenance }) {
-  const parts =
+  const who = [r.provider, r.model].filter(Boolean).join(" / ");
+  const text =
     r.mode === "live_llm"
-      ? { icon: Bot, text: `Explanation by live LLM${r.provider ? `: ${r.provider}` : ""}${r.model ? ` / ${r.model}` : ""}` }
+      ? `Explanation includes notes from an AI model${who ? ` (${who})` : ""}.`
       : r.mode === "demo_cache"
-        ? { icon: Database, text: `Explanation replayed from a recorded LLM run${r.provider ? `: ${r.provider}` : ""}${r.model ? ` / ${r.model}` : ""}` }
-        : { icon: Cpu, text: "Explanation by deterministic rules, no LLM used" };
-  const Icon = parts.icon;
-  return (
-    <span className="inline-flex items-center gap-1 font-mono text-[11px] text-ink-3">
-      <Icon className="size-3 shrink-0" aria-hidden />
-      {parts.text}
-    </span>
-  );
+        ? `Explanation includes AI notes recorded in an earlier run${who ? ` (${who})` : ""}, not a live answer.`
+        : "Explanation written from fixed rules. No AI was used.";
+  return <span className="text-[13px] text-ink-3">{text}</span>;
 }
 
+/** Leads with what happened. The longer reasoning stays one click away. */
 export function Explanation({ text }: { text: string }) {
   const parts = splitExplanation(text);
+  const raw = parts.find((p) => !p.heading)?.text ?? "";
+  const [lead, otherSignals] = raw.split(/\s*Other signals on this region\.?:?\s*/);
+  const whyRaw = parts.find((p) => p.heading === "Why it matters")?.text ?? "";
+  const [why, corroboration] = whyRaw.split(/\s*Corroboration:\s*/);
+  const ai = parts.find((p) => p.heading?.startsWith("AI reasoning"));
+  const hasMore = otherSignals || corroboration || ai;
   return (
-    <div className="flex flex-col gap-2">
-      {parts.map((p, i) => (
-        <div key={i}>
-          {p.heading && <div className="eyebrow mb-0.5">{p.heading}</div>}
-          <p className="leading-relaxed text-ink-2">{p.text}</p>
-        </div>
-      ))}
+    <div className="flex flex-col gap-2 text-ink-2">
+      <p className="text-ink">{lead}</p>
+      {why && <p>{why}</p>}
+      {hasMore && (
+        <details className="text-[14px]">
+          <summary>Read more</summary>
+          <div className="mt-1.5 flex flex-col gap-2">
+            {otherSignals && (
+              <div>
+                <div className="font-medium text-ink">Other checks on this spot</div>
+                <p>{otherSignals}</p>
+              </div>
+            )}
+            {corroboration && <p>{corroboration}</p>}
+            {ai && (
+              <div>
+                <div className="font-medium text-ink">AI notes</div>
+                <p>{ai.text}</p>
+              </div>
+            )}
+          </div>
+        </details>
+      )}
     </div>
   );
 }
@@ -68,18 +75,18 @@ function EvidenceBlock({
   const doc = ev.doc_id ? docs.get(ev.doc_id) : undefined;
   const measurement = ev.kind === "raw_value" || ev.kind === "metadata" || ev.kind === "field_ref";
   const location = ev.doc_id && (
-    <span className="font-mono text-[10.5px] text-ink-3">
+    <span className="text-[13px] text-ink-3">
       {doc?.filename ?? ev.doc_id}
-      {ev.page !== null && ` · p${ev.page + 1}`} {ev.bbox && fmtBBox(ev.bbox)}
+      {ev.page !== null && `, page ${ev.page + 1}`}
     </span>
   );
 
   // Measurements lead with the numbers; their source crop is a small reference.
   if (measurement) {
     return (
-      <figure className="flex gap-2 border border-line bg-ground p-2">
+      <figure className="flex gap-2 rounded-md border border-line bg-ground p-2">
         <figcaption className="flex min-w-0 flex-1 flex-col gap-1">
-          <span className="text-xs text-ink-2">{ev.label}</span>
+          <span className="text-[13px] text-ink-2">{ev.label}</span>
           <DataList data={ev.data} />
           {location}
         </figcaption>
@@ -97,22 +104,22 @@ function EvidenceBlock({
   }
 
   return (
-    <figure className="border border-line bg-ground">
+    <figure className="overflow-hidden rounded-md border border-line bg-ground">
       {hasImage ? (
         <img
           src={api.fileUrl(ev.uri!)}
           alt={ev.label}
           loading="lazy"
           onError={() => setFailed(true)}
-          className={cn("max-h-56 w-full object-contain", ev.kind === "heatmap" ? "bg-[#050608]" : "bg-white")}
+          className={cn("max-h-56 w-full object-contain", ev.kind === "heatmap" ? "bg-[#ffffff]" : "bg-white")}
         />
       ) : ev.doc_id && ev.page !== null && ev.bbox ? (
         <PageCrop caseId={caseId} doc={doc} page={ev.page} bbox={ev.bbox} stroke={stroke} className="max-h-48" />
       ) : ev.uri ? (
-        <div className="p-2 text-xs text-ink-3">Evidence image could not be loaded: {ev.uri}</div>
+        <div className="p-2 text-[13px] text-ink-3">Evidence image could not be loaded: {ev.uri}</div>
       ) : null}
       <figcaption className="flex flex-col gap-1 px-2 py-1.5">
-        <span className="text-xs text-ink-2">{ev.label}</span>
+        <span className="text-[13px] text-ink-2">{ev.label}</span>
         {location}
         <DataList data={ev.data} />
       </figcaption>
@@ -120,10 +127,10 @@ function EvidenceBlock({
   );
 }
 
-const ACTIONS: { d: ReviewDecision; label: string; icon: typeof Check }[] = [
-  { d: "confirmed", label: "Confirm", icon: Check },
-  { d: "dismissed", label: "Dismiss", icon: X },
-  { d: "escalated", label: "Escalate", icon: ArrowUpCircle },
+const ACTIONS: { d: ReviewDecision; label: string }[] = [
+  { d: "confirmed", label: "Confirm" },
+  { d: "dismissed", label: "Dismiss" },
+  { d: "escalated", label: "Escalate" },
 ];
 
 export function FindingCard({
@@ -175,34 +182,25 @@ export function FindingCard({
   const doc = finding.doc_id ? docs.get(finding.doc_id) : undefined;
   const dismissed = finding.review.decision === "dismissed";
 
+  const dismissedCls = dismissed && "opacity-60";
   return (
-    <article
-      ref={ref}
-      className={cn(
-        "border-b border-l-[3px] border-b-line bg-panel transition-colors",
-        selected ? cn(m.border, "bg-raised") : "border-l-transparent",
-      )}
-    >
+    <article ref={ref} className={cn("border-b border-line", selected ? "bg-raised" : "bg-panel")}>
       <button
         type="button"
         aria-expanded={selected}
         onClick={onSelect}
-        className={cn("flex w-full cursor-pointer flex-col gap-1.5 px-3 py-2.5 text-left hover:bg-hover", dismissed && "opacity-60")}
+        className={cn("flex w-full cursor-pointer flex-col gap-0.5 px-4 py-3 text-left hover:bg-hover", dismissedCls)}
       >
-        <span className="flex flex-wrap items-center gap-2">
-          <span className="font-mono text-[11px] text-ink-3">{label}</span>
+        <span className="flex flex-wrap items-center gap-x-2">
           <StatusBadge status={finding.status} />
-          <span className="ml-auto">
-            <ConfidenceMeter value={finding.fused_score ?? finding.confidence} label={finding.fused_score !== null ? "Fused score" : "Confidence"} />
-          </span>
+          <span className="ml-auto text-[13px] text-ink-3">{label}</span>
         </span>
         <span className="font-medium leading-snug text-ink">{finding.title}</span>
-        <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-3">
-          <span>{CATEGORY_LABEL[finding.category]}</span>
+        <span className="flex flex-wrap items-center gap-x-2 text-[13px] text-ink-3">
           {doc && (
-            <span className="font-mono">
+            <span>
               {doc.filename}
-              {finding.page !== null && ` · p${finding.page + 1}`}
+              {finding.page !== null && `, page ${finding.page + 1}`}
             </span>
           )}
           {finding.review.decision !== "pending" && <ReviewBadge decision={finding.review.decision} />}
@@ -215,49 +213,70 @@ export function FindingCard({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <div className="flex flex-col gap-3 px-3 pb-3">
+            <div className="flex flex-col gap-3.5 px-4 pb-4">
               <Explanation text={finding.explanation} />
-
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                <SeverityText severity={finding.severity} />
-                <span className="font-mono text-[11px] text-ink-3">{finding.detector}</span>
-                {finding.fused_score !== null && (
-                  <span className="font-mono text-[11px] text-ink-3">detector conf {Math.round(finding.confidence * 100)}%</span>
-                )}
-              </div>
-
-              {finding.bbox && (
-                <div className="flex items-center gap-1 font-mono text-[11px] text-ink-3">
-                  <MapPin className="size-3" aria-hidden />
-                  source region {fmtBBox(finding.bbox)}
-                </div>
-              )}
+              <ConfidenceMeter words value={finding.fused_score ?? finding.confidence} />
 
               {onCompare && (
                 <Button size="sm" onClick={onCompare} className="self-start">
-                  <Columns2 aria-hidden /> Compare sources side by side
+                  Compare side by side
                 </Button>
               )}
 
-              {finding.evidence.length > 0 && (
-                <section aria-label="Evidence">
-                  <h4 className="eyebrow mb-1.5">Evidence</h4>
-                  <div className="flex flex-col gap-2">
-                    {finding.evidence.map((ev, i) => (
-                      <EvidenceBlock key={i} ev={ev} caseId={caseId} docs={docs} stroke={m.stroke} />
-                    ))}
-                  </div>
-                </section>
-              )}
+              <section className="rounded-md border border-line bg-panel p-3" aria-label="Your decision">
+                <h4 className="eyebrow mb-2">Your decision</h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {ACTIONS.map(({ d, label: l }) => (
+                    <Button
+                      key={d}
+                      size="sm"
+                      disabled={review.isPending}
+                      aria-pressed={finding.review.decision === d}
+                      className={cn(finding.review.decision === d && "border-accent bg-obs-dim text-accent")}
+                      onClick={() => review.mutate(d)}
+                    >
+                      {l}
+                    </Button>
+                  ))}
+                </div>
+                <input
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  aria-label="Optional note"
+                  placeholder="Add a note (optional)"
+                  className="mt-2 h-8 w-full rounded-md border border-line-strong bg-panel px-2 text-[14px] text-ink placeholder:text-ink-3"
+                />
+                <label className="mt-1.5 flex items-center gap-1.5 text-[13px] text-ink-3">
+                  Reviewing as
+                  <input
+                    value={reviewer}
+                    onChange={(e) => setName(e.target.value)}
+                    aria-label="Reviewer name"
+                    placeholder="Your name"
+                    className="h-7 min-w-0 flex-1 rounded-md border border-line bg-panel px-1.5 text-[13px] text-ink placeholder:text-ink-3"
+                  />
+                </label>
+                {finding.review.at && (
+                  <p className="mt-2 text-[13px] text-ink-3">
+                    <ReviewBadge decision={finding.review.decision} /> by {finding.review.reviewer}, {fmtTime(finding.review.at)}
+                    {finding.review.note && <span className="block text-ink-2">"{finding.review.note}"</span>}
+                  </p>
+                )}
+                {review.isError && (
+                  <p role="alert" className="mt-1.5 text-[13px] text-man">
+                    That didn't save: {(review.error as Error).message}
+                  </p>
+                )}
+              </section>
 
               {finding.benign_alternatives.length > 0 && (
                 <section>
-                  <h4 className="eyebrow mb-1">Benign explanations to rule out</h4>
-                  <ul className="list-disc space-y-0.5 pl-4 text-ink-2 marker:text-ink-3">
-                    {finding.benign_alternatives.map((b, i) => (
+                  <h4 className="eyebrow mb-1">Could be innocent if</h4>
+                  <ul className="list-disc space-y-0.5 pl-4 text-[14px] text-ink-2 marker:text-ink-3">
+                    {finding.benign_alternatives.slice(0, 3).map((b, i) => (
                       <li key={i}>{b}</li>
                     ))}
                   </ul>
@@ -266,84 +285,68 @@ export function FindingCard({
 
               {finding.recommended_verification.length > 0 && (
                 <section>
-                  <h4 className="eyebrow mb-1">To verify</h4>
-                  <ol className="list-decimal space-y-0.5 pl-4 text-ink-2 marker:font-mono marker:text-ink-3">
-                    {finding.recommended_verification.map((b, i) => (
+                  <h4 className="eyebrow mb-1">How to check</h4>
+                  <ul className="list-disc space-y-0.5 pl-4 text-[14px] text-ink-2 marker:text-ink-3">
+                    {finding.recommended_verification.slice(0, 3).map((b, i) => (
                       <li key={i}>{b}</li>
                     ))}
-                  </ol>
+                  </ul>
                 </section>
+              )}
+
+              {finding.evidence.length > 0 && (
+                <details className="text-[14px]">
+                  <summary>Show the evidence ({finding.evidence.length})</summary>
+                  <div className="mt-2 flex flex-col gap-2">
+                    {finding.evidence.map((ev, i) => (
+                      <EvidenceBlock key={i} ev={ev} caseId={caseId} docs={docs} stroke={m.stroke} />
+                    ))}
+                  </div>
+                </details>
               )}
 
               {finding.related_finding_ids.length > 0 && (
-                <section>
-                  <h4 className="eyebrow mb-1">Related findings</h4>
-                  <div className="flex flex-wrap gap-1">
-                    {finding.related_finding_ids.map((id) => (
-                      <button
-                        key={id}
-                        type="button"
-                        onClick={() => onSelectRelated(id)}
-                        className="inline-flex cursor-pointer items-center gap-1 border border-line-strong px-1.5 py-0.5 font-mono text-[11px] text-ink-2 hover:bg-hover hover:text-ink"
-                      >
-                        <Link2 className="size-3" aria-hidden />
+                <div className="text-[14px] text-ink-2">
+                  Related:{" "}
+                  {finding.related_finding_ids.map((id, i) => (
+                    <span key={id}>
+                      {i > 0 && ", "}
+                      <button type="button" className="link cursor-pointer" onClick={() => onSelectRelated(id)}>
                         {labelsById.get(id) ?? id}
                       </button>
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              <Provenance r={finding.reasoning} />
-
-              <section className="border-t border-line pt-2.5" aria-label="Examiner decision">
-                <div className="mb-1.5 flex items-center justify-between gap-2">
-                  <h4 className="eyebrow">Examiner decision</h4>
-                  <ReviewBadge decision={finding.review.decision} />
-                </div>
-                {finding.review.at && (
-                  <p className="mb-1.5 font-mono text-[11px] text-ink-3">
-                    {finding.review.reviewer} · {fmtTime(finding.review.at)}
-                    {finding.review.note && <span className="block text-ink-2">“{finding.review.note}”</span>}
-                  </p>
-                )}
-                <div className="mb-1.5 flex gap-1.5">
-                  <input
-                    value={reviewer}
-                    onChange={(e) => setName(e.target.value)}
-                    aria-label="Reviewer name"
-                    placeholder="Reviewer"
-                    className="h-8 w-28 border border-line-strong bg-ground px-2 font-mono text-xs text-ink placeholder:text-ink-3"
-                  />
-                  <input
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                    aria-label="Optional note"
-                    placeholder="Note (optional)"
-                    className="h-8 min-w-0 flex-1 border border-line-strong bg-ground px-2 text-xs text-ink placeholder:text-ink-3"
-                  />
-                </div>
-                <div className="grid grid-cols-3 gap-1.5">
-                  {ACTIONS.map(({ d, label: l, icon: Icon }) => (
-                    <Button
-                      key={d}
-                      size="sm"
-                      disabled={review.isPending}
-                      aria-pressed={finding.review.decision === d}
-                      className={cn(finding.review.decision === d && "border-ink bg-hover")}
-                      onClick={() => review.mutate(d)}
-                    >
-                      <Icon aria-hidden /> {l}
-                    </Button>
+                    </span>
                   ))}
                 </div>
-                {review.isError && (
-                  <p role="alert" className="mt-1.5 text-xs text-man">
-                    Decision not saved: {(review.error as Error).message}
-                  </p>
-                )}
-                <p className="mt-1.5 text-[11px] text-ink-3">Each decision is written to the audit chain.</p>
-              </section>
+              )}
+
+              <details className="text-[14px]">
+                <summary>Technical details</summary>
+                <dl className="mt-1.5 grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-0.5 text-[13px] text-ink-2">
+                  <dt className="text-ink-3">Check</dt>
+                  <dd className="code break-all">{finding.detector}</dd>
+                  <dt className="text-ink-3">Where it looked</dt>
+                  <dd>{CATEGORY_LABEL[finding.category]}</dd>
+                  <dt className="text-ink-3">Severity</dt>
+                  <dd>{finding.severity}</dd>
+                  {finding.fused_score !== null && (
+                    <>
+                      <dt className="text-ink-3">Combined score</dt>
+                      <dd>{Math.round(finding.fused_score * 100)}%</dd>
+                    </>
+                  )}
+                  <dt className="text-ink-3">Check's own confidence</dt>
+                  <dd>{Math.round(finding.confidence * 100)}%</dd>
+                  {finding.bbox && (
+                    <>
+                      <dt className="text-ink-3">Region (pixels)</dt>
+                      <dd className="code">{fmtBBox(finding.bbox)}</dd>
+                    </>
+                  )}
+                </dl>
+                <div className="mt-1.5">
+                  <Provenance r={finding.reasoning} />
+                </div>
+              </details>
             </div>
           </motion.div>
         )}

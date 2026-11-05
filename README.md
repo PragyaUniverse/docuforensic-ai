@@ -41,7 +41,7 @@ In a second terminal:
 make ui
 ```
 
-Then open http://localhost:5173 and choose **Load demo case**.
+Then open http://localhost:5173 and pick one of the examples.
 
 **API keys are optional.** With none, all forensics and cross-document checks run locally, and AI
 explanations are replayed from answers recorded in real runs, clearly labelled as replays. To use a
@@ -71,16 +71,16 @@ show its working for every answer.
 
 ## What judges should watch during the demo
 
-1. **The salary slip.** The figure says 84,320 and the words on the same page say 48,320. Watch three
+1. **"An altered salary slip".** The figure says 84,320 and the words on the same page say 48,320. Watch three
    independent forensic signals converge on that exact box.
-2. **Case C, Conflicts screen.** Nothing looks visually wrong on these documents. Every discrepancy
+2. **"Documents that disagree", Compare documents tab.** Nothing looks visually wrong on these documents. Every discrepancy
    comes from reading them together.
-3. **Case D.** A person sees 86,400 and the PDF's text layer says 62,400. An OCR-only or text-only
+3. **"An edited PDF".** A person sees 86,400 and the PDF's text layer says 62,400. An OCR-only or text-only
    pipeline gets a different answer from the one on the page.
 4. **Click-through.** Pick any finding and jump to its exact region in the original document, then find
    the same finding in the dossier.
-5. **Break the audit chain.** Edit a log entry, press Verify, and see the failure at the exact entry.
-6. **Case A and the bad files.** The clean case stays quiet, and a corrupt PDF gets a clear message
+5. **Break the history.** On the History tab, edit a log entry, press Verify integrity, and see it caught at the exact entry.
+6. **The clean example and the bad files.** The clean case stays quiet, and a corrupt PDF gets a clear message
    instead of a crash.
 
 ## Architecture
@@ -143,7 +143,7 @@ Summary below, full version in [docs/CAPABILITY_MATRIX.md](docs/CAPABILITY_MATRI
 | Status | Capabilities |
 |---|---|
 | **Implemented** | Ingestion of PNG, JPG, scanned and digital PDF; classification; printed OCR; field and table extraction; structure; visual and PDF forensics; signature reuse and placement; contextual and cross-document checks; evidence mapping; dossier; audit trail; reviewer UI; safe failure handling; local LLM reasoning; offline mode |
-| **Partial** | Hosted LLMs (Gemini, Groq, OpenRouter: built and tested against a simulated network only, since no keys were available); degraded scans; Docker (written, never run); tablet layout (main screens only) |
+| **Partial** | Hosted LLMs (Gemini, Groq, OpenRouter: built and tested against a simulated network only, since no keys were available); degraded scans; Docker (written, never run); tablet layout (Findings screen checked) |
 | **Planned** | Investigation analytics |
 | **Unsupported** | Handwriting recognition; multilingual documents; signature identity verification; checks against external registries; authentication and multiple users |
 

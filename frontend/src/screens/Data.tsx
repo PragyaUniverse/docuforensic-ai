@@ -1,16 +1,15 @@
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, ArrowUpRight, Search } from "lucide-react";
+import { ArrowUpRight, Search } from "lucide-react";
 import { api } from "@/api";
 import { useCaseDocuments } from "@/api/hooks";
 import type { BBox, CaseField, Document, Section, Table } from "@/api/types";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Empty, ErrorState, Loading } from "@/components/ui/states";
 import { DocCanvas } from "@/components/DocCanvas";
 import { ConfidenceMeter } from "@/components/StatusBadge";
-import { cn, fmtBBox, humanize } from "@/lib/utils";
+import { cn, humanize } from "@/lib/utils";
 
 const LOW = 0.55;
 
@@ -54,8 +53,7 @@ export function DataScreen() {
     <div className="grid h-full min-h-[560px] grid-rows-[minmax(0,1fr)_minmax(0,38%)] lg:grid-cols-[minmax(0,1fr)_minmax(300px,38%)] lg:grid-rows-1">
       <div className="flex min-h-0 min-w-0 flex-col border-b border-line lg:border-b-0 lg:border-r">
         <div className="shrink-0 border-b border-line px-4 pt-3">
-          <div className="eyebrow">Steps 3 and 4 · Extraction and structure</div>
-          <div className="mt-2 flex gap-1" role="tablist" aria-label="Extracted data views">
+                    <div className="flex gap-1" role="tablist" aria-label="Extracted data views">
             {(["fields", "tables", "structure"] as Tab[]).map((t) => (
               <button
                 key={t}
@@ -65,7 +63,7 @@ export function DataScreen() {
                 onClick={() => setTab(t)}
                 className={cn(
                   "cursor-pointer border-b-2 px-3 py-1.5 capitalize",
-                  tab === t ? "border-ink text-ink" : "border-transparent text-ink-3 hover:text-ink",
+                  tab === t ? "border-accent font-medium text-ink" : "border-transparent text-ink-3 hover:text-ink",
                 )}
               >
                 {t}
@@ -82,16 +80,16 @@ export function DataScreen() {
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Filter fields"
-                  aria-label="Filter fields"
-                  className="h-7 w-44 border border-line-strong bg-ground pl-7 pr-2 text-[13px] text-ink placeholder:text-ink-3"
+                  placeholder="Search"
+                  aria-label="Search fields"
+                  className="h-8 w-44 rounded-md border border-line-strong bg-panel pl-7 pr-2 text-[13px] text-ink placeholder:text-ink-3"
                 />
               </div>
               <select
                 value={docFilter}
                 onChange={(e) => setDocFilter(e.target.value)}
                 aria-label="Filter by document"
-                className="h-7 max-w-48 border border-line-strong bg-ground px-1 text-[13px] text-ink"
+                className="h-8 max-w-48 rounded-md border border-line-strong bg-panel px-1 text-[13px] text-ink"
               >
                 <option value="">All documents</option>
                 {summaries.map((s) => (
@@ -101,16 +99,16 @@ export function DataScreen() {
                 ))}
               </select>
               <label className="flex items-center gap-1.5 text-[13px] text-ink-2">
-                <Switch checked={lowOnly} onCheckedChange={setLowOnly} label="Low confidence only" />
-                Low confidence only ({lowCount})
+                <input type="checkbox" checked={lowOnly} onChange={(e) => setLowOnly(e.target.checked)} />
+                Only low confidence ({lowCount})
               </label>
             </div>
             <div className="min-h-0 flex-1 overflow-auto">
               {fieldsQ.isLoading && <Loading label="Loading extracted fields" />}
               {fieldsQ.isError && <ErrorState title="Fields could not load" error={fieldsQ.error} onRetry={() => fieldsQ.refetch()} />}
               {fieldsQ.data && rows.length === 0 && (
-                <Empty title={fieldsQ.data.length === 0 ? "No fields extracted yet" : "No fields match"}>
-                  {fieldsQ.data.length === 0 ? "Fields appear after the investigation runs." : "Clear the filters to see all fields."}
+                <Empty title={fieldsQ.data.length === 0 ? "Nothing extracted yet" : "No fields match"}>
+                  {fieldsQ.data.length === 0 ? "Fields appear here after the check runs." : "Clear the filters to see all fields."}
                 </Empty>
               )}
               {rows.length > 0 && (
@@ -120,7 +118,7 @@ export function DataScreen() {
                       <th scope="col" className="px-4 py-2 font-medium">Field</th>
                       <th scope="col" className="px-2 py-2 font-medium">Value</th>
                       <th scope="col" className="px-2 py-2 font-medium">Confidence</th>
-                      <th scope="col" className="px-4 py-2 font-medium">Source</th>
+                      <th scope="col" className="px-4 py-2 font-medium">Found in</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -141,30 +139,20 @@ export function DataScreen() {
                           }}
                           className={cn("cursor-pointer border-b border-line align-top hover:bg-hover", on && "bg-raised shadow-[inset_3px_0_0_0_var(--color-ink)]")}
                         >
-                          <td className="px-4 py-1.5">
-                            <div className="text-[13px]">{humanize(f.name)}</div>
-                            {f.label_raw && <div className="text-[11px] text-ink-3">“{f.label_raw}”</div>}
+                          <td className="px-4 py-2">
+                            <div className="text-[14px] text-ink-2" title={f.label_raw ? `Printed as "${f.label_raw}"` : undefined}>{humanize(f.name)}</div>
                           </td>
-                          <td className="px-2 py-1.5">
-                            <div className="break-words font-mono text-[13px]">{f.value_raw}</div>
-                            {f.value_norm && f.value_norm !== f.value_raw && (
-                              <div className="break-words font-mono text-[11px] text-ink-3">norm {f.value_norm}</div>
-                            )}
+                          <td className="px-2 py-2">
+                            <div className="break-words text-[14px]">{f.value_raw}</div>
                           </td>
-                          <td className="whitespace-nowrap px-2 py-1.5">
+                          <td className="whitespace-nowrap px-2 py-2">
                             <ConfidenceMeter value={f.confidence} low={low} />
                             {low && (
-                              <div className="mt-0.5 flex items-center gap-1 text-[11px] text-inc">
-                                <AlertTriangle className="size-3" aria-hidden /> Low, verify
-                              </div>
+                              <div className="text-[13px] text-inc">Please check this one</div>
                             )}
                           </td>
-                          <td className="whitespace-nowrap px-4 py-1.5 font-mono text-[11px] text-ink-3">
-                            <div className="max-w-44 truncate text-ink-2" title={f.doc_filename}>{f.doc_filename}</div>
-                            <div>
-                              p{f.page + 1} {fmtBBox(f.bbox)}
-                            </div>
-                            <div>{f.source}</div>
+                          <td className="px-4 py-2 text-[14px] text-ink-3">
+                            {humanize(f.doc_type)}, page {f.page + 1}
                           </td>
                         </tr>
                       );
@@ -173,8 +161,8 @@ export function DataScreen() {
                 </table>
               )}
             </div>
-            <p className="shrink-0 border-t border-line bg-panel px-4 py-1.5 text-xs text-ink-3">
-              Extracted values are machine readings, not verified facts. Each keeps its confidence and source location.
+            <p className="shrink-0 border-t border-line bg-panel px-4 py-1.5 text-[13px] text-ink-3">
+              These were read by a machine, so they may contain mistakes. Click a row to see where it came from.
             </p>
           </>
         )}
@@ -185,11 +173,11 @@ export function DataScreen() {
 
       <div className="flex min-h-0 min-w-0 flex-col">
         <div className="flex h-9 shrink-0 items-center justify-between gap-2 border-b border-line bg-panel px-3">
-          <span className="truncate font-mono text-xs text-ink-2">{targetDoc?.filename ?? "Source location"}</span>
+          <span className="truncate font-mono text-[13px] text-ink-2">{targetDoc?.filename ?? "Original document"}</span>
           {target && (
             <Button asChild size="sm" variant="ghost">
               <Link to={{ pathname: `/cases/${caseId}/viewer`, search: new URLSearchParams({ doc: target.docId, page: String(target.page), ...(target.key.startsWith("fld") ? { field: target.key } : {}) }).toString() }}>
-                Open in viewer <ArrowUpRight aria-hidden />
+                Open in Findings <ArrowUpRight aria-hidden />
               </Link>
             </Button>
           )}
@@ -205,8 +193,8 @@ export function DataScreen() {
             className="min-h-0 flex-1"
           />
         ) : (
-          <Empty title="Select a row" className="flex-1">
-            The original page opens here with the source region highlighted.
+          <Empty title="Click a row" className="flex-1">
+            The original page opens here, with the spot highlighted.
           </Empty>
         )}
       </div>
@@ -231,12 +219,12 @@ function TableBlock({ doc, table, target, onPick }: { doc: Document; table: Tabl
     <section className="mb-6">
       <h3 className="mb-1 flex flex-wrap items-baseline gap-x-2">
         <span className="font-medium">{humanize(table.name)}</span>
-        <span className="font-mono text-[11px] text-ink-3">
+        <span className="font-mono text-[13px] text-ink-3">
           {doc.filename} · p{table.page + 1} · {table.rows.length} rows
         </span>
       </h3>
       <div className="overflow-x-auto border border-line">
-        <table className="w-full text-left font-mono text-xs">
+        <table className="w-full text-left font-mono text-[13px]">
           <thead>
             <tr className="eyebrow border-b border-line-strong bg-panel">
               {table.headers.map((h) => (
@@ -282,7 +270,7 @@ function SectionNode({ s, doc, onPick, depth = 0 }: { s: Section; doc: Document;
         className="flex w-full cursor-pointer items-baseline justify-between gap-2 px-2 py-1 text-left hover:bg-hover"
       >
         <span>{humanize(s.name)}</span>
-        <span className="font-mono text-[11px] text-ink-3">
+        <span className="font-mono text-[13px] text-ink-3">
           {s.field_ids.length} field{s.field_ids.length === 1 ? "" : "s"}
         </span>
       </button>
@@ -302,10 +290,10 @@ function StructureView({ docs, onPick }: { docs: Document[]; onPick: (t: Target)
   return (
     <div className="grid min-h-0 flex-1 content-start gap-3 overflow-auto p-4 xl:grid-cols-2">
       {docs.map((d) => (
-        <section key={d.id} className="border border-line bg-panel">
+        <section key={d.id} className="rounded-md border border-line bg-panel">
           <header className="border-b border-line px-3 py-2">
             <div className="eyebrow">{humanize(d.doc_type)}</div>
-            <div className="truncate font-mono text-xs text-ink-2">{d.filename}</div>
+            <div className="truncate font-mono text-[13px] text-ink-2">{d.filename}</div>
           </header>
           {d.sections.length === 0 ? (
             <p className="px-3 py-2 text-[13px] text-ink-3">No layout sections identified.</p>
@@ -320,12 +308,12 @@ function StructureView({ docs, onPick }: { docs: Document[]; onPick: (t: Target)
             <div className="border-t border-line px-3 py-2 text-[13px]">
               {d.missing_fields.length > 0 && (
                 <p className="text-ink-2">
-                  <span className="text-inc">Missing:</span> <span className="font-mono text-xs">{d.missing_fields.join(", ")}</span>
+                  <span className="text-inc">Missing:</span> <span className="font-mono text-[13px]">{d.missing_fields.join(", ")}</span>
                 </p>
               )}
               {d.duplicated_fields.length > 0 && (
                 <p className="text-ink-2">
-                  <span className="text-inc">Duplicated:</span> <span className="font-mono text-xs">{d.duplicated_fields.join(", ")}</span>
+                  <span className="text-inc">Duplicated:</span> <span className="font-mono text-[13px]">{d.duplicated_fields.join(", ")}</span>
                 </p>
               )}
             </div>

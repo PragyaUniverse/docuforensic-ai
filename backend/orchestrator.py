@@ -432,14 +432,14 @@ def _run(case: Case) -> None:
         }
         ctx.payload["llm_usage"] = {k: get_client().usage[k] for k in ("calls", "tokens", "cache_hits")}
         if not stats.get("llm_enriched"):
-            ctx.payload["message"] = "Deterministic reasoning used; no LLM answer was available or accepted."
+            ctx.payload["message"] = "Explanations written from fixed rules. No AI answer was available or accepted."
         else:
             names = ", ".join(sorted(stats["providers"]))
             replayed = sum(f.reasoning.mode == "demo_cache" for f in findings)
             ctx.payload["message"] = (
-                f"{replayed} finding(s) show AI counter-hypotheses replayed from a recorded {names} run. No live call was made."
+                f"AI notes on {replayed} finding(s) come from an earlier recorded {names} run, not a live answer."
                 if replayed == stats["llm_enriched"]
-                else f"{stats['llm_enriched']} finding(s) got AI counter-hypotheses from {names}."
+                else f"AI notes added to {stats['llm_enriched']} finding(s), from {names}."
             )
         if stats.get("skipped_budget"):
             ctx.degrade(f"{stats['skipped_budget']} finding(s) kept deterministic reasoning to stay within the budget.")

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { AlertOctagon, Inbox, Loader2, RefreshCw } from "lucide-react";
+import { AlertOctagon, Loader2, RefreshCw } from "lucide-react";
 import { Button } from "./button";
 import { cn } from "@/lib/utils";
 
@@ -7,7 +7,7 @@ export function Loading({ label = "Loading", className }: { label?: string; clas
   return (
     <div role="status" className={cn("flex items-center justify-center gap-2 p-8 text-ink-3", className)}>
       <Loader2 className="size-4 animate-spin" aria-hidden />
-      <span className="font-mono text-xs">{label}</span>
+      <span>{label}</span>
     </div>
   );
 }
@@ -53,7 +53,6 @@ export function Empty({
 }) {
   return (
     <div className={cn("flex flex-col items-center justify-center gap-2 p-10 text-center", className)}>
-      <Inbox className="size-5 text-ink-3" aria-hidden />
       <p className="font-medium text-ink">{title}</p>
       {children && <p className="max-w-md text-ink-3">{children}</p>}
       {action && <div className="mt-2">{action}</div>}

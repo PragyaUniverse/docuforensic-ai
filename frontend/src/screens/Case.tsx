@@ -1,47 +1,102 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FileWarning, Loader2, Play, RotateCw, UploadCloud } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { api } from "@/api";
-import { useCase } from "@/api/hooks";
+import { useCase, useFindings } from "@/api/hooks";
 import type { DocumentSummary } from "@/api/types";
 import { Button } from "@/components/ui/button";
-import { Empty, ErrorState, Loading } from "@/components/ui/states";
-import { ConfidenceMeter, ProcBadge } from "@/components/StatusBadge";
+import { ErrorState, Loading } from "@/components/ui/states";
+import { HumanReviewPlate, ProcBadge, RiskPlate } from "@/components/StatusBadge";
 import { PageHeading } from "@/components/Shell";
 import { cn, humanize } from "@/lib/utils";
 
-function DocRow({ d, caseRunning }: { d: DocumentSummary; caseRunning: boolean }) {
-  const problem = d.status === "unsupported" || d.status === "failed" || d.status === "degraded";
+function plural(n: number, one: string, many = `${one}s`) {
+  return `${n} ${n === 1 ? one : many}`;
+}
+
+function DocRow({ d, caseRunning, toReview }: { d: DocumentSummary; caseRunning: boolean; toReview: number }) {
+  const type = d.doc_type === "unknown" ? null : humanize(d.doc_type);
   return (
-    <tr className="border-b border-line align-top">
-      <td className="px-4 py-2.5">
-        <div className="break-all font-mono text-[13px] text-ink">{d.filename}</div>
-        {d.status_message && (
-          <div className={cn("mt-1 flex items-start gap-1.5 text-[13px]", problem ? "text-ink-2" : "text-ink-3")}>
-            {problem && <FileWarning className="mt-0.5 size-3.5 shrink-0 text-inc" aria-hidden />}
-            <span>{d.status_message}</span>
-          </div>
+    <li className="flex flex-wrap items-baseline gap-x-4 gap-y-0.5 border-b border-line px-4 py-3 last:border-b-0">
+      <div className="min-w-[220px] flex-1">
+        <div className="font-medium">{type ?? d.filename}</div>
+        {type && <div className="break-all text-[13px] text-ink-3">{d.filename}</div>}
+        {d.status_message && <div className="mt-0.5 text-[14px] text-ink-2">{d.status_message}</div>}
+      </div>
+      {toReview > 0 && <div className="text-[14px] text-ink-2">{toReview} to review</div>}
+      {d.status === "processing" && !caseRunning ? (
+        <span className="text-[14px] text-ink-3">Ready to check</span>
+      ) : (
+        <ProcBadge status={d.status} />
+      )}
+    </li>
+  );
+}
+
+function Upload({ caseId, large }: { caseId: string; large: boolean }) {
+  const qc = useQueryClient();
+  const input = useRef<HTMLInputElement>(null);
+  const [over, setOver] = useState(false);
+  const upload = useMutation({
+    mutationFn: (files: File[]) => api.uploadDocuments(caseId, files),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["case", caseId] }),
+  });
+  const onFiles = useCallback(
+    (list: FileList | null) => {
+      const files = list ? Array.from(list) : [];
+      if (files.length) upload.mutate(files);
+    },
+    [upload],
+  );
+  return (
+    <>
+      <div
+        onDragOver={(e) => {
+          e.preventDefault();
+          setOver(true);
+        }}
+        onDragLeave={() => setOver(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setOver(false);
+          onFiles(e.dataTransfer.files);
+        }}
+        className={cn(
+          "flex flex-col items-center justify-center gap-2 rounded-md border border-dashed px-6 text-center",
+          large ? "py-12" : "py-5",
+          over ? "border-accent bg-obs-dim" : "border-line-strong bg-panel",
         )}
-      </td>
-      <td className="px-3 py-2.5">
-        {d.status === "processing" && !caseRunning ? (
-          <span className="inline-flex border border-line-strong px-1.5 py-0.5 font-mono text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink-2">
-            Ready to analyse
-          </span>
+      >
+        {upload.isPending ? (
+          <p className="flex items-center gap-2 text-ink-2">
+            <Loader2 className="size-4 animate-spin" aria-hidden /> Uploading
+          </p>
         ) : (
-          <ProcBadge status={d.status} />
+          <>
+            <p className="text-ink">
+              Drag files here, or{" "}
+              <button type="button" className="link cursor-pointer" onClick={() => input.current?.click()}>
+                choose files
+              </button>
+            </p>
+            <p className="text-[13px] text-ink-3">PNG, JPG or PDF. Add every document from the application together.</p>
+          </>
         )}
-      </td>
-      <td className="px-3 py-2.5 font-mono text-xs text-ink-2">{d.format}</td>
-      <td className="px-3 py-2.5">
-        <div className="text-[13px]">{d.doc_type === "unknown" ? <span className="text-ink-3">Not classified</span> : humanize(d.doc_type)}</div>
-        {d.doc_type !== "unknown" && <ConfidenceMeter value={d.doc_type_confidence} label="Classification confidence" />}
-      </td>
-      <td className="px-3 py-2.5 text-right font-mono text-xs text-ink-2">{d.page_count}</td>
-      <td className="px-3 py-2.5 text-right font-mono text-xs text-ink-2">{d.field_count}</td>
-      <td className="px-4 py-2.5 text-right font-mono text-xs text-ink-2">{d.finding_count}</td>
-    </tr>
+        <input
+          ref={input}
+          type="file"
+          multiple
+          className="sr-only"
+          aria-label="Choose documents to upload"
+          onChange={(e) => {
+            onFiles(e.target.files);
+            e.target.value = "";
+          }}
+        />
+      </div>
+      {upload.isError && <ErrorState title="That upload didn't work" error={upload.error} />}
+    </>
   );
 }
 
@@ -50,13 +105,12 @@ export function CaseScreen() {
   const nav = useNavigate();
   const qc = useQueryClient();
   const c = useCase(caseId);
-  const input = useRef<HTMLInputElement>(null);
-  const [over, setOver] = useState(false);
-
-  const upload = useMutation({
-    mutationFn: (files: File[]) => api.uploadDocuments(caseId, files),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["case", caseId] }),
-  });
+  const findings = useFindings(caseId);
+  const counts = useMemo(() => {
+    const out = { POTENTIAL_MANIPULATION: 0, INCONSISTENCY: 0, OBSERVATION: 0 };
+    (findings.data ?? []).forEach((f) => out[f.status]++);
+    return out;
+  }, [findings.data]);
   const run = useMutation({
     mutationFn: () => api.runCase(caseId),
     onSuccess: () => {
@@ -65,128 +119,115 @@ export function CaseScreen() {
     },
   });
 
-  const onFiles = useCallback(
-    (list: FileList | null) => {
-      const files = list ? Array.from(list) : [];
-      if (files.length) upload.mutate(files);
-    },
-    [upload],
-  );
-
   if (c.isLoading) return <Loading label="Loading case" className="h-full" />;
   if (c.isError) return <ErrorState title="This case could not load" error={c.error} onRetry={() => c.refetch()} />;
   const { case: cs, documents } = c.data!;
-  const runnable = documents.length > 0 && cs.status !== "running";
   const done = cs.status === "complete";
+  const running = cs.status === "running";
+  const needsAttention = counts.POTENTIAL_MANIPULATION + counts.INCONSISTENCY;
+  const nothingRead = documents.length > 0 && documents.every((d) => d.page_count === 0);
 
   return (
-    <div className="flex flex-col">
-      <PageHeading
-        eyebrow="Step 1 · Submission"
-        title={cs.name}
-        actions={
-          <>
-            {done && (
-              <Button asChild>
+    <div className="mx-auto flex max-w-[860px] flex-col gap-5 pb-10">
+      <PageHeading title={done ? "Results" : documents.length ? "Ready when you are" : "Add your documents"} />
+      {run.isError && <ErrorState title="The check didn't start" error={run.error} />}
+
+      <div className="flex flex-col gap-6 px-6">
+        {done && (
+          <section className="rounded-md border border-line bg-panel p-5">
+            <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+              <RiskPlate risk={cs.risk_level} large />
+              <HumanReviewPlate />
+            </div>
+            {needsAttention > 0 ? (
+              <ul className="mt-3 space-y-0.5 text-ink-2">
+                {counts.POTENTIAL_MANIPULATION > 0 && (
+                  <li>
+                    <strong className="font-semibold text-man">{plural(counts.POTENTIAL_MANIPULATION, "potential manipulation")}</strong>: signs a
+                    document may have been altered
+                  </li>
+                )}
+                {counts.INCONSISTENCY > 0 && (
+                  <li>
+                    <strong className="font-semibold text-inc">{plural(counts.INCONSISTENCY, "inconsistency", "inconsistencies")}</strong>: values
+                    that should match but don't
+                  </li>
+                )}
+              </ul>
+            ) : nothingRead ? (
+              <p className="mt-3 text-ink-2">None of these files could be read, so nothing was checked. The list below says why.</p>
+            ) : (
+              <p className="mt-3 text-ink-2">Nothing stood out. That doesn't prove the documents are genuine.</p>
+            )}
+            {counts.OBSERVATION > 0 && (
+              <p className="mt-1 text-[14px] text-ink-3">Plus {plural(counts.OBSERVATION, "minor observation")}, usually nothing to worry about.</p>
+            )}
+            <div className={cn("mt-4 flex flex-wrap items-center gap-3", nothingRead && "hidden")}>
+              <Button asChild variant="primary">
                 <Link to={`/cases/${caseId}/viewer`}>Review findings</Link>
               </Button>
-            )}
-            {cs.status === "running" ? (
+              <Button asChild>
+                <Link to={`/cases/${caseId}/dossier`}>Open the report</Link>
+              </Button>
+            </div>
+            <p className={cn("mt-3 text-[13px] text-ink-3", nothingRead && "hidden")}>
+              The risk level helps you decide what to look at first. It isn't a decision about the applicant.
+            </p>
+          </section>
+        )}
+
+        {!done && !running && <Upload caseId={caseId} large={documents.length === 0} />}
+
+        {documents.length > 0 && (
+          <section aria-labelledby="docs-h">
+            <h2 id="docs-h" className="mb-2 text-[17px] font-semibold">
+              {plural(documents.length, "document")}
+            </h2>
+            <ul className="rounded-md border border-line bg-panel">
+              {documents.map((d) => (
+                <DocRow
+                  key={d.id}
+                  d={d}
+                  caseRunning={running}
+                  toReview={(findings.data ?? []).filter((f) => f.status !== "OBSERVATION" && (f.doc_id === d.id || f.evidence.some((e) => e.doc_id === d.id))).length}
+                />
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {!done && (
+          <div>
+            {running ? (
               <Button asChild variant="primary">
                 <Link to={`/cases/${caseId}/pipeline`}>
-                  <Loader2 className="animate-spin" aria-hidden /> View progress
+                  <Loader2 className="animate-spin" aria-hidden /> See progress
                 </Link>
               </Button>
             ) : (
-              <Button variant={done ? "secondary" : "primary"} disabled={!runnable || run.isPending} onClick={() => run.mutate()}>
-                {done ? <RotateCw aria-hidden /> : <Play aria-hidden />}
-                {done ? "Run again" : "Run investigation"}
+              <Button variant="primary" size="lg" disabled={documents.length === 0 || run.isPending} onClick={() => run.mutate()}>
+                Check these documents
               </Button>
             )}
-          </>
-        }
-      >
-        Submit every document for one application together. Relationships between them are the point.
-      </PageHeading>
-      {run.isError && <ErrorState title="The investigation did not start" error={run.error} />}
+          </div>
+        )}
 
-      <div className="flex flex-col gap-6 p-6">
-        <div
-          onDragOver={(e) => {
-            e.preventDefault();
-            setOver(true);
-          }}
-          onDragLeave={() => setOver(false)}
-          onDrop={(e) => {
-            e.preventDefault();
-            setOver(false);
-            onFiles(e.dataTransfer.files);
-          }}
-          className={cn(
-            "flex flex-col items-center justify-center gap-2 border border-dashed px-6 py-8 text-center transition-colors",
-            over ? "border-ink bg-hover" : "border-line-strong bg-panel",
-          )}
-        >
-          {upload.isPending ? (
-            <>
-              <Loader2 className="size-5 animate-spin text-ink-2" aria-hidden />
-              <p className="text-ink-2">Uploading and hashing</p>
-            </>
-          ) : (
-            <>
-              <UploadCloud className="size-5 text-ink-2" aria-hidden />
-              <p className="text-ink">Drop documents here, or</p>
-              <Button size="sm" onClick={() => input.current?.click()}>
-                Choose files
-              </Button>
-              <p className="font-mono text-[11px] text-ink-3">PNG, JPG, scanned PDF, digital PDF. Other files are recorded as unsupported.</p>
-            </>
-          )}
-          <input
-            ref={input}
-            type="file"
-            multiple
-            className="sr-only"
-            aria-label="Choose documents to upload"
-            onChange={(e) => {
-              onFiles(e.target.files);
-              e.target.value = "";
-            }}
-          />
-        </div>
-        {upload.isError && <ErrorState title="Upload rejected" error={upload.error} className="border border-line" />}
-
-        <section aria-labelledby="docs-h">
-          <h2 id="docs-h" className="eyebrow mb-2">
-            Documents in this case
-          </h2>
-          {documents.length === 0 ? (
-            <Empty title="No documents yet" className="border border-line">
-              Add at least one document to start the investigation.
-            </Empty>
-          ) : (
-            <div className="overflow-x-auto border border-line bg-panel">
-              <table className="w-full min-w-[720px] text-left">
-                <thead>
-                  <tr className="eyebrow border-b border-line-strong">
-                    <th scope="col" className="px-4 py-2 font-medium">File</th>
-                    <th scope="col" className="px-3 py-2 font-medium">Status</th>
-                    <th scope="col" className="px-3 py-2 font-medium">Format</th>
-                    <th scope="col" className="px-3 py-2 font-medium">Type</th>
-                    <th scope="col" className="px-3 py-2 text-right font-medium">Pages</th>
-                    <th scope="col" className="px-3 py-2 text-right font-medium">Fields</th>
-                    <th scope="col" className="px-4 py-2 text-right font-medium">Findings</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {documents.map((d) => (
-                    <DocRow key={d.id} d={d} caseRunning={cs.status === "running"} />
-                  ))}
-                </tbody>
-              </table>
+        {done && (
+          <details className="text-[14px]">
+            <summary>Add more documents or check again</summary>
+            <div className="mt-3 flex flex-col gap-3">
+              <Upload caseId={caseId} large={false} />
+              <div className="flex flex-wrap items-center gap-3">
+                <Button disabled={run.isPending} onClick={() => run.mutate()}>
+                  Check again
+                </Button>
+                <Link className="link" to={`/cases/${caseId}/pipeline`}>
+                  See each step of the last check
+                </Link>
+              </div>
             </div>
-          )}
-        </section>
+          </details>
+        )}
       </div>
     </div>
   );

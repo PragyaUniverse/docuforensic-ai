@@ -40,7 +40,7 @@ synthetic data, and nothing here has been tested on real documents.
 | Degraded scans | Partial | Measured: 24% manipulation recall |
 | Docker deployment | Partial | Files written, **never run** |
 | CI | Partial | Workflow written, **not yet run**. Its lint and test steps pass locally |
-| Tablet layout | Partial | Viewer, conflicts and data checked. Not designed for phones |
+| Tablet layout | Partial | Findings checked at tablet size. Not designed for phones |
 | Investigation analytics | Planned | Not started |
 | Handwritten text recognition | **Unsupported** | Not built |
 | Multilingual documents | **Unsupported** | Not built |

@@ -1,100 +1,85 @@
-import { ShieldAlert, ShieldCheck, ShieldQuestion, UserCheck, type LucideIcon } from "lucide-react";
 import type { FindingStatus, ProcessingStatus, ReviewDecision, RiskLevel, Severity } from "@/api/types";
 import { STATUS_META } from "@/lib/findings";
 import { cn } from "@/lib/utils";
 
-const plate = "inline-flex items-center gap-1.5 rounded-sm border font-mono font-medium uppercase tracking-[0.06em]";
+function Dot({ className }: { className: string }) {
+  return <span aria-hidden className={cn("inline-block size-2 shrink-0 rounded-full", className)} />;
+}
 
-export function StatusBadge({
-  status,
-  compact,
-  className,
-}: {
-  status: FindingStatus;
-  compact?: boolean;
-  className?: string;
-}) {
+const DOT: Record<FindingStatus, string> = {
+  POTENTIAL_MANIPULATION: "bg-man",
+  INCONSISTENCY: "bg-inc",
+  OBSERVATION: "bg-obs",
+};
+
+export function StatusBadge({ status, className }: { status: FindingStatus; compact?: boolean; className?: string }) {
   const m = STATUS_META[status];
-  const Icon = m.icon;
   return (
-    <span
-      title={m.meaning}
-      className={cn(plate, "px-1.5 py-0.5 text-[10.5px]", m.text, m.bg, m.border, className)}
-    >
-      <Icon className="size-3" aria-hidden />
-      {compact ? m.short : m.label}
-      {compact && <span className="sr-only">{m.label}</span>}
+    <span title={m.meaning} className={cn("inline-flex items-center gap-1.5 text-[13px] font-medium", m.text, className)}>
+      <Dot className={DOT[status]} />
+      {m.label}
     </span>
   );
 }
 
-const RISK: Record<RiskLevel, { label: string; icon: LucideIcon; cls: string }> = {
-  high: { label: "High", icon: ShieldAlert, cls: "text-man border-man bg-man-dim" },
-  medium: { label: "Medium", icon: ShieldQuestion, cls: "text-inc border-inc bg-inc-dim" },
-  low: { label: "Low", icon: ShieldCheck, cls: "text-ok border-ok bg-ok-dim" },
-  undetermined: { label: "Undetermined", icon: ShieldQuestion, cls: "text-ink-2 border-line-strong bg-raised" },
+const RISK: Record<RiskLevel, { label: string; dot: string; text: string }> = {
+  high: { label: "High risk", dot: "bg-man", text: "text-man" },
+  medium: { label: "Medium risk", dot: "bg-inc", text: "text-inc" },
+  low: { label: "Low risk", dot: "bg-ok", text: "text-ok" },
+  undetermined: { label: "Risk unclear", dot: "bg-ink-3", text: "text-ink-2" },
 };
 
 export function RiskPlate({ risk, assessed = true, large }: { risk: RiskLevel; assessed?: boolean; large?: boolean }) {
-  const r = assessed ? RISK[risk] : { label: "Not assessed", icon: ShieldQuestion, cls: RISK.undetermined.cls };
-  const Icon = r.icon;
+  const r = assessed ? RISK[risk] : { label: "Not checked yet", dot: "bg-line-strong", text: "text-ink-3" };
   return (
-    <span className={cn(plate, large ? "px-3 py-1.5 text-[13px]" : "px-2 py-1 text-[11px]", r.cls)}>
-      <Icon className={large ? "size-4" : "size-3.5"} aria-hidden />
-      Risk: {r.label}
+    <span className={cn("inline-flex items-center gap-1.5 font-medium", large ? "text-[17px]" : "text-[14px]", r.text)}>
+      <Dot className={r.dot} />
+      {r.label}
     </span>
   );
 }
 
 export function HumanReviewPlate() {
-  return (
-    <span className={cn(plate, "border-line-strong bg-raised px-2 py-1 text-[11px] text-ink")}>
-      <UserCheck className="size-3.5" aria-hidden />
-      Requires human review
-    </span>
-  );
+  return <span className="text-[14px] text-ink-2">Needs human review</span>;
 }
 
 const PROC: Record<ProcessingStatus, { label: string; cls: string }> = {
-  pending: { label: "Pending", cls: "text-ink-3 border-line" },
-  processing: { label: "Processing", cls: "text-ink border-line-strong" },
-  ok: { label: "OK", cls: "text-ok border-ok/60" },
-  degraded: { label: "Degraded", cls: "text-inc border-inc/70" },
-  unsupported: { label: "Unsupported", cls: "text-ink-2 border-line-strong bg-raised" },
-  failed: { label: "Failed", cls: "text-man border-man/70" },
+  pending: { label: "Waiting", cls: "text-ink-3" },
+  processing: { label: "Working on it", cls: "text-ink-2" },
+  ok: { label: "Read fine", cls: "text-ok" },
+  degraded: { label: "Read with problems", cls: "text-inc" },
+  unsupported: { label: "Not supported", cls: "text-ink-2" },
+  failed: { label: "Couldn't be read", cls: "text-man" },
 };
 
 export function ProcBadge({ status }: { status: ProcessingStatus }) {
   const p = PROC[status] ?? PROC.pending;
-  return <span className={cn(plate, "px-1.5 py-0.5 text-[10.5px]", p.cls)}>{p.label}</span>;
+  return <span className={cn("text-[14px]", p.cls)}>{p.label}</span>;
 }
 
 const REVIEW: Record<ReviewDecision, { label: string; cls: string }> = {
-  pending: { label: "Awaiting review", cls: "text-ink-3 border-line" },
-  confirmed: { label: "Reviewer confirmed", cls: "text-ink border-ink/70" },
-  dismissed: { label: "Reviewer dismissed", cls: "text-ink-3 border-line-strong line-through decoration-ink-3" },
-  escalated: { label: "Escalated", cls: "text-ink border-inc" },
+  pending: { label: "Not reviewed yet", cls: "text-ink-3" },
+  confirmed: { label: "Confirmed", cls: "text-ink font-medium" },
+  dismissed: { label: "Dismissed", cls: "text-ink-3 line-through" },
+  escalated: { label: "Escalated", cls: "text-inc font-medium" },
 };
 
 export function ReviewBadge({ decision }: { decision: ReviewDecision }) {
   const r = REVIEW[decision];
-  return <span className={cn(plate, "px-1.5 py-0.5 text-[10px]", r.cls)}>{r.label}</span>;
+  return <span className={cn("text-[13px]", r.cls)}>{r.label}</span>;
 }
 
 export function SeverityText({ severity }: { severity: Severity }) {
-  return <span className="font-mono text-[11px] uppercase text-ink-2">Severity {severity}</span>;
+  return <span className="text-[13px] text-ink-3">Severity: {severity}</span>;
 }
 
-export function ConfidenceMeter({ value, label = "Confidence", low }: { value: number; label?: string; low?: boolean }) {
-  const v = Math.max(0, Math.min(1, value));
+export function ConfidenceMeter({ value, label = "Confidence", low, words }: { value: number; label?: string; low?: boolean; words?: boolean }) {
+  const v = Math.round(Math.max(0, Math.min(1, value)) * 100);
   return (
-    <span className="inline-flex items-center gap-1.5" title={`${label}: ${Math.round(v * 100)}%`}>
-      <span aria-hidden className="relative block h-[5px] w-12 overflow-hidden bg-line-strong">
-        <span className={cn("absolute inset-y-0 left-0", low ? "bg-inc" : "bg-ink")} style={{ width: `${v * 100}%` }} />
-      </span>
-      <span className={cn("font-mono text-[11px]", low ? "text-inc" : "text-ink-2")}>
-        {Math.round(v * 100)}%<span className="sr-only"> {label}</span>
-      </span>
+    <span title={`${label}: ${v}%`} className={cn("whitespace-nowrap text-[13px]", low ? "font-medium text-inc" : "text-ink-3")}>
+      {v}%{words ? " confidence" : ""}
+      {low ? " (low)" : ""}
+      {!words && <span className="sr-only"> {label}</span>}
     </span>
   );
 }

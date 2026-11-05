@@ -23,16 +23,16 @@ Original file (SHA-256 recorded on submission)
    opens the right document and page with the exact region highlighted.
 3. **Source to finding.** In the extracted data table, click that field. The viewer highlights its
    location, and related findings are listed.
-4. **Graph.** Open the evidence graph. The red edge between the two documents is the same finding.
-5. **Dossier.** Find the finding in section 7.5, with its document, page, bbox, field ids and evidence.
+4. **Map.** On Compare documents, choose See as a map. The red line between the two documents is the same finding.
+5. **Report.** Find the finding under Evidence & Traceability, with its document, page, bbox, field ids and evidence.
 6. **Original file.** Compare the SHA-256 in section 7.1 against the file:
 
    ```bash
    shasum -a 256 data/synthetic_cases/case_c_crossdoc/<file>
    ```
 
-7. **Audit.** Open the audit trail, press **Verify integrity** (passes), use the tamper demo (fails at
-   the edited entry), then restore (passes).
+7. **History.** Open the History tab, press **Verify integrity** (passes), choose **Try editing an entry**,
+   verify again (fails at the edited entry), then undo the edit (passes).
 
 ## Automated check
 

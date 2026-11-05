@@ -51,8 +51,7 @@ export function DocCanvas({
   const [view, setView] = useState({ s: 0.3, x: 0, y: 0 });
   const [animate, setAnimate] = useState(false);
   const [imgState, setImgState] = useState<"loading" | "ok" | "error">("loading");
-  const [cursor, setCursor] = useState<{ x: number; y: number } | null>(null);
-  const drag = useRef<{ x: number; y: number; vx: number; vy: number; moved: boolean; id: number } | null>(null);
+    const drag = useRef<{ x: number; y: number; vx: number; vy: number; moved: boolean; id: number } | null>(null);
   const suppressClick = useRef(false);
   const animTimer = useRef<number | undefined>(undefined);
 
@@ -97,7 +96,7 @@ export function DocCanvas({
     if (focus) {
       const bw = Math.max(40, focus.x1 - focus.x0);
       const bh = Math.max(24, focus.y1 - focus.y0);
-      const s = clamp(Math.min((size.w * 0.5) / bw, (size.h * 0.3) / bh), fitScale, Math.max(fitScale, 1.15));
+      const s = clamp(Math.min((size.w * 0.5) / bw, (size.h * 0.3) / bh), fitScale, Math.max(fitScale, 0.8));
       applyView(
         {
           s,
@@ -143,12 +142,6 @@ export function DocCanvas({
     suppressClick.current = false;
   };
   const onPointerMove = (e: React.PointerEvent) => {
-    const r = wrap.current?.getBoundingClientRect();
-    if (r) {
-      const x = (e.clientX - r.left - view.x) / view.s;
-      const y = (e.clientY - r.top - view.y) / view.s;
-      setCursor(x >= 0 && y >= 0 && x <= pw && y <= ph ? { x, y } : null);
-    }
     const d = drag.current;
     if (!d) return;
     const dx = e.clientX - d.x;
@@ -209,14 +202,9 @@ export function DocCanvas({
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
-        onPointerLeave={() => setCursor(null)}
         onKeyDown={onKey}
-        className="relative min-h-0 flex-1 cursor-grab touch-none select-none overflow-hidden bg-[#050608] active:cursor-grabbing"
-        style={{
-          backgroundImage: "radial-gradient(circle, #1c2128 1px, transparent 1px)",
-          backgroundSize: "18px 18px",
-        }}
-      >
+        className="relative min-h-0 flex-1 cursor-grab touch-none select-none overflow-hidden bg-[#e6e3dc] active:cursor-grabbing"
+        >
         <div
           className={animate ? "transition-transform duration-[360ms] ease-[cubic-bezier(.2,.7,.2,1)]" : ""}
           style={{
@@ -238,7 +226,7 @@ export function DocCanvas({
             draggable={false}
             onLoad={() => setImgState("ok")}
             onError={() => setImgState("error")}
-            className="absolute inset-0 block bg-white shadow-[0_0_0_1px_#3a424e]"
+            className="absolute inset-0 block bg-white shadow-[0_0_0_1px_#c8c4ba]"
           />
           <AnimatePresence>
             {heatmap && (
@@ -271,7 +259,7 @@ export function DocCanvas({
                 y1={(a.y0 + a.y1) / 2}
                 x2={(b.x0 + b.x1) / 2}
                 y2={(b.y0 + b.y1) / 2}
-                stroke="#ff5a4f"
+                stroke="#b3261e"
                 strokeWidth={1.5}
                 strokeDasharray="6 5"
                 vectorEffect="non-scaling-stroke"
@@ -320,9 +308,9 @@ export function DocCanvas({
                 y={highlight.bbox.y0}
                 width={highlight.bbox.x1 - highlight.bbox.x0}
                 height={highlight.bbox.y1 - highlight.bbox.y0}
-                fill="#eceae4"
+                fill="#1f5a96"
                 fillOpacity={0.12}
-                stroke="#0a0c0f"
+                stroke="#1f5a96"
                 strokeWidth={2.5}
                 vectorEffect="non-scaling-stroke"
                 className="region-selected"
@@ -332,11 +320,11 @@ export function DocCanvas({
           </svg>
           {/* Region tags stay a constant screen size at any zoom. */}
           {ordered
-            .filter((r) => r.finding.id === selectedFindingId || (r.primary && r.finding.status !== "OBSERVATION"))
+            .filter((r) => r.primary && (r.finding.id === selectedFindingId || r.finding.status !== "OBSERVATION"))
+            .filter((r, i, all) => all.findIndex((o) => o.finding.id === r.finding.id) === i)
             .map((r, i) => {
               const m = STATUS_META[r.finding.status];
               const sel = r.finding.id === selectedFindingId;
-              const Icon = m.icon;
               return (
                 <button
                   key={`${r.finding.id}-tag-${i}`}
@@ -355,9 +343,8 @@ export function DocCanvas({
                     transform: `translateY(-100%) scale(${inv})`,
                     background: m.stroke,
                   }}
-                  className="flex cursor-pointer items-center gap-1 whitespace-nowrap px-1 py-px font-mono text-[10.5px] font-medium text-[#0a0c0f]"
+                  className="flex cursor-pointer items-center gap-1 whitespace-nowrap rounded-sm px-1.5 py-px text-[13px] font-medium text-white"
                 >
-                  <Icon className="size-2.5" aria-hidden />
                   {labels?.get(r.finding.id)}
                   {sel && <span>{m.label}</span>}
                 </button>
@@ -372,7 +359,7 @@ export function DocCanvas({
                 transformOrigin: "0 100%",
                 transform: `translateY(-100%) scale(${inv})`,
               }}
-              className="whitespace-nowrap bg-[#0a0c0f] px-1 py-px font-mono text-[10.5px] text-ink"
+              className="whitespace-nowrap rounded-sm bg-accent px-1.5 py-px text-[13px] text-white"
             >
               {highlight.label}
             </div>
@@ -381,7 +368,7 @@ export function DocCanvas({
         {imgState === "loading" && (
           <div className="absolute inset-0 flex items-center justify-center gap-2 text-ink-3">
             <Loader2 className="size-4 animate-spin" aria-hidden />
-            <span className="font-mono text-xs">Loading page image</span>
+            <span>Loading page</span>
           </div>
         )}
         {imgState === "error" && (
@@ -418,19 +405,6 @@ export function DocCanvas({
             <Maximize aria-hidden />
           </Button>
         </div>
-      </div>
-      <div className="flex h-6 shrink-0 items-center gap-4 overflow-hidden whitespace-nowrap border-t border-line bg-panel px-3 font-mono text-[11px] text-ink-3">
-        <span>{Math.round(view.s * 100)}%</span>
-        <span>
-          {pw} x {ph} px
-        </span>
-        <span className="w-28 text-ink-2">
-          {cursor ? `x ${Math.round(cursor.x)}  y ${Math.round(cursor.y)}` : "x -  y -"}
-        </span>
-        {p.text_source && <span>text: {p.text_source}</span>}
-        {p.mean_ocr_confidence !== null && p.mean_ocr_confidence !== undefined && (
-          <span>mean OCR conf {Math.round(p.mean_ocr_confidence * 100)}%</span>
-        )}
       </div>
     </div>
   );
