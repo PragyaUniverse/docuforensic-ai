@@ -1,8 +1,6 @@
 # Architecture
 
-> **Draft.** This describes the design in `docs/CONTRACTS.md`. It was written while modules were still
-> landing, so see `docs/CAPABILITY_MATRIX.md` for what has been verified. `diagram.png` is rendered
-> from the Mermaid below once the design is final.
+![Architecture](diagram.png)
 
 ## Overview
 
@@ -11,76 +9,63 @@ region. Forensic detection and cross-document correlation are deterministic and 
 LLM is optional: it only writes explanations, and it can't create, remove or re-grade a finding.
 
 ```mermaid
-flowchart TB
-    subgraph IN["Submission"]
-        UI["React reviewer UI"] -->|"multipart upload, SSE progress"| API["FastAPI: limits, type checks, rate limit"]
+flowchart LR
+    U(["Examiner<br/>React reviewer UI"]) -->|"upload, live SSE progress"| API["FastAPI<br/>size, type and rate limits"]
+    API --> ING
+
+    subgraph P1["1. Document processing"]
+        direction TB
+        ING["Ingest<br/>SHA-256, magic bytes, 200 DPI render"] --> OCR["OCR<br/>PDF text layer, RapidOCR (PP-OCR), Tesseract"]
+        OCR --> CLS["Classification and field and table extraction<br/>bboxes always come from word boxes"]
+        CLS --> STR["Structure<br/>sections, missing and duplicated fields"]
     end
 
-    subgraph DOC["Document processing (local)"]
-        ING["Ingest: SHA-256, magic-byte sniffing, 200 DPI page render"]
-        OCR["OCR: PyMuPDF text layer, RapidOCR (PP-OCR models), Tesseract fallback"]
-        CLS["Classification"]
-        EXT["Field and table extraction: label-to-value layout, word boxes as bboxes"]
-        STR["Structure: sections, missing and duplicated fields"]
-        ING --> OCR --> CLS --> EXT --> STR
-    end
-
-    subgraph CV["Computer vision and PDF forensics (local)"]
-        VIS["Pixel: ELA, noise residual, copy-move, font and stroke, overwrite, photo insert"]
-        PDF["PDF structure: text layer vs pixels, incremental updates, producer, overlays, metadata"]
-        SIG["Signature reuse by perceptual hash, placement"]
-        FUS["Region fusion: one score per area"]
+    subgraph P2["2. Forensics: computer vision and PDF"]
+        direction TB
+        VIS["Pixels<br/>ELA, noise, copy-move, typography,<br/>overwrite, photo insert"]
+        PDF["PDF structure<br/>text layer vs pixels, revisions, overlays, metadata"]
+        SIG["Signatures<br/>reuse across documents, placement"]
+        FUS["Region fusion<br/>one explainable score per area"]
         VIS --> FUS
         PDF --> FUS
         SIG --> FUS
     end
 
-    subgraph CTX["Contextual analysis (local)"]
-        WITHIN["Within-document: arithmetic, date order, ID checksum"]
-        ENT["Entity matching: rapidfuzz, normalization"]
-        CROSS["Cross-document correlation: discrepancy types, salary vs bank credits"]
-        ENT --> CROSS
+    subgraph P3["3. Contextual analysis"]
+        direction TB
+        WIT["Within a document<br/>arithmetic, figures vs words, dates, ID checks"]
+        ENT["Entity matching<br/>rapidfuzz, normalization"] --> CRO["Cross-document correlation<br/>9 discrepancy types, salary vs bank"]
     end
 
-    subgraph AI["AI reasoning (optional, swappable)"]
-        INV["Investigator: explanations, benign alternatives, verification steps"]
-        RED["PII redaction before external calls"]
-        CHAIN["Provider chain: Gemini, Groq, OpenRouter, Ollama, then deterministic"]
-        CACHE[("Answer cache by input hash")]
-        INV --> RED --> CHAIN
-        INV <--> CACHE
+    subgraph P4["4. AI reasoning: optional, can't change findings"]
+        direction TB
+        INV["Investigator<br/>explanations, benign alternatives, verification"] --> RED["PII redaction"]
+        RED --> CHN["Provider chain<br/>Gemini, Groq, OpenRouter, Ollama, deterministic"]
     end
 
-    subgraph EV["Evidence management"]
-        STORE[("SQLite + evidence files: pages, heatmaps, crops")]
-        GRAPH["Evidence graph: conflicts as red edges"]
-        AUD[("Hash-chained audit trail")]
-        DOS["Dossier: JSON + PDF, sections 7.1 to 7.6"]
+    subgraph P5["5. Evidence management"]
+        direction TB
+        DB[("SQLite and evidence files<br/>pages, heatmaps, crops")]
+        GRA["Evidence graph<br/>conflicts as red edges"]
+        DOS["Dossier<br/>PDF and JSON, sections 7.1 to 7.6"]
+        AUD[("Hash-chained audit trail<br/>every stage and decision")]
     end
 
-    REV["Human review: Confirm, Dismiss, Escalate"]
-
-    API --> ING
     STR --> VIS
     STR --> PDF
     STR --> SIG
-    STR --> WITHIN
+    STR --> WIT
     STR --> ENT
     FUS --> INV
-    WITHIN --> INV
-    CROSS --> INV
-    INV --> STORE
-    STORE --> GRAPH
-    STORE --> DOS
-    GRAPH --> UI
-    DOS --> UI
-    STORE --> UI
-    UI --> REV
-    REV --> AUD
-    DOC -. "every stage logged" .-> AUD
-    CV -.-> AUD
-    CTX -.-> AUD
-    AI -. "provider that answered" .-> AUD
+    WIT --> INV
+    CRO --> INV
+    INV --> DB
+    DB --> GRA
+    DB --> DOS
+    DB --> AUD
+    GRA --> R(["Human review<br/>Confirm, Dismiss, Escalate"])
+    DOS --> R
+    R -->|"logged"| AUD
 ```
 
 ## Data flow
