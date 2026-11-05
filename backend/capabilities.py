@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import importlib.util
 import shutil
+from pathlib import Path
 from typing import Any
 
 from audit import chain
@@ -97,7 +98,10 @@ def mode() -> str:
         return "offline"
     if settings.demo_cache:
         return "demo_cache"
-    return "live" if get_client().any_live_provider() else "deterministic"
+    if get_client().any_live_provider():
+        return "live"
+    # Answers recorded from real runs are replayed for the same evidence, and labelled as such.
+    return "demo_cache" if any(Path(settings.llm_cache_dir).glob("*.json")) else "deterministic"
 
 
 def report() -> dict[str, Any]:

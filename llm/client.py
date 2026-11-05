@@ -198,6 +198,15 @@ class LLMClient:
                 self._write(Path(settings.llm_cache_dir), key, task, result.data, name,
                             result.model or "")
             return result
+        # With no working provider, an answer recorded from a real run on this same evidence can still
+        # be replayed. It is labelled as replayed, so it never passes for a live answer.
+        if not self.record_demo:
+            entry = self._read(Path(settings.llm_cache_dir), key, schema)
+            if entry:
+                with self._lock:
+                    self.usage["cache_hits"] += 1
+                return LLMResult(True, "demo_cache", entry["data"], entry.get("provider"),
+                                 entry.get("model"), key, cached=True, tried=tried)
         return LLMResult(False, "deterministic", prompt_hash=key, error=scrub_secrets(last_error),
                          tried=tried)
 

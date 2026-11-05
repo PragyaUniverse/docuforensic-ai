@@ -204,3 +204,18 @@ def test_capabilities_label_without_key_is_honest():
     status = make(lambda r: down_ollama(r) or httpx.Response(500)).provider_status()
     gem = next(p for p in status if p["provider"] == "gemini")
     assert gem["status"] == "unverified until a key is provided" and gem["key_present"] is False
+
+
+def test_recorded_answers_are_replayed_when_every_provider_is_down(monkeypatch):
+    monkeypatch.setattr(settings, "gemini_api_keys", "AIzaKEYONE000000")
+    client = make(lambda r: gemini_ok())
+    client.record_demo = True
+    client.complete_json("t", "p", Answer)
+
+    monkeypatch.setattr(settings, "gemini_api_keys", "")
+    replay = make(lambda r: down_ollama(r) or httpx.Response(500))
+    hit = replay.complete_json("t", "p", Answer)
+    assert hit.ok and hit.mode == "demo_cache", "must be labelled as a replay, never as live"
+    # Different evidence has no recorded answer, so nothing is invented.
+    miss = replay.complete_json("t", "a different prompt", Answer)
+    assert not miss.ok and miss.mode == "deterministic"
