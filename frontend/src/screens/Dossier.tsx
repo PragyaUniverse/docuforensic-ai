@@ -98,7 +98,7 @@ export function DossierScreen() {
   if (q.isError) {
     return (
       <div className="flex flex-col">
-        <PageHeading title="Report" />
+        <PageHeading title="Report 📄" />
         <ErrorState title="The report isn't available" error={q.error} onRetry={() => q.refetch()} />
         <p className="px-6 text-ink-3">
           The report appears once the check has finished.{" "}
@@ -145,7 +145,7 @@ export function DossierScreen() {
         </nav>
 
         <article className="flex min-w-0 max-w-[920px] flex-col gap-10">
-          <div className="flex flex-col gap-2 rounded-lg border border-line bg-panel shadow-sm p-4">
+          <div className="flex flex-col gap-2 card p-4">
             <div className="flex flex-wrap items-center gap-2">
               <RiskPlate risk={d.risk_level} large />
               <HumanReviewPlate />

@@ -10,8 +10,8 @@ import { humanize } from "@/lib/utils";
 
 function Stat({ value, label }: { value: number; label: string }) {
   return (
-    <div className="rounded-lg border border-line bg-panel shadow-sm px-4 py-3">
-      <div className="text-[24px] font-semibold leading-tight">{value}</div>
+    <div className="card px-4 py-3">
+      <div className="font-[family-name:var(--font-display)] text-[30px] font-extrabold leading-tight">{value}</div>
       <div className="text-[14px] text-ink-2">{label}</div>
     </div>
   );
@@ -19,7 +19,7 @@ function Stat({ value, label }: { value: number; label: string }) {
 
 function CountTable({ title, rows, note }: { title: string; rows: [string, number, number?][]; note?: string }) {
   return (
-    <section className="rounded-lg border border-line bg-panel shadow-sm">
+    <section className="card">
       <h2 className="border-b border-line px-4 py-2.5 font-semibold">{title}</h2>
       {rows.length === 0 ? (
         <p className="px-4 py-3 text-[14px] text-ink-3">Nothing yet.</p>
@@ -50,7 +50,7 @@ export function AnalyticsScreen() {
   const decided = (a.by_review.confirmed ?? 0) + (a.by_review.dismissed ?? 0) + (a.by_review.escalated ?? 0);
   return (
     <div className="mx-auto flex max-w-[1000px] flex-col gap-5 pb-10">
-      <PageHeading title="Analytics">Totals across every case on this system. These are counts, not accuracy figures.</PageHeading>
+      <PageHeading title="the numbers 📈">Totals across every case on this system. These are counts, not accuracy figures.</PageHeading>
       <div className="flex flex-col gap-5 px-6">
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           <Stat value={a.cases} label="Cases" />
@@ -79,7 +79,7 @@ export function AnalyticsScreen() {
             note="A check that reviewers often dismiss may be raising too many false alarms."
           />
         </div>
-        <section className="rounded-lg border border-line bg-panel shadow-sm">
+        <section className="card">
           <h2 className="border-b border-line px-4 py-2.5 font-semibold">Recent cases</h2>
           <ul>
             {a.recent.map((c) => (

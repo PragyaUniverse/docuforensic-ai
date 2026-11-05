@@ -82,14 +82,14 @@ export function DataScreen() {
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search"
                   aria-label="Search fields"
-                  className="h-8 w-44 rounded-md border border-line-strong bg-panel pl-7 pr-2 text-[13px] text-ink placeholder:text-ink-3"
+                  className="h-8 w-44 rounded-xl border-2 border-[var(--color-edge)] bg-panel pl-7 pr-2 text-[13px] text-ink placeholder:text-ink-3"
                 />
               </div>
               <select
                 value={docFilter}
                 onChange={(e) => setDocFilter(e.target.value)}
                 aria-label="Filter by document"
-                className="h-8 max-w-48 rounded-md border border-line-strong bg-panel px-1 text-[13px] text-ink"
+                className="h-8 max-w-48 rounded-xl border-2 border-[var(--color-edge)] bg-panel px-1 text-[13px] text-ink"
               >
                 <option value="">All documents</option>
                 {summaries.map((s) => (
@@ -290,7 +290,7 @@ function StructureView({ docs, onPick }: { docs: Document[]; onPick: (t: Target)
   return (
     <div className="grid min-h-0 flex-1 content-start gap-3 overflow-auto p-4 xl:grid-cols-2">
       {docs.map((d) => (
-        <section key={d.id} className="rounded-lg border border-line bg-panel shadow-sm">
+        <section key={d.id} className="card">
           <header className="border-b border-line px-3 py-2">
             <div className="eyebrow">{humanize(d.doc_type)}</div>
             <div className="truncate font-mono text-[13px] text-ink-2">{d.filename}</div>

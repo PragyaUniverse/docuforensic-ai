@@ -14,11 +14,11 @@ export function LoginScreen() {
       qc.invalidateQueries();
     },
   });
-  const field = "mt-1 h-10 w-full rounded-md border border-line-strong bg-panel px-3 text-ink";
+  const field = "mt-1 h-10 w-full rounded-xl border-2 border-[var(--color-edge)] bg-panel px-3 text-ink";
   return (
     <div className="flex h-full items-center justify-center bg-ground p-6">
       <form
-        className="w-full max-w-[360px] rounded-lg border border-line bg-panel shadow-sm p-6"
+        className="w-full max-w-[360px] card p-6"
         onSubmit={(e) => {
           e.preventDefault();
           login.mutate();

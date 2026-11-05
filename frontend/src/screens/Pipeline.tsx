@@ -104,7 +104,7 @@ export function PipelineScreen() {
   return (
     <div className="mx-auto flex max-w-[760px] flex-col gap-4 pb-10">
       <PageHeading
-        title={running ? "Checking your documents" : status === "complete" ? "All done" : status === "failed" ? "The check stopped" : "Not checked yet"}
+        title={running ? "on it… 🔎" : status === "complete" ? "all done 🎉" : status === "failed" ? "the check stopped 😬" : "not checked yet"}
       >
         {running ? "This usually takes under a minute." : undefined}
       </PageHeading>
@@ -128,7 +128,7 @@ export function PipelineScreen() {
         )}
         {status === "failed" && <p className="text-ink-2">The messages below say why. Nothing was made up for the steps that didn't run.</p>}
 
-        <div className="flex items-center gap-4 rounded-xl border border-line bg-panel p-4 shadow-sm">
+        <div className="flex items-center gap-4 card p-4">
           <button type="button" onClick={openDocChat} title="Ask Doc a question" aria-label="Ask Doc a question" className="shrink-0 cursor-pointer">
             <Mascot mood={running ? "thinking" : status === "complete" ? "happy" : status === "failed" ? "oops" : "idle"} size={84} />
           </button>
@@ -148,9 +148,9 @@ export function PipelineScreen() {
 
         {running && (
           <div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-line" aria-hidden>
+            <div className="h-3 overflow-hidden rounded-full border-2 border-[var(--color-edge)] bg-panel" aria-hidden>
               <motion.div
-                className="h-full rounded-full bg-accent"
+                className="h-full rounded-full bg-[linear-gradient(90deg,var(--color-accent),var(--color-pink))]"
                 initial={false}
                 animate={{ width: `${(stepsDone / stages.length) * 100}%` }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
@@ -159,12 +159,12 @@ export function PipelineScreen() {
           </div>
         )}
 
-        <ol aria-label="Steps" className="rounded-lg border border-line bg-panel shadow-sm">
+        <ol aria-label="Steps" className="card">
           {stages.map((s) => {
             const state = s.p?.state ?? "pending";
             const warn = state === "degraded" || state === "failed";
             return (
-              <li key={s.id} className={cn("flex items-start gap-3 border-b border-line px-4 py-2.5 transition-colors duration-200 last:border-b-0", state === "running" && "bg-obs-dim")}>
+              <li key={s.id} className={cn("flex items-start gap-3 border-b border-line px-4 py-2.5 transition-colors duration-200 last:border-b-0", state === "running" && "bg-lime/35")}>
                 <span className="pt-0.5">
                   <StageIcon state={state} />
                 </span>
@@ -181,7 +181,7 @@ export function PipelineScreen() {
         {problems.length > 0 && (
           <section>
             <h2 className="mb-2 text-[17px] font-semibold">Files with problems</h2>
-            <ul className="rounded-lg border border-line bg-panel shadow-sm">
+            <ul className="card">
               {problems.map((d) => (
                 <li key={d.id} className="border-b border-line px-4 py-2.5 last:border-b-0">
                   <div className="flex items-center justify-between gap-2">

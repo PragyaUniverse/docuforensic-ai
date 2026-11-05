@@ -63,9 +63,9 @@ function Upload({ caseId, large }: { caseId: string; large: boolean }) {
           onFiles(e.dataTransfer.files);
         }}
         className={cn(
-          "flex flex-col items-center justify-center gap-2 rounded-md border border-dashed px-6 text-center transition-colors duration-150",
+          "flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed px-6 text-center transition-colors duration-150",
           large ? "py-12" : "py-5",
-          over ? "border-accent bg-obs-dim" : "border-line-strong bg-panel",
+          over ? "border-accent bg-lime/40" : "border-[var(--color-edge)] bg-panel",
         )}
       >
         {upload.isPending ? (
@@ -74,6 +74,7 @@ function Upload({ caseId, large }: { caseId: string; large: boolean }) {
           </p>
         ) : (
           <>
+            <p className="text-[28px]" aria-hidden>📂</p>
             <p className="text-ink">
               Drag files here, or{" "}
               <button type="button" className="link cursor-pointer" onClick={() => input.current?.click()}>
@@ -129,12 +130,12 @@ export function CaseScreen() {
 
   return (
     <div className="mx-auto flex max-w-[860px] flex-col gap-5 pb-10">
-      <PageHeading title={done ? "Results" : documents.length ? "Ready when you are" : "Add your documents"} />
+      <PageHeading title={done ? "the results are in 📊" : documents.length ? "ready when you are 🚀" : "add your documents 📥"} />
       {run.isError && <ErrorState title="The check didn't start" error={run.error} />}
 
       <div className="flex flex-col gap-6 px-6">
         {done && (
-          <section className="rise rounded-lg border border-line bg-panel shadow-sm p-5">
+          <section className="rise card p-5">
             <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
               <RiskPlate risk={cs.risk_level} large />
               <HumanReviewPlate />
@@ -157,14 +158,14 @@ export function CaseScreen() {
             ) : nothingRead ? (
               <p className="mt-3 text-ink-2">None of these files could be read, so nothing was checked. The list below says why.</p>
             ) : (
-              <p className="mt-3 text-ink-2">Nothing stood out. That doesn't prove the documents are genuine.</p>
+              <p className="mt-3 text-ink-2">Nothing stood out ✨ That doesn't prove the documents are genuine, though.</p>
             )}
             {counts.OBSERVATION > 0 && (
               <p className="mt-1 text-[14px] text-ink-3">Plus {plural(counts.OBSERVATION, "minor observation")}, usually nothing to worry about.</p>
             )}
             <div className={cn("mt-4 flex flex-wrap items-center gap-3", nothingRead && "hidden")}>
               <Button asChild variant="primary">
-                <Link to={`/cases/${caseId}/viewer`}>Review findings</Link>
+                <Link to={`/cases/${caseId}/viewer`}>Review findings 🔍</Link>
               </Button>
               <Button asChild>
                 <Link to={`/cases/${caseId}/dossier`}>Open the report</Link>
@@ -180,10 +181,10 @@ export function CaseScreen() {
 
         {documents.length > 0 && (
           <section aria-labelledby="docs-h">
-            <h2 id="docs-h" className="mb-2 text-[17px] font-semibold">
+            <h2 id="docs-h" className="mb-3 text-[20px]">
               {plural(documents.length, "document")}
             </h2>
-            <ul className="rounded-lg border border-line bg-panel shadow-sm">
+            <ul className="card">
               {documents.map((d) => (
                 <DocRow
                   key={d.id}
@@ -206,7 +207,7 @@ export function CaseScreen() {
               </Button>
             ) : (
               <Button variant="primary" size="lg" disabled={documents.length === 0 || run.isPending} onClick={() => run.mutate()}>
-                Check these documents
+                Check these documents ⚡
               </Button>
             )}
           </div>

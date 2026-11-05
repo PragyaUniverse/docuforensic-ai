@@ -22,7 +22,7 @@ export function DialogContent({
       <D.Content
         aria-describedby={description ? undefined : undefined}
         className={cn(
-          "fixed left-1/2 top-1/2 z-50 flex max-h-[92vh] w-[min(1180px,96vw)] -translate-x-1/2 -translate-y-1/2 flex-col rounded-md border border-line-strong bg-panel",
+          "fixed left-1/2 top-1/2 z-50 flex max-h-[92vh] w-[min(1180px,96vw)] -translate-x-1/2 -translate-y-1/2 flex-col rounded-xl border-2 border-[var(--color-edge)] bg-panel",
           className,
         )}
       >

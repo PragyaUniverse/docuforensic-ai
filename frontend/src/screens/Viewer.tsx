@@ -194,13 +194,15 @@ export function ViewerScreen() {
                 title={s.filename}
                 onClick={() => update({ doc: s.id, page: "0", field: null })}
                 className={cn(
-                  "relative shrink-0 cursor-pointer px-2.5 py-2 text-[14px] transition-colors duration-150",
-                  active ? "font-medium text-ink" : "text-ink-2 hover:text-ink",
+                  "relative my-1.5 shrink-0 cursor-pointer rounded-full px-3 py-1 text-[14px] font-medium transition-colors duration-150",
+                  active ? "text-white" : "text-ink-2 hover:bg-hover hover:text-ink",
                 )}
               >
-                {s.doc_type === "unknown" ? s.filename : humanize(s.doc_type)}
-                {n > 0 && <span className="ml-1.5 text-[13px] font-normal text-ink-3">{n}</span>}
-                {active && <motion.span layoutId="doc-tab" transition={{ duration: 0.2, ease: "easeOut" }} className="absolute inset-x-0 bottom-0 h-0.5 bg-accent" />}
+                {active && <motion.span layoutId="doc-tab" transition={{ type: "spring", stiffness: 420, damping: 32 }} className="absolute inset-0 rounded-full bg-accent" />}
+                <span className="relative">
+                  {s.doc_type === "unknown" ? s.filename : humanize(s.doc_type)}
+                  {n > 0 && <span className={cn("ml-1.5 rounded-full px-1.5 text-[12px] font-bold", active ? "bg-white/25" : "bg-raised text-ink-3")}>{n}</span>}
+                </span>
               </button>
             );
           })}
@@ -227,7 +229,7 @@ export function ViewerScreen() {
                 <select
                   value={heatKind ?? ""}
                   onChange={(e) => setHeatKind(e.target.value || null)}
-                  className="h-8 rounded-md border border-line-strong bg-panel px-1.5 text-ink"
+                  className="h-8 rounded-xl border-2 border-[var(--color-edge)] bg-panel px-1.5 text-ink"
                 >
                   <option value="">The document</option>
                   {overlays.data.map((o) => (
@@ -279,7 +281,7 @@ export function ViewerScreen() {
 
       <aside aria-label="Findings" className="flex min-h-0 flex-col bg-panel">
         <div className="flex shrink-0 items-center justify-between gap-2 border-b border-line px-4 py-2.5">
-          <h1 className="text-[17px] font-semibold">
+          <h1 className="text-[19px]">
             Findings{findingsQ.data ? <span className="ml-1.5 font-normal text-ink-3">{important.length}</span> : null}
           </h1>
           <label className="flex items-center gap-1.5 text-[13px] text-ink-2">
@@ -292,7 +294,7 @@ export function ViewerScreen() {
           {findingsQ.isError && <ErrorState title="Findings could not load" error={findingsQ.error} onRetry={() => findingsQ.refetch()} />}
           {findingsQ.data && important.length + minor.length === 0 && (
             <Empty
-              title={findings.length === 0 ? (notRun ? "Not checked yet" : noneAnalysed ? "None of these files could be read" : "Nothing stood out") : "Nothing on this document"}
+              title={findings.length === 0 ? (notRun ? "Not checked yet" : noneAnalysed ? "None of these files could be read 😕" : "Nothing stood out ✨") : "Nothing on this document ✨"}
               action={
                 notRun ? (
                   <Button asChild size="sm">

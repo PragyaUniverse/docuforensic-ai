@@ -146,12 +146,12 @@ function ChatPanel({
       exit={{ opacity: 0, y: 10, scale: 0.98 }}
       transition={{ duration: 0.18, ease: "easeOut" }}
       style={{ transformOrigin: "0% 100%" }}
-      className="pointer-events-auto fixed bottom-3 left-3 z-50 flex h-[min(520px,calc(100dvh-90px))] w-[360px] max-w-[calc(100vw-24px)] flex-col overflow-hidden rounded-xl border border-line bg-panel shadow-2xl"
+      className="pointer-events-auto fixed bottom-3 left-3 z-50 flex h-[min(520px,calc(100dvh-90px))] w-[360px] max-w-[calc(100vw-24px)] flex-col overflow-hidden rounded-2xl border-2 border-[var(--color-edge)] bg-panel shadow-[6px_6px_0_var(--color-edge)]"
     >
       <header className="flex shrink-0 items-center gap-2 border-b border-line px-3 py-2">
         <Mascot mood={busy ? "thinking" : "idle"} size={30} />
         <div className="min-w-0 flex-1 pl-1">
-          <div className="font-semibold leading-tight">Doc</div>
+          <div className="font-[family-name:var(--font-display)] text-[17px] font-extrabold leading-tight">Doc ✦</div>
           <div className="truncate text-[12px] text-ink-3">{caseId ? "Ask about this case or the app" : "Ask me about this app"}</div>
         </div>
         <button type="button" onClick={onHide} className="cursor-pointer rounded px-1.5 py-0.5 text-[13px] text-ink-3 hover:bg-hover hover:text-ink">
@@ -168,7 +168,7 @@ function ChatPanel({
         </div>
         {lines.map((l) =>
           l.from === "you" ? (
-            <motion.div key={l.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="max-w-[85%] self-end whitespace-pre-line rounded-xl rounded-br-sm bg-accent px-3 py-2 text-[14px] leading-snug text-white">
+            <motion.div key={l.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="max-w-[85%] self-end whitespace-pre-line rounded-xl rounded-br-sm bg-accent px-3 py-2 text-[14px] font-medium leading-snug text-white">
               {l.text}
             </motion.div>
           ) : (
@@ -201,7 +201,7 @@ function ChatPanel({
                 key={c}
                 type="button"
                 onClick={() => ask(c)}
-                className="cursor-pointer rounded-full border border-line-strong bg-panel px-2.5 py-1 text-[13px] text-ink-2 transition-colors duration-150 hover:border-accent hover:text-ink"
+                className="cursor-pointer rounded-full border-2 border-[var(--color-edge)] bg-panel px-3 py-1 font-medium text-[13px] text-ink-2 transition-colors duration-150 hover:border-accent hover:text-ink"
               >
                 {c}
               </button>
@@ -224,9 +224,9 @@ function ChatPanel({
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Ask Doc a question"
           aria-label="Ask Doc a question"
-          className="h-9 min-w-0 flex-1 rounded-md border border-line-strong bg-panel px-2.5 text-[14px] text-ink placeholder:text-ink-3"
+          className="h-9 min-w-0 flex-1 rounded-xl border-2 border-[var(--color-edge)] bg-panel px-2.5 text-[14px] text-ink placeholder:text-ink-3"
         />
-        <button type="submit" disabled={busy || !draft.trim()} aria-label="Send" className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md bg-accent text-white transition-colors duration-150 hover:bg-accent-dark disabled:cursor-default disabled:opacity-40">
+        <button type="submit" disabled={busy || !draft.trim()} aria-label="Send" className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 border-[var(--color-edge)] bg-accent text-white transition-colors duration-150 hover:bg-accent-dark disabled:cursor-default disabled:opacity-40">
           <Send className="size-4" aria-hidden />
         </button>
       </form>
@@ -379,7 +379,7 @@ export function Assistant({ floating = true }: { floating?: boolean }) {
                   exit={{ opacity: 0, scale: 0.9, y: 4 }}
                   transition={{ type: "spring", stiffness: 320, damping: 24 }}
                   style={{ transformOrigin: "0% 100%" }}
-                  className="absolute bottom-[calc(100%-6px)] left-8 w-56 rounded-xl rounded-bl-sm border border-line bg-panel px-3 py-2 pr-7 text-[14px] leading-snug text-ink shadow-lg sm:bottom-14 sm:left-[calc(100%+2px)]"
+                  className="absolute bottom-[calc(100%-6px)] left-8 w-56 rounded-2xl rounded-bl-sm border-2 border-[var(--color-edge)] bg-panel px-3 py-2 pr-7 text-[14px] font-medium leading-snug text-ink shadow-[3px_3px_0_var(--color-edge)] sm:bottom-14 sm:left-[calc(100%+2px)]"
                 >
                   {bubble}
                   <button
