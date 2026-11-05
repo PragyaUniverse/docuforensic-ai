@@ -1,13 +1,13 @@
 {
-    "case_id": "case_523cb46052c3",
+    "case_id": "case_f246fc0ac744",
     "case_name": "Case B: Visual investigation",
-    "generated_at": "2026-11-05T09:05:34.415739Z",
+    "generated_at": "2026-11-05T09:40:36.855912Z",
     "risk_level": "high",
     "requires_human_review": true,
     "disclaimer": "This dossier records automated observations for a human reviewer. It is not a determination about any person or document: every item is an observation, an inconsistency or a hypothesis that needs verification. OCR values may contain errors. The process is aligned with the principles of ISO/IEC 27037, 27041, 27042 and NIST SP 800-86; no formal compliance is claimed.",
     "overview": [
         {
-            "doc_id": "doc_727ea0cb9259",
+            "doc_id": "doc_f4e44b267fb3",
             "filename": "application_form.png",
             "sha256": "dc64a552c348207037f0c556946d11211ef6d0fef039e856160f271740110029",
             "doc_type": "application_form",
@@ -18,7 +18,7 @@
             "status_message": null
         },
         {
-            "doc_id": "doc_c02f3af40d55",
+            "doc_id": "doc_63a5b3081adc",
             "filename": "id_proof.jpg",
             "sha256": "7bb1df35bba082e8caa384296f82e52391ba7ebfbd7560a3435b5932fdd30f9f",
             "doc_type": "id_proof",
@@ -29,7 +29,7 @@
             "status_message": null
         },
         {
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "filename": "salary_slip.png",
             "sha256": "06118573448d8b6b0531ac64cf2879785427c4367015edefc8d13a05f1d8ef77",
             "doc_type": "salary_slip",
@@ -40,7 +40,7 @@
             "status_message": null
         },
         {
-            "doc_id": "doc_b14e287330b4",
+            "doc_id": "doc_fac9f1be7fff",
             "filename": "bank_statement.pdf",
             "sha256": "cfea6354c946638e37d21acf1b01e4c3d6d7bb3b8aee0981fe783083ca4ae377",
             "doc_type": "bank_statement",
@@ -51,7 +51,7 @@
             "status_message": null
         },
         {
-            "doc_id": "doc_c96d00906936",
+            "doc_id": "doc_ae3cb1b136b1",
             "filename": "address_proof.pdf",
             "sha256": "2086fa9f615991bb50a33dad626643338a5faaf95c430dda90bcd6da2c83f7d2",
             "doc_type": "address_proof",
@@ -62,7 +62,7 @@
             "status_message": null
         },
         {
-            "doc_id": "doc_2db598654766",
+            "doc_id": "doc_ab836ea47d30",
             "filename": "declaration.png",
             "sha256": "21664fa8725aa615f3693a91a9aef624ab09474a12f63a3e1e896e4508003eff",
             "doc_type": "declaration",
@@ -74,10 +74,10 @@
         }
     ],
     "extracted": {
-        "doc_727ea0cb9259": [
+        "doc_f4e44b267fb3": [
             {
-                "id": "fld_e828f2babfb6",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_5e4e0cc0dfb4",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "application_id",
                 "label_raw": "application id",
                 "value_raw": "MF-2026-118377",
@@ -95,8 +95,8 @@
                 "section": "Meridian Finserv Ltd. PERSONAL LOAN APPLICATION"
             },
             {
-                "id": "fld_0d695b70d629",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_754156b5eb99",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "person_name",
                 "label_raw": "applicant name",
                 "value_raw": "Arjun Vikram Desai",
@@ -114,8 +114,8 @@
                 "section": "Meridian Finserv Ltd. PERSONAL LOAN APPLICATION"
             },
             {
-                "id": "fld_e0d21d2a4015",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_4db0e6f3e3c6",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "date_of_birth",
                 "label_raw": "date of birth",
                 "value_raw": "05/11/1989",
@@ -133,8 +133,8 @@
                 "section": "Meridian Finserv Ltd. PERSONAL LOAN APPLICATION"
             },
             {
-                "id": "fld_eadda35d2dcd",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_0ba497f71d6e",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "gender",
                 "label_raw": "gender",
                 "value_raw": "Male",
@@ -152,8 +152,8 @@
                 "section": "Meridian Finserv Ltd. PERSONAL LOAN APPLICATION"
             },
             {
-                "id": "fld_f9125c01562e",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_62508ff8613a",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "id_number",
                 "label_raw": "aadhaar no",
                 "value_raw": "999948611759",
@@ -171,8 +171,8 @@
                 "section": "Meridian Finserv Ltd. PERSONAL LOAN APPLICATION"
             },
             {
-                "id": "fld_5757ee40be1c",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_ae50b898cd75",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "pan_number",
                 "label_raw": "pan",
                 "value_raw": "ZZBPD7316L",
@@ -190,8 +190,8 @@
                 "section": "Meridian Finserv Ltd. PERSONAL LOAN APPLICATION"
             },
             {
-                "id": "fld_b984bd9fe6ae",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_3429b7c3fbb9",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "address",
                 "label_raw": "residential address",
                 "value_raw": "B-17, Shanti Nagar Society, Paud Road, Kothrud, Pune, Maharashtra 411038",
@@ -209,8 +209,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_695c6fd752d6",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_eaa89b3afd25",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "phone",
                 "label_raw": "mobile",
                 "value_raw": "+919000005678",
@@ -228,8 +228,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_2cb41e755d45",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_7fb043ce46d6",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "email",
                 "label_raw": "email",
                 "value_raw": "arjun.desai@example.com",
@@ -247,8 +247,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_942656fb38ea",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_b9dc22dfdb5e",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "employer_name",
                 "label_raw": "employer name",
                 "value_raw": "Kestrel Logistics Pvt. Ltd.",
@@ -266,8 +266,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_e08c3c96af0a",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_048d7cfcc133",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "designation",
                 "label_raw": "designation",
                 "value_raw": "Operations Executive",
@@ -285,8 +285,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_230030a8c3c8",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_1ec1ecd5c6cc",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "date_of_joining",
                 "label_raw": "date of joining",
                 "value_raw": "17/01/2022",
@@ -304,8 +304,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_e3db3b8a0afb",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_6ab3c8fdd254",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "declared_monthly_income",
                 "label_raw": "monthly income",
                 "value_raw": "84,320.00",
@@ -323,8 +323,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_60122dea965f",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_18f1a0cf423b",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "loan_amount",
                 "label_raw": "loan amount",
                 "value_raw": "15,00,000.00",
@@ -342,8 +342,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_45ed59e3acaf",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_bc253551bd53",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "tenure",
                 "label_raw": "tenure",
                 "value_raw": "48 months",
@@ -361,8 +361,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_ac7cb284ba6e",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_76d63d9f28e3",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "bank_account_number",
                 "label_raw": "bank a/c no",
                 "value_raw": "30088172640055",
@@ -380,8 +380,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_06448a071b81",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_5614bc92e6db",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "ifsc",
                 "label_raw": "ifsc",
                 "value_raw": "SHYD0000917",
@@ -399,8 +399,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_847acfe9c397",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_5046ba8ccdee",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "application_date",
                 "label_raw": "application date",
                 "value_raw": "02/11/2026",
@@ -418,8 +418,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_251c2dbcaa4e",
-                "doc_id": "doc_727ea0cb9259",
+                "id": "fld_51aca7556c66",
+                "doc_id": "doc_f4e44b267fb3",
                 "name": "place",
                 "label_raw": "place",
                 "value_raw": "Pune",
@@ -437,10 +437,10 @@
                 "section": "Paud Road, Kothrud,"
             }
         ],
-        "doc_c02f3af40d55": [
+        "doc_63a5b3081adc": [
             {
-                "id": "fld_17bc326fb60a",
-                "doc_id": "doc_c02f3af40d55",
+                "id": "fld_cb522412e018",
+                "doc_id": "doc_63a5b3081adc",
                 "name": "person_name",
                 "label_raw": "name",
                 "value_raw": "Arjun Vikram Desai",
@@ -458,8 +458,8 @@
                 "section": "AADHAAR-STYLE IDENTITY CARD (SYNTHETIC SPECIMEN)"
             },
             {
-                "id": "fld_8deeb5a70965",
-                "doc_id": "doc_c02f3af40d55",
+                "id": "fld_0423660f76c9",
+                "doc_id": "doc_63a5b3081adc",
                 "name": "date_of_birth",
                 "label_raw": "dob",
                 "value_raw": "05/11/1989",
@@ -477,8 +477,8 @@
                 "section": "AADHAAR-STYLE IDENTITY CARD (SYNTHETIC SPECIMEN)"
             },
             {
-                "id": "fld_e19609f20a27",
-                "doc_id": "doc_c02f3af40d55",
+                "id": "fld_faaa13d4a1b5",
+                "doc_id": "doc_63a5b3081adc",
                 "name": "gender",
                 "label_raw": "gender",
                 "value_raw": "Male",
@@ -496,8 +496,8 @@
                 "section": "AADHAAR-STYLE IDENTITY CARD (SYNTHETIC SPECIMEN)"
             },
             {
-                "id": "fld_4db024ba9a4e",
-                "doc_id": "doc_c02f3af40d55",
+                "id": "fld_8f9c06105650",
+                "doc_id": "doc_63a5b3081adc",
                 "name": "address",
                 "label_raw": "address",
                 "value_raw": "B-17, Shanti Nagar Society, Paud Road, Kothrud, Pune, Maharashtra 411038",
@@ -515,8 +515,8 @@
                 "section": "AADHAAR-STYLE IDENTITY CARD (SYNTHETIC SPECIMEN)"
             },
             {
-                "id": "fld_db130b0b87f0",
-                "doc_id": "doc_c02f3af40d55",
+                "id": "fld_c17f67164c0e",
+                "doc_id": "doc_63a5b3081adc",
                 "name": "id_number",
                 "label_raw": "id no",
                 "value_raw": "9999 4861 1759",
@@ -534,8 +534,8 @@
                 "section": "AADHAAR-STYLE IDENTITY CARD (SYNTHETIC SPECIMEN)"
             },
             {
-                "id": "fld_5606581fab12",
-                "doc_id": "doc_c02f3af40d55",
+                "id": "fld_7b34599a9188",
+                "doc_id": "doc_63a5b3081adc",
                 "name": "person_name",
                 "label_raw": "name",
                 "value_raw": "Arjun Vikram Desai",
@@ -553,8 +553,8 @@
                 "section": "PAN-STYLE TAX ID CARD (SYNTHETIC SPECIMEN)"
             },
             {
-                "id": "fld_f0feca30dc50",
-                "doc_id": "doc_c02f3af40d55",
+                "id": "fld_74858f3a05ef",
+                "doc_id": "doc_63a5b3081adc",
                 "name": "date_of_birth",
                 "label_raw": "date of birth",
                 "value_raw": "05/11/1989",
@@ -572,8 +572,8 @@
                 "section": "PAN-STYLE TAX ID CARD (SYNTHETIC SPECIMEN)"
             },
             {
-                "id": "fld_c205c9a667ae",
-                "doc_id": "doc_c02f3af40d55",
+                "id": "fld_4d1046b03578",
+                "doc_id": "doc_63a5b3081adc",
                 "name": "pan_number",
                 "label_raw": "permanent account no",
                 "value_raw": "ZZBPD7316L",
@@ -591,8 +591,8 @@
                 "section": "PAN-STYLE TAX ID CARD (SYNTHETIC SPECIMEN)"
             },
             {
-                "id": "fld_bed20791953e",
-                "doc_id": "doc_c02f3af40d55",
+                "id": "fld_8e1f8d52b3cf",
+                "doc_id": "doc_63a5b3081adc",
                 "name": "id_type",
                 "label_raw": null,
                 "value_raw": "AADHAAR-STYLE",
@@ -610,10 +610,10 @@
                 "section": "AADHAAR-STYLE IDENTITY CARD (SYNTHETIC SPECIMEN)"
             }
         ],
-        "doc_2d1fa84f2195": [
+        "doc_5781c4124cdd": [
             {
-                "id": "fld_7a6382d7daa7",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "fld_641726abdae9",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "person_name",
                 "label_raw": "employee name",
                 "value_raw": "Arjun Vikram Desai",
@@ -631,8 +631,8 @@
                 "section": "Kestrel Logistics Pvt. Ltd. PAYSLIP"
             },
             {
-                "id": "fld_f446c8d56c3e",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "fld_a37e5b5b8a50",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "employee_id",
                 "label_raw": "employee id",
                 "value_raw": "KL-08812",
@@ -650,8 +650,8 @@
                 "section": "Kestrel Logistics Pvt. Ltd. PAYSLIP"
             },
             {
-                "id": "fld_2d08c03c755f",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "fld_32dc9793e2e2",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "designation",
                 "label_raw": "designation",
                 "value_raw": "Operations Executive",
@@ -669,8 +669,8 @@
                 "section": "Kestrel Logistics Pvt. Ltd. PAYSLIP"
             },
             {
-                "id": "fld_5be3e2b74019",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "fld_88ac8706d85e",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "pay_period",
                 "label_raw": "pay period",
                 "value_raw": "October 2026",
@@ -688,8 +688,8 @@
                 "section": "Kestrel Logistics Pvt. Ltd. PAYSLIP"
             },
             {
-                "id": "fld_68ba623909a0",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "fld_a2568f8a434f",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "date_of_joining",
                 "label_raw": "date of joining",
                 "value_raw": "17-jan-2022",
@@ -707,8 +707,8 @@
                 "section": "Kestrel Logistics Pvt. Ltd. PAYSLIP"
             },
             {
-                "id": "fld_dc32a029d5b7",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "fld_33e06b510df4",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "pan_number",
                 "label_raw": "pan",
                 "value_raw": "ZZBPD7316L",
@@ -726,8 +726,8 @@
                 "section": "Kestrel Logistics Pvt. Ltd. PAYSLIP"
             },
             {
-                "id": "fld_e1d16a7f709c",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "fld_244aee5d8ba5",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "employer_name",
                 "label_raw": "employer",
                 "value_raw": "Kestrel Logistics Pvt. Ltd.",
@@ -745,8 +745,8 @@
                 "section": "Kestrel Logistics Pvt. Ltd. PAYSLIP"
             },
             {
-                "id": "fld_b97b9c1a267a",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "fld_6e1d03c2a077",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "bank_account_number",
                 "label_raw": "salary a/c no",
                 "value_raw": "30088172640055",
@@ -764,8 +764,8 @@
                 "section": "Kestrel Logistics Pvt. Ltd. PAYSLIP"
             },
             {
-                "id": "fld_416c497c3b43",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "fld_d46894b2cae4",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "basic_pay",
                 "label_raw": "basic pay",
                 "value_raw": "30,000.00",
@@ -783,8 +783,8 @@
                 "section": "Kestrel Logistics Pvt. Ltd. PAYSLIP"
             },
             {
-                "id": "fld_d09167842a9c",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "fld_b630171cd5b8",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "hra",
                 "label_raw": "hra",
                 "value_raw": "12,000.00",
@@ -802,8 +802,8 @@
                 "section": "Kestrel Logistics Pvt. Ltd. PAYSLIP"
             },
             {
-                "id": "fld_28a73f5332f0",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "fld_b646baa2fa12",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "other_allowances",
                 "label_raw": "other allowances",
                 "value_raw": "12,000.00",
@@ -821,8 +821,8 @@
                 "section": "Kestrel Logistics Pvt. Ltd. PAYSLIP"
             },
             {
-                "id": "fld_876438eaddfc",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "fld_83d5bd9760c1",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "gross_pay",
                 "label_raw": "gross pay",
                 "value_raw": "54,000.00",
@@ -840,8 +840,8 @@
                 "section": "Kestrel Logistics Pvt. Ltd. PAYSLIP"
             },
             {
-                "id": "fld_54cdf886852a",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "fld_f88c3c50c255",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "total_deductions",
                 "label_raw": "total deductions",
                 "value_raw": "5,680.00",
@@ -859,8 +859,8 @@
                 "section": "Kestrel Logistics Pvt. Ltd. PAYSLIP"
             },
             {
-                "id": "fld_1368a8a2556a",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "fld_dabc5e63c2a3",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "net_pay",
                 "label_raw": "net pay",
                 "value_raw": "84,320.00",
@@ -878,10 +878,10 @@
                 "section": "Kestrel Logistics Pvt. Ltd. PAYSLIP"
             }
         ],
-        "doc_b14e287330b4": [
+        "doc_fac9f1be7fff": [
             {
-                "id": "fld_19deab89afa6",
-                "doc_id": "doc_b14e287330b4",
+                "id": "fld_554861f88b5f",
+                "doc_id": "doc_fac9f1be7fff",
                 "name": "person_name",
                 "label_raw": "account holder",
                 "value_raw": "Arjun Vikram Desai",
@@ -899,8 +899,8 @@
                 "section": "Sahyadri Cooperative Bank ACCOUNT STATEMENT"
             },
             {
-                "id": "fld_35b5b40a46e4",
-                "doc_id": "doc_b14e287330b4",
+                "id": "fld_c7188bdb538a",
+                "doc_id": "doc_fac9f1be7fff",
                 "name": "address",
                 "label_raw": "address",
                 "value_raw": "B-17, Shanti Nagar Society, Paud Road, Kothrud, Pune, Maharashtra 411038",
@@ -918,8 +918,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_8c0edbe543ab",
-                "doc_id": "doc_b14e287330b4",
+                "id": "fld_4d2a0105b9f1",
+                "doc_id": "doc_fac9f1be7fff",
                 "name": "bank_name",
                 "label_raw": "bank",
                 "value_raw": "Sahyadri Cooperative Bank",
@@ -937,8 +937,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_901b08a9d1f6",
-                "doc_id": "doc_b14e287330b4",
+                "id": "fld_008a1fbc30c6",
+                "doc_id": "doc_fac9f1be7fff",
                 "name": "ifsc",
                 "label_raw": "ifsc",
                 "value_raw": "SHYD0000917",
@@ -956,8 +956,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_085940dc82c2",
-                "doc_id": "doc_b14e287330b4",
+                "id": "fld_06edc1a4fc94",
+                "doc_id": "doc_fac9f1be7fff",
                 "name": "bank_account_number",
                 "label_raw": "account no",
                 "value_raw": "30088172640055",
@@ -975,8 +975,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_6865789a44bd",
-                "doc_id": "doc_b14e287330b4",
+                "id": "fld_83f65a4d805e",
+                "doc_id": "doc_fac9f1be7fff",
                 "name": "statement_period",
                 "label_raw": "statement period",
                 "value_raw": "01-May-2026 to 31-Oct-2026",
@@ -994,8 +994,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_56fe1d5b70f5",
-                "doc_id": "doc_b14e287330b4",
+                "id": "fld_1d6105fe46e4",
+                "doc_id": "doc_fac9f1be7fff",
                 "name": "opening_balance",
                 "label_raw": "opening balance",
                 "value_raw": "31,890.40",
@@ -1013,8 +1013,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_4d4a2693c9a8",
-                "doc_id": "doc_b14e287330b4",
+                "id": "fld_43b789fea03b",
+                "doc_id": "doc_fac9f1be7fff",
                 "name": "closing_balance",
                 "label_raw": "closing balance",
                 "value_raw": "1,79,308.65",
@@ -1032,10 +1032,10 @@
                 "section": "Paud Road, Kothrud,"
             }
         ],
-        "doc_c96d00906936": [
+        "doc_ae3cb1b136b1": [
             {
-                "id": "fld_2337158dd093",
-                "doc_id": "doc_c96d00906936",
+                "id": "fld_476d49f261fe",
+                "doc_id": "doc_ae3cb1b136b1",
                 "name": "person_name",
                 "label_raw": "consumer name",
                 "value_raw": "Arjun Vikram Desai",
@@ -1053,8 +1053,8 @@
                 "section": "Western Metro Power Supply ELECTRICITY BILL"
             },
             {
-                "id": "fld_2b08e5cd1354",
-                "doc_id": "doc_c96d00906936",
+                "id": "fld_94c5ba00f08d",
+                "doc_id": "doc_ae3cb1b136b1",
                 "name": "address",
                 "label_raw": "service address",
                 "value_raw": "B-17, Shanti Nagar Society, Paud Road, Kothrud, Pune, Maharashtra 411038",
@@ -1072,8 +1072,8 @@
                 "section": "Western Metro Power Supply ELECTRICITY BILL"
             },
             {
-                "id": "fld_ad5898230038",
-                "doc_id": "doc_c96d00906936",
+                "id": "fld_4befe58d0301",
+                "doc_id": "doc_ae3cb1b136b1",
                 "name": "consumer_number",
                 "label_raw": "consumer no",
                 "value_raw": "WMP-55102873",
@@ -1091,8 +1091,8 @@
                 "section": "Western Metro Power Supply ELECTRICITY BILL"
             },
             {
-                "id": "fld_2aecc87ce91d",
-                "doc_id": "doc_c96d00906936",
+                "id": "fld_d841ca63b6f1",
+                "doc_id": "doc_ae3cb1b136b1",
                 "name": "bill_date",
                 "label_raw": "bill date",
                 "value_raw": "12-Oct-2026",
@@ -1110,8 +1110,8 @@
                 "section": "Western Metro Power Supply ELECTRICITY BILL"
             },
             {
-                "id": "fld_d4a655aae001",
-                "doc_id": "doc_c96d00906936",
+                "id": "fld_efec1b1dd396",
+                "doc_id": "doc_ae3cb1b136b1",
                 "name": "billing_period",
                 "label_raw": "billing period",
                 "value_raw": "01-Sep-2026 to 30-Sep-2026",
@@ -1129,8 +1129,8 @@
                 "section": "Western Metro Power Supply ELECTRICITY BILL"
             },
             {
-                "id": "fld_26d12b4090c9",
-                "doc_id": "doc_c96d00906936",
+                "id": "fld_360e41afbd3d",
+                "doc_id": "doc_ae3cb1b136b1",
                 "name": "due_date",
                 "label_raw": "due date",
                 "value_raw": "27-Oct-2026",
@@ -1148,8 +1148,8 @@
                 "section": "Western Metro Power Supply ELECTRICITY BILL"
             },
             {
-                "id": "fld_d212f84911a3",
-                "doc_id": "doc_c96d00906936",
+                "id": "fld_d79d3bed6331",
+                "doc_id": "doc_ae3cb1b136b1",
                 "name": "amount_due",
                 "label_raw": "amount due",
                 "value_raw": "1,496.00",
@@ -1167,8 +1167,8 @@
                 "section": "Western Metro Power Supply ELECTRICITY BILL"
             },
             {
-                "id": "fld_f6786f114bd7",
-                "doc_id": "doc_c96d00906936",
+                "id": "fld_e3761755ca57",
+                "doc_id": "doc_ae3cb1b136b1",
                 "name": "issuer_name",
                 "label_raw": null,
                 "value_raw": "Western Metro Power Supply",
@@ -1186,10 +1186,10 @@
                 "section": "Western Metro Power Supply ELECTRICITY BILL"
             }
         ],
-        "doc_2db598654766": [
+        "doc_ab836ea47d30": [
             {
-                "id": "fld_b7e3c30e5432",
-                "doc_id": "doc_2db598654766",
+                "id": "fld_81bffdd268f8",
+                "doc_id": "doc_ab836ea47d30",
                 "name": "person_name",
                 "label_raw": "name",
                 "value_raw": "Arjun Vikram Desai",
@@ -1207,8 +1207,8 @@
                 "section": "SELF-DECLARATION OF INCOME AND EMPLOYMENT"
             },
             {
-                "id": "fld_5cbdc3b95e32",
-                "doc_id": "doc_2db598654766",
+                "id": "fld_a000a1cd21ed",
+                "doc_id": "doc_ab836ea47d30",
                 "name": "date_of_birth",
                 "label_raw": "date of birth",
                 "value_raw": "05-11-1989",
@@ -1226,8 +1226,8 @@
                 "section": "SELF-DECLARATION OF INCOME AND EMPLOYMENT"
             },
             {
-                "id": "fld_89705449cff8",
-                "doc_id": "doc_2db598654766",
+                "id": "fld_3cc7b1c103fb",
+                "doc_id": "doc_ab836ea47d30",
                 "name": "address",
                 "label_raw": "residential address",
                 "value_raw": "B-17, Shanti Nagar Society, Paud Road, Kothrud, Pune, Maharashtra 411038",
@@ -1245,8 +1245,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_9f7f7e20a45a",
-                "doc_id": "doc_2db598654766",
+                "id": "fld_623cb3f95d23",
+                "doc_id": "doc_ab836ea47d30",
                 "name": "employer_name",
                 "label_raw": "employer",
                 "value_raw": "Kestrel Logistics Pvt. Ltd.",
@@ -1264,8 +1264,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_4b3a870b48d7",
-                "doc_id": "doc_2db598654766",
+                "id": "fld_d7161f294a16",
+                "doc_id": "doc_ab836ea47d30",
                 "name": "declared_monthly_income",
                 "label_raw": "monthly income",
                 "value_raw": "84,320.00",
@@ -1283,8 +1283,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_c785fd26a11d",
-                "doc_id": "doc_2db598654766",
+                "id": "fld_1b4ca2ca7906",
+                "doc_id": "doc_ab836ea47d30",
                 "name": "declaration_date",
                 "label_raw": "date",
                 "value_raw": "02-11-2026",
@@ -1302,8 +1302,8 @@
                 "section": "Paud Road, Kothrud,"
             },
             {
-                "id": "fld_4d949ddc86d1",
-                "doc_id": "doc_2db598654766",
+                "id": "fld_6a865ed5f639",
+                "doc_id": "doc_ab836ea47d30",
                 "name": "place",
                 "label_raw": "place",
                 "value_raw": "Pune",
@@ -1323,7 +1323,7 @@
         ]
     },
     "structure": {
-        "doc_727ea0cb9259": [
+        "doc_f4e44b267fb3": [
             {
                 "name": "Meridian Finserv Ltd. PERSONAL LOAN APPLICATION",
                 "page": 0,
@@ -1334,12 +1334,12 @@
                     "y1": 1815.0
                 },
                 "field_ids": [
-                    "fld_e828f2babfb6",
-                    "fld_0d695b70d629",
-                    "fld_e0d21d2a4015",
-                    "fld_eadda35d2dcd",
-                    "fld_f9125c01562e",
-                    "fld_5757ee40be1c"
+                    "fld_5e4e0cc0dfb4",
+                    "fld_754156b5eb99",
+                    "fld_4db0e6f3e3c6",
+                    "fld_0ba497f71d6e",
+                    "fld_62508ff8613a",
+                    "fld_ae50b898cd75"
                 ],
                 "children": [
                     {
@@ -1352,26 +1352,26 @@
                             "y1": 1815.0
                         },
                         "field_ids": [
-                            "fld_b984bd9fe6ae",
-                            "fld_695c6fd752d6",
-                            "fld_2cb41e755d45",
-                            "fld_942656fb38ea",
-                            "fld_e08c3c96af0a",
-                            "fld_230030a8c3c8",
-                            "fld_e3db3b8a0afb",
-                            "fld_60122dea965f",
-                            "fld_45ed59e3acaf",
-                            "fld_ac7cb284ba6e",
-                            "fld_06448a071b81",
-                            "fld_847acfe9c397",
-                            "fld_251c2dbcaa4e"
+                            "fld_3429b7c3fbb9",
+                            "fld_eaa89b3afd25",
+                            "fld_7fb043ce46d6",
+                            "fld_b9dc22dfdb5e",
+                            "fld_048d7cfcc133",
+                            "fld_1ec1ecd5c6cc",
+                            "fld_6ab3c8fdd254",
+                            "fld_18f1a0cf423b",
+                            "fld_bc253551bd53",
+                            "fld_76d63d9f28e3",
+                            "fld_5614bc92e6db",
+                            "fld_5046ba8ccdee",
+                            "fld_51aca7556c66"
                         ],
                         "children": []
                     }
                 ]
             }
         ],
-        "doc_c02f3af40d55": [
+        "doc_63a5b3081adc": [
             {
                 "name": "Identity Document Copy ID PROOF",
                 "page": 0,
@@ -1393,12 +1393,12 @@
                             "y1": 1133.0
                         },
                         "field_ids": [
-                            "fld_17bc326fb60a",
-                            "fld_8deeb5a70965",
-                            "fld_e19609f20a27",
-                            "fld_4db024ba9a4e",
-                            "fld_db130b0b87f0",
-                            "fld_bed20791953e"
+                            "fld_cb522412e018",
+                            "fld_0423660f76c9",
+                            "fld_faaa13d4a1b5",
+                            "fld_8f9c06105650",
+                            "fld_c17f67164c0e",
+                            "fld_8e1f8d52b3cf"
                         ],
                         "children": []
                     },
@@ -1412,16 +1412,16 @@
                             "y1": 1725.0
                         },
                         "field_ids": [
-                            "fld_5606581fab12",
-                            "fld_f0feca30dc50",
-                            "fld_c205c9a667ae"
+                            "fld_7b34599a9188",
+                            "fld_74858f3a05ef",
+                            "fld_4d1046b03578"
                         ],
                         "children": []
                     }
                 ]
             }
         ],
-        "doc_2d1fa84f2195": [
+        "doc_5781c4124cdd": [
             {
                 "name": "Kestrel Logistics Pvt. Ltd. PAYSLIP",
                 "page": 0,
@@ -1432,20 +1432,20 @@
                     "y1": 1325.0
                 },
                 "field_ids": [
-                    "fld_7a6382d7daa7",
-                    "fld_f446c8d56c3e",
-                    "fld_2d08c03c755f",
-                    "fld_5be3e2b74019",
-                    "fld_68ba623909a0",
-                    "fld_dc32a029d5b7",
-                    "fld_e1d16a7f709c",
-                    "fld_b97b9c1a267a",
-                    "fld_416c497c3b43",
-                    "fld_d09167842a9c",
-                    "fld_28a73f5332f0",
-                    "fld_876438eaddfc",
-                    "fld_54cdf886852a",
-                    "fld_1368a8a2556a"
+                    "fld_641726abdae9",
+                    "fld_a37e5b5b8a50",
+                    "fld_32dc9793e2e2",
+                    "fld_88ac8706d85e",
+                    "fld_a2568f8a434f",
+                    "fld_33e06b510df4",
+                    "fld_244aee5d8ba5",
+                    "fld_6e1d03c2a077",
+                    "fld_d46894b2cae4",
+                    "fld_b630171cd5b8",
+                    "fld_b646baa2fa12",
+                    "fld_83d5bd9760c1",
+                    "fld_f88c3c50c255",
+                    "fld_dabc5e63c2a3"
                 ],
                 "children": [
                     {
@@ -1475,7 +1475,7 @@
                 ]
             }
         ],
-        "doc_b14e287330b4": [
+        "doc_fac9f1be7fff": [
             {
                 "name": "Sahyadri Cooperative Bank ACCOUNT STATEMENT",
                 "page": 0,
@@ -1486,7 +1486,7 @@
                     "y1": 1860.0
                 },
                 "field_ids": [
-                    "fld_19deab89afa6"
+                    "fld_554861f88b5f"
                 ],
                 "children": [
                     {
@@ -1499,20 +1499,20 @@
                             "y1": 1860.0
                         },
                         "field_ids": [
-                            "fld_35b5b40a46e4",
-                            "fld_8c0edbe543ab",
-                            "fld_901b08a9d1f6",
-                            "fld_085940dc82c2",
-                            "fld_6865789a44bd",
-                            "fld_56fe1d5b70f5",
-                            "fld_4d4a2693c9a8"
+                            "fld_c7188bdb538a",
+                            "fld_4d2a0105b9f1",
+                            "fld_008a1fbc30c6",
+                            "fld_06edc1a4fc94",
+                            "fld_83f65a4d805e",
+                            "fld_1d6105fe46e4",
+                            "fld_43b789fea03b"
                         ],
                         "children": []
                     }
                 ]
             }
         ],
-        "doc_c96d00906936": [
+        "doc_ae3cb1b136b1": [
             {
                 "name": "Western Metro Power Supply ELECTRICITY BILL",
                 "page": 0,
@@ -1523,19 +1523,19 @@
                     "y1": 1373.5253228081597
                 },
                 "field_ids": [
-                    "fld_2337158dd093",
-                    "fld_2b08e5cd1354",
-                    "fld_ad5898230038",
-                    "fld_2aecc87ce91d",
-                    "fld_d4a655aae001",
-                    "fld_26d12b4090c9",
-                    "fld_d212f84911a3",
-                    "fld_f6786f114bd7"
+                    "fld_476d49f261fe",
+                    "fld_94c5ba00f08d",
+                    "fld_4befe58d0301",
+                    "fld_d841ca63b6f1",
+                    "fld_efec1b1dd396",
+                    "fld_360e41afbd3d",
+                    "fld_d79d3bed6331",
+                    "fld_e3761755ca57"
                 ],
                 "children": []
             }
         ],
-        "doc_2db598654766": [
+        "doc_ab836ea47d30": [
             {
                 "name": "SELF-DECLARATION OF INCOME AND EMPLOYMENT",
                 "page": 0,
@@ -1546,8 +1546,8 @@
                     "y1": 1258.0
                 },
                 "field_ids": [
-                    "fld_b7e3c30e5432",
-                    "fld_5cbdc3b95e32"
+                    "fld_81bffdd268f8",
+                    "fld_a000a1cd21ed"
                 ],
                 "children": [
                     {
@@ -1560,11 +1560,11 @@
                             "y1": 1258.0
                         },
                         "field_ids": [
-                            "fld_89705449cff8",
-                            "fld_9f7f7e20a45a",
-                            "fld_4b3a870b48d7",
-                            "fld_c785fd26a11d",
-                            "fld_4d949ddc86d1"
+                            "fld_3cc7b1c103fb",
+                            "fld_623cb3f95d23",
+                            "fld_d7161f294a16",
+                            "fld_1b4ca2ca7906",
+                            "fld_6a865ed5f639"
                         ],
                         "children": []
                     }
@@ -1573,12 +1573,12 @@
         ]
     },
     "tables": {
-        "doc_727ea0cb9259": [],
-        "doc_c02f3af40d55": [],
-        "doc_2d1fa84f2195": [
+        "doc_f4e44b267fb3": [],
+        "doc_63a5b3081adc": [],
+        "doc_5781c4124cdd": [
             {
-                "id": "tbl_4a7c0fdf8f9b",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "tbl_3a4b37f09d86",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "earnings",
                 "page": 0,
                 "bbox": {
@@ -1661,8 +1661,8 @@
                 ]
             },
             {
-                "id": "tbl_bfd5540ea5f0",
-                "doc_id": "doc_2d1fa84f2195",
+                "id": "tbl_e582b16221e4",
+                "doc_id": "doc_5781c4124cdd",
                 "name": "deductions",
                 "page": 0,
                 "bbox": {
@@ -1745,10 +1745,10 @@
                 ]
             }
         ],
-        "doc_b14e287330b4": [
+        "doc_fac9f1be7fff": [
             {
-                "id": "tbl_8d6b3cc6a02e",
-                "doc_id": "doc_b14e287330b4",
+                "id": "tbl_ee535e6c004e",
+                "doc_id": "doc_fac9f1be7fff",
                 "name": "transactions",
                 "page": 0,
                 "bbox": {
@@ -2896,19 +2896,19 @@
                 ]
             }
         ],
-        "doc_c96d00906936": [],
-        "doc_2db598654766": []
+        "doc_ae3cb1b136b1": [],
+        "doc_ab836ea47d30": []
     },
     "contextual_findings": [
         {
-            "id": "fnd_c5e59e66169d",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_4e720f739130",
+            "case_id": "case_f246fc0ac744",
             "status": "INCONSISTENCY",
             "category": "contextual",
             "severity": "high",
             "confidence": 0.949,
             "title": "Net pay in figures differs from net pay in words",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "page": 0,
             "bbox": {
                 "x0": 471.0,
@@ -2917,23 +2917,23 @@
                 "y1": 910.0
             },
             "related_doc_ids": [
-                "doc_2d1fa84f2195"
+                "doc_5781c4124cdd"
             ],
             "related_field_ids": [
-                "fld_1368a8a2556a"
+                "fld_dabc5e63c2a3"
             ],
             "related_finding_ids": [
-                "fnd_c27e7f8e51ea",
-                "fnd_6f80dc45590e",
-                "fnd_7d6ff07e518b",
-                "fnd_6a0c6dfb883a"
+                "fnd_e38c6ea579db",
+                "fnd_641d96937a4b",
+                "fnd_c01fa37ecfe3",
+                "fnd_bc76a7c3ed9f"
             ],
             "evidence": [
                 {
                     "kind": "crop",
                     "label": "Highlighted source region",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c5e59e66169d.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_4e720f739130.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 471.0,
@@ -2947,8 +2947,8 @@
                 {
                     "kind": "field_ref",
                     "label": "net_pay",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c5e59e66169d_1.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_4e720f739130_1.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 471.0,
@@ -2956,7 +2956,7 @@
                         "x1": 624.0,
                         "y1": 910.0
                     },
-                    "field_id": "fld_1368a8a2556a",
+                    "field_id": "fld_dabc5e63c2a3",
                     "data": {
                         "field": "net_pay",
                         "value": "84,320.00",
@@ -2968,8 +2968,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Net pay written in words",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c5e59e66169d_2.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_4e720f739130_2.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 127.0,
@@ -2985,7 +2985,7 @@
                     }
                 }
             ],
-            "explanation": "Net pay is printed as 84,320.00 in figures, but as 48,320.00 in words on the same document. The words agree with gross pay minus deductions (48,320.00), so it is the figure that stands apart. Why it matters: A document's words and figures state the same amount, and an edit to the figure often leaves the words behind. Corroboration: 4 other finding(s) concern the same field or region, from independent cross-document and visual checks. Independent signals increase the priority for review, but don't establish a conclusion. Cached AI reasoning (ollama/qwen2.5:7b): The discrepancy between the net pay in figures (84,320.00) and the net pay in words (48,320) suggests an error in the figure, as the words match the expected amount after deductions.",
+            "explanation": "Net pay is printed as 84,320.00 in figures, but as 48,320.00 in words on the same document. The words agree with gross pay minus deductions (48,320.00), so it is the figure that stands apart. Why it matters: A document's words and figures state the same amount, and an edit to the figure often leaves the words behind. Corroboration: 4 other finding(s) concern the same field or region, from independent cross-document and visual checks. Independent signals increase the priority for review, but don't establish a conclusion. AI reasoning (ollama/qwen2.5:7b): The discrepancy between the net pay in figures (84,320.00) and the net pay in words (48,320) suggests an error in the figure, as the words match the expected amount after deductions.",
             "benign_alternatives": [
                 "A typing error when the document was prepared.",
                 "An OCR misreading of the figure or the words.",
@@ -3002,7 +3002,7 @@
             "discrepancy_type": null,
             "fused_score": null,
             "reasoning": {
-                "mode": "demo_cache",
+                "mode": "live_llm",
                 "provider": "ollama",
                 "model": "qwen2.5:7b",
                 "prompt_hash": "bf30ace9e24d13d2b8eecaef962ffa299d4edb4dafaa9b8d4581a0f3dc0dbfc7"
@@ -3013,17 +3013,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:31.777952Z"
+            "created_at": "2026-11-05T09:37:35.030886Z"
         },
         {
-            "id": "fnd_6f80dc45590e",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_641d96937a4b",
+            "case_id": "case_f246fc0ac744",
             "status": "INCONSISTENCY",
             "category": "contextual",
             "severity": "high",
             "confidence": 0.948,
             "title": "Net pay does not equal gross pay minus deductions",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "page": 0,
             "bbox": {
                 "x0": 471.0,
@@ -3032,25 +3032,25 @@
                 "y1": 910.0
             },
             "related_doc_ids": [
-                "doc_2d1fa84f2195"
+                "doc_5781c4124cdd"
             ],
             "related_field_ids": [
-                "fld_876438eaddfc",
-                "fld_54cdf886852a",
-                "fld_1368a8a2556a"
+                "fld_83d5bd9760c1",
+                "fld_f88c3c50c255",
+                "fld_dabc5e63c2a3"
             ],
             "related_finding_ids": [
-                "fnd_c27e7f8e51ea",
-                "fnd_c5e59e66169d",
-                "fnd_7d6ff07e518b",
-                "fnd_6a0c6dfb883a"
+                "fnd_e38c6ea579db",
+                "fnd_4e720f739130",
+                "fnd_c01fa37ecfe3",
+                "fnd_bc76a7c3ed9f"
             ],
             "evidence": [
                 {
                     "kind": "crop",
                     "label": "Highlighted source region",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_6f80dc45590e.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_641d96937a4b.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 471.0,
@@ -3064,8 +3064,8 @@
                 {
                     "kind": "field_ref",
                     "label": "gross_pay",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_6f80dc45590e_1.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_641d96937a4b_1.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 667.0,
@@ -3073,7 +3073,7 @@
                         "x1": 810.0,
                         "y1": 806.0
                     },
-                    "field_id": "fld_876438eaddfc",
+                    "field_id": "fld_83d5bd9760c1",
                     "data": {
                         "field": "gross_pay",
                         "value": "54,000.00",
@@ -3085,8 +3085,8 @@
                 {
                     "kind": "field_ref",
                     "label": "total_deductions",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_6f80dc45590e_2.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_641d96937a4b_2.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 1402.0,
@@ -3094,7 +3094,7 @@
                         "x1": 1527.0,
                         "y1": 806.0
                     },
-                    "field_id": "fld_54cdf886852a",
+                    "field_id": "fld_f88c3c50c255",
                     "data": {
                         "field": "total_deductions",
                         "value": "5,680.00",
@@ -3106,8 +3106,8 @@
                 {
                     "kind": "field_ref",
                     "label": "net_pay",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_6f80dc45590e_3.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_641d96937a4b_3.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 471.0,
@@ -3115,7 +3115,7 @@
                         "x1": 624.0,
                         "y1": 910.0
                     },
-                    "field_id": "fld_1368a8a2556a",
+                    "field_id": "fld_dabc5e63c2a3",
                     "data": {
                         "field": "net_pay",
                         "value": "84,320.00",
@@ -3128,7 +3128,7 @@
                     "kind": "raw_value",
                     "label": "Recomputed net pay",
                     "uri": null,
-                    "doc_id": "doc_2d1fa84f2195",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": null,
                     "bbox": null,
                     "field_id": null,
@@ -3139,7 +3139,7 @@
                     }
                 }
             ],
-            "explanation": "Gross pay 54,000.00 minus total deductions 5,680.00 gives 48,320.00, but the document states net pay 84,320.00 (difference 36,000.00). Why it matters: Payroll systems compute these totals, so a broken sum can mean one figure was changed separately. Corroboration: 4 other finding(s) concern the same field or region, from independent cross-document and visual checks. Independent signals increase the priority for review, but don't establish a conclusion. Cached AI reasoning (ollama/qwen2.5:7b): The net pay stated on the document (84,320.00) does not match the recomputed net pay (48,320.00), indicating a discrepancy that could be due to an error in the document or a miscalculation.",
+            "explanation": "Gross pay 54,000.00 minus total deductions 5,680.00 gives 48,320.00, but the document states net pay 84,320.00 (difference 36,000.00). Why it matters: Payroll systems compute these totals, so a broken sum can mean one figure was changed separately. Corroboration: 4 other finding(s) concern the same field or region, from independent cross-document and visual checks. Independent signals increase the priority for review, but don't establish a conclusion. AI reasoning (ollama/qwen2.5:7b): The net pay stated on the document (84,320.00) does not match the recomputed net pay (48,320.00), indicating a discrepancy that could be due to an error in the document or a miscalculation.",
             "benign_alternatives": [
                 "Unlisted deductions or a rounding policy.",
                 "An OCR misreading of one digit.",
@@ -3158,7 +3158,7 @@
             "discrepancy_type": null,
             "fused_score": null,
             "reasoning": {
-                "mode": "demo_cache",
+                "mode": "live_llm",
                 "provider": "ollama",
                 "model": "qwen2.5:7b",
                 "prompt_hash": "95be24131a26b037e5e7b08ba3f145bd5916d8095ed0733e724b907fdac9ae85"
@@ -3169,17 +3169,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:31.777054Z"
+            "created_at": "2026-11-05T09:37:35.029992Z"
         },
         {
-            "id": "fnd_beec17974b0d",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_7a2dcf0c7048",
+            "case_id": "case_f246fc0ac744",
             "status": "INCONSISTENCY",
             "category": "contextual",
             "severity": "high",
             "confidence": 0.92,
             "title": "Running balance breaks in the transaction table",
-            "doc_id": "doc_b14e287330b4",
+            "doc_id": "doc_fac9f1be7fff",
             "page": 0,
             "bbox": {
                 "x0": 1356.0,
@@ -3188,7 +3188,7 @@
                 "y1": 1562.084228515625
             },
             "related_doc_ids": [
-                "doc_b14e287330b4"
+                "doc_fac9f1be7fff"
             ],
             "related_field_ids": [],
             "related_finding_ids": [],
@@ -3196,8 +3196,8 @@
                 {
                     "kind": "crop",
                     "label": "Highlighted source region",
-                    "uri": "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_beec17974b0d.png",
-                    "doc_id": "doc_b14e287330b4",
+                    "uri": "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_7a2dcf0c7048.png",
+                    "doc_id": "doc_fac9f1be7fff",
                     "page": 0,
                     "bbox": {
                         "x0": 1356.0,
@@ -3211,8 +3211,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Transaction row 19",
-                    "uri": "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_beec17974b0d_1.png",
-                    "doc_id": "doc_b14e287330b4",
+                    "uri": "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_7a2dcf0c7048_1.png",
+                    "doc_id": "doc_fac9f1be7fff",
                     "page": 0,
                     "bbox": {
                         "x0": 1356.0,
@@ -3228,7 +3228,7 @@
                     }
                 }
             ],
-            "explanation": "Applying each debit and credit to the previous balance doesn't reproduce the stated balance in 1 row(s): row 19: expected 161,467.21, stated 109,579.56. Why it matters: Bank systems keep running balances exact, so a break can mean a row was changed. Cached AI reasoning (ollama/qwen2.5:7b): The running balance breaks at row 19, indicating a discrepancy between the expected and stated amounts. This could be due to an error in the OCR process or a manual alteration of the document.",
+            "explanation": "Applying each debit and credit to the previous balance doesn't reproduce the stated balance in 1 row(s): row 19: expected 161,467.21, stated 109,579.56. Why it matters: Bank systems keep running balances exact, so a break can mean a row was changed. AI reasoning (ollama/qwen2.5:7b): The running balance breaks at row 19, indicating a discrepancy between the expected and stated amounts. This could be due to an error in the OCR process or a manual alteration of the document.",
             "benign_alternatives": [
                 "An omitted row at a page boundary.",
                 "An OCR misreading of a balance or amount.",
@@ -3247,7 +3247,7 @@
             "discrepancy_type": null,
             "fused_score": null,
             "reasoning": {
-                "mode": "demo_cache",
+                "mode": "live_llm",
                 "provider": "ollama",
                 "model": "qwen2.5:7b",
                 "prompt_hash": "8bf1f6cb4567ac93e0acaf18a492ef7b89305eb997c8f52a387dad91866a52f5"
@@ -3258,19 +3258,19 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:31.778142Z"
+            "created_at": "2026-11-05T09:37:35.031075Z"
         }
     ],
     "cross_document_findings": [
         {
-            "id": "fnd_7d6ff07e518b",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_c01fa37ecfe3",
+            "case_id": "case_f246fc0ac744",
             "status": "INCONSISTENCY",
             "category": "cross_document",
             "severity": "high",
             "confidence": 0.919,
             "title": "Net pay on the salary slip does not match the bank credit",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "page": 0,
             "bbox": {
                 "x0": 471.0,
@@ -3279,24 +3279,24 @@
                 "y1": 910.0
             },
             "related_doc_ids": [
-                "doc_2d1fa84f2195",
-                "doc_b14e287330b4"
+                "doc_5781c4124cdd",
+                "doc_fac9f1be7fff"
             ],
             "related_field_ids": [
-                "fld_1368a8a2556a"
+                "fld_dabc5e63c2a3"
             ],
             "related_finding_ids": [
-                "fnd_c27e7f8e51ea",
-                "fnd_6f80dc45590e",
-                "fnd_c5e59e66169d",
-                "fnd_6a0c6dfb883a"
+                "fnd_e38c6ea579db",
+                "fnd_641d96937a4b",
+                "fnd_4e720f739130",
+                "fnd_bc76a7c3ed9f"
             ],
             "evidence": [
                 {
                     "kind": "crop",
                     "label": "Highlighted source region",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_7d6ff07e518b.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_c01fa37ecfe3.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 471.0,
@@ -3310,8 +3310,8 @@
                 {
                     "kind": "field_ref",
                     "label": "net_pay on salary slip (salary_slip.png)",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_7d6ff07e518b_1.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_c01fa37ecfe3_1.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 471.0,
@@ -3319,7 +3319,7 @@
                         "x1": 624.0,
                         "y1": 910.0
                     },
-                    "field_id": "fld_1368a8a2556a",
+                    "field_id": "fld_dabc5e63c2a3",
                     "data": {
                         "field": "net_pay",
                         "value": "84,320.00",
@@ -3331,8 +3331,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Salary credit on bank statement (bank_statement.pdf)",
-                    "uri": "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_7d6ff07e518b_2.png",
-                    "doc_id": "doc_b14e287330b4",
+                    "uri": "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_c01fa37ecfe3_2.png",
+                    "doc_id": "doc_fac9f1be7fff",
                     "page": 0,
                     "bbox": {
                         "x0": 1182.0,
@@ -3350,7 +3350,7 @@
                     }
                 }
             ],
-            "explanation": "The salary slip states net pay 84,320.00, but the closest salary credit on the bank statement is 48,320.00 ('NEFT CR-KESTREL-SALARY', row 24), a difference of 36,000.00 (42.7%). Why it matters: The credited amount should reconcile with net pay, unless something else explains the gap. Corroboration: 4 other finding(s) concern the same field or region, from independent contextual and visual checks. Independent signals increase the priority for review, but don't establish a conclusion. Cached AI reasoning (ollama/qwen2.5:7b): The discrepancy between the stated net pay of 84,320.00 on the salary slip and the credited amount of 48,320.00 on the bank statement suggests a potential error or omission. This could be due to a one-time transaction, a mistake in recording, or a delay in payment.",
+            "explanation": "The salary slip states net pay 84,320.00, but the closest salary credit on the bank statement is 48,320.00 ('NEFT CR-KESTREL-SALARY', row 24), a difference of 36,000.00 (42.7%). Why it matters: The credited amount should reconcile with net pay, unless something else explains the gap. Corroboration: 4 other finding(s) concern the same field or region, from independent contextual and visual checks. Independent signals increase the priority for review, but don't establish a conclusion. AI reasoning (ollama/qwen2.5:7b): The discrepancy between the stated net pay of 84,320.00 on the salary slip and the credited amount of 48,320.00 on the bank statement suggests a potential error or omission. This could be due to a one-time transaction, a mistake in recording, or a delay in payment.",
             "benign_alternatives": [
                 "Reimbursements, bonuses or arrears paid together.",
                 "A split salary across accounts.",
@@ -3370,7 +3370,7 @@
             "discrepancy_type": "salary_vs_bank_credit",
             "fused_score": null,
             "reasoning": {
-                "mode": "demo_cache",
+                "mode": "live_llm",
                 "provider": "ollama",
                 "model": "qwen2.5:7b",
                 "prompt_hash": "88a1ae611263e8e00db9e5c9b37411a82219a4e35990a5a26312118c71ce12fb"
@@ -3381,17 +3381,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:31.781284Z"
+            "created_at": "2026-11-05T09:37:35.033979Z"
         },
         {
-            "id": "fnd_6a0c6dfb883a",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_bc76a7c3ed9f",
+            "case_id": "case_f246fc0ac744",
             "status": "INCONSISTENCY",
             "category": "cross_document",
             "severity": "high",
             "confidence": 0.872,
             "title": "Declared income is above what the salary slip shows",
-            "doc_id": "doc_727ea0cb9259",
+            "doc_id": "doc_f4e44b267fb3",
             "page": 0,
             "bbox": {
                 "x0": 542.0,
@@ -3400,28 +3400,28 @@
                 "y1": 1203.0
             },
             "related_doc_ids": [
-                "doc_727ea0cb9259",
-                "doc_2d1fa84f2195",
-                "doc_b14e287330b4"
+                "doc_f4e44b267fb3",
+                "doc_5781c4124cdd",
+                "doc_fac9f1be7fff"
             ],
             "related_field_ids": [
-                "fld_e3db3b8a0afb",
-                "fld_876438eaddfc",
-                "fld_1368a8a2556a"
+                "fld_6ab3c8fdd254",
+                "fld_83d5bd9760c1",
+                "fld_dabc5e63c2a3"
             ],
             "related_finding_ids": [
-                "fnd_c27e7f8e51ea",
-                "fnd_bc41f6a65960",
-                "fnd_6f80dc45590e",
-                "fnd_c5e59e66169d",
-                "fnd_7d6ff07e518b"
+                "fnd_e38c6ea579db",
+                "fnd_bde7de74240d",
+                "fnd_641d96937a4b",
+                "fnd_4e720f739130",
+                "fnd_c01fa37ecfe3"
             ],
             "evidence": [
                 {
                     "kind": "crop",
                     "label": "Highlighted source region",
-                    "uri": "cases/case_523cb46052c3/doc_727ea0cb9259/evidence/fnd_6a0c6dfb883a.png",
-                    "doc_id": "doc_727ea0cb9259",
+                    "uri": "cases/case_f246fc0ac744/doc_f4e44b267fb3/evidence/fnd_bc76a7c3ed9f.png",
+                    "doc_id": "doc_f4e44b267fb3",
                     "page": 0,
                     "bbox": {
                         "x0": 542.0,
@@ -3435,8 +3435,8 @@
                 {
                     "kind": "field_ref",
                     "label": "declared_monthly_income on application form (application_form.png)",
-                    "uri": "cases/case_523cb46052c3/doc_727ea0cb9259/evidence/fnd_6a0c6dfb883a_1.png",
-                    "doc_id": "doc_727ea0cb9259",
+                    "uri": "cases/case_f246fc0ac744/doc_f4e44b267fb3/evidence/fnd_bc76a7c3ed9f_1.png",
+                    "doc_id": "doc_f4e44b267fb3",
                     "page": 0,
                     "bbox": {
                         "x0": 542.0,
@@ -3444,7 +3444,7 @@
                         "x1": 676.0,
                         "y1": 1203.0
                     },
-                    "field_id": "fld_e3db3b8a0afb",
+                    "field_id": "fld_6ab3c8fdd254",
                     "data": {
                         "field": "declared_monthly_income",
                         "value": "84,320.00",
@@ -3456,8 +3456,8 @@
                 {
                     "kind": "field_ref",
                     "label": "gross_pay on salary slip (salary_slip.png)",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_6a0c6dfb883a_2.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_bc76a7c3ed9f_2.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 667.0,
@@ -3465,7 +3465,7 @@
                         "x1": 810.0,
                         "y1": 806.0
                     },
-                    "field_id": "fld_876438eaddfc",
+                    "field_id": "fld_83d5bd9760c1",
                     "data": {
                         "field": "gross_pay",
                         "value": "54,000.00",
@@ -3477,8 +3477,8 @@
                 {
                     "kind": "field_ref",
                     "label": "net_pay on salary slip (salary_slip.png)",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_6a0c6dfb883a_3.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_bc76a7c3ed9f_3.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 471.0,
@@ -3486,7 +3486,7 @@
                         "x1": 624.0,
                         "y1": 910.0
                     },
-                    "field_id": "fld_1368a8a2556a",
+                    "field_id": "fld_dabc5e63c2a3",
                     "data": {
                         "field": "net_pay",
                         "value": "84,320.00",
@@ -3498,8 +3498,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Salary credit, row 4",
-                    "uri": "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_6a0c6dfb883a_4.png",
-                    "doc_id": "doc_b14e287330b4",
+                    "uri": "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_bc76a7c3ed9f_4.png",
+                    "doc_id": "doc_fac9f1be7fff",
                     "page": 0,
                     "bbox": {
                         "x0": 1182.0,
@@ -3519,8 +3519,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Salary credit, row 8",
-                    "uri": "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_6a0c6dfb883a_5.png",
-                    "doc_id": "doc_b14e287330b4",
+                    "uri": "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_bc76a7c3ed9f_5.png",
+                    "doc_id": "doc_fac9f1be7fff",
                     "page": 0,
                     "bbox": {
                         "x0": 1182.0,
@@ -3540,8 +3540,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Salary credit, row 12",
-                    "uri": "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_6a0c6dfb883a_6.png",
-                    "doc_id": "doc_b14e287330b4",
+                    "uri": "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_bc76a7c3ed9f_6.png",
+                    "doc_id": "doc_fac9f1be7fff",
                     "page": 0,
                     "bbox": {
                         "x0": 1182.0,
@@ -3559,7 +3559,7 @@
                     }
                 }
             ],
-            "explanation": "Declared monthly income 84,320.00 on application form (application_form.png) is above the slip's range of net 84,320.00 to gross 54,000.00 by more than 5%. The typical salary credit at the bank, 48,320.00, is also below it. Why it matters: Declared income can be compared with what the supporting documents show. Corroboration: 5 other finding(s) concern the same field or region, from independent contextual and visual checks. Independent signals increase the priority for review, but don't establish a conclusion. Cached AI reasoning (ollama/qwen2.5:7b): The declared monthly income of 84,320.00 on the application form is significantly higher than the salary slip's net pay of 84,320.00 and gross pay of 54,000.00. This discrepancy could indicate an error in the application form or a misunderstanding of the salary details.",
+            "explanation": "Declared monthly income 84,320.00 on application form (application_form.png) is above the slip's range of net 84,320.00 to gross 54,000.00 by more than 5%. The typical salary credit at the bank, 48,320.00, is also below it. Why it matters: Declared income can be compared with what the supporting documents show. Corroboration: 5 other finding(s) concern the same field or region, from independent contextual and visual checks. Independent signals increase the priority for review, but don't establish a conclusion. AI reasoning (ollama/qwen2.5:7b): The declared monthly income of 84,320.00 on the application form is significantly higher than the salary slip's net pay of 84,320.00 and gross pay of 54,000.00. This discrepancy could indicate an error in the application form or a misunderstanding of the salary details.",
             "benign_alternatives": [
                 "Other income sources not on the slip.",
                 "Annual vs monthly figures.",
@@ -3578,7 +3578,7 @@
             "discrepancy_type": "declared_vs_actual_income",
             "fused_score": null,
             "reasoning": {
-                "mode": "demo_cache",
+                "mode": "live_llm",
                 "provider": "ollama",
                 "model": "qwen2.5:7b",
                 "prompt_hash": "3efd2df3517b6b0459e607b1c3d60cdb6bddde5f14e3390a3ffa47f503bb92d1"
@@ -3589,48 +3589,48 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:31.781549Z"
+            "created_at": "2026-11-05T09:37:35.034237Z"
         }
     ],
     "missing_or_duplicated": {
-        "doc_727ea0cb9259": {
+        "doc_f4e44b267fb3": {
             "missing": [],
             "duplicated": []
         },
-        "doc_c02f3af40d55": {
+        "doc_63a5b3081adc": {
             "missing": [],
             "duplicated": [
                 "date_of_birth",
                 "person_name"
             ]
         },
-        "doc_2d1fa84f2195": {
+        "doc_5781c4124cdd": {
             "missing": [],
             "duplicated": []
         },
-        "doc_b14e287330b4": {
+        "doc_fac9f1be7fff": {
             "missing": [],
             "duplicated": []
         },
-        "doc_c96d00906936": {
+        "doc_ae3cb1b136b1": {
             "missing": [],
             "duplicated": []
         },
-        "doc_2db598654766": {
+        "doc_ab836ea47d30": {
             "missing": [],
             "duplicated": []
         }
     },
     "visual_findings": [
         {
-            "id": "fnd_95ef7d66a051",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_9149d31753fb",
+            "case_id": "case_f246fc0ac744",
             "status": "POTENTIAL_MANIPULATION",
             "category": "visual",
             "severity": "high",
             "confidence": 0.96,
             "title": "The same signature pixels appear on two documents",
-            "doc_id": "doc_2db598654766",
+            "doc_id": "doc_ab836ea47d30",
             "page": 0,
             "bbox": {
                 "x0": 1041.0,
@@ -3639,7 +3639,7 @@
                 "y1": 1185.0
             },
             "related_doc_ids": [
-                "doc_727ea0cb9259"
+                "doc_f4e44b267fb3"
             ],
             "related_field_ids": [],
             "related_finding_ids": [],
@@ -3647,8 +3647,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Signature comparison",
-                    "uri": "cases/case_523cb46052c3/doc_2db598654766/evidence/fnd_95ef7d66a051_0.png",
-                    "doc_id": "doc_2db598654766",
+                    "uri": "cases/case_f246fc0ac744/doc_ab836ea47d30/evidence/fnd_9149d31753fb_0.png",
+                    "doc_id": "doc_ab836ea47d30",
                     "page": 0,
                     "bbox": {
                         "x0": 1041.0,
@@ -3665,8 +3665,8 @@
                 {
                     "kind": "crop",
                     "label": "This signature",
-                    "uri": "cases/case_523cb46052c3/doc_2db598654766/evidence/sig_p0_1041_1115.png",
-                    "doc_id": "doc_2db598654766",
+                    "uri": "cases/case_f246fc0ac744/doc_ab836ea47d30/evidence/sig_p0_1041_1115.png",
+                    "doc_id": "doc_ab836ea47d30",
                     "page": 0,
                     "bbox": {
                         "x0": 1041.0,
@@ -3680,8 +3680,8 @@
                 {
                     "kind": "comparison",
                     "label": "Matching signature",
-                    "uri": "cases/case_523cb46052c3/doc_727ea0cb9259/evidence/sig_p0_1031_1675.png",
-                    "doc_id": "doc_727ea0cb9259",
+                    "uri": "cases/case_f246fc0ac744/doc_f4e44b267fb3/evidence/sig_p0_1031_1675.png",
+                    "doc_id": "doc_f4e44b267fb3",
                     "page": 0,
                     "bbox": {
                         "x0": 1031.0,
@@ -3693,7 +3693,7 @@
                     "data": {}
                 }
             ],
-            "explanation": "The signature on 'declaration.png' matches the one on 'application_form.png' at 1.000 pixel correlation. Pen signatures vary every time they're written, so a near-exact pixel match suggests one image was copied, unless a shared digital signature image is expected here. Why it matters: Handwritten signatures vary naturally, so near-identical pixels across documents suggest a copy. Cached AI reasoning (ollama/qwen2.5:7b): The pixel correlation of 1.000 between the signatures on 'declaration.png' and 'application_form.png' suggests a near-exact match, which is unusual for handwritten signatures. This could indicate that one image was copied from the other, unless a shared digital signature was used.",
+            "explanation": "The signature on 'declaration.png' matches the one on 'application_form.png' at 1.000 pixel correlation. Pen signatures vary every time they're written, so a near-exact pixel match suggests one image was copied, unless a shared digital signature image is expected here. Why it matters: Handwritten signatures vary naturally, so near-identical pixels across documents suggest a copy. AI reasoning (ollama/qwen2.5:7b): The pixel correlation of 1.000 between the signatures on 'declaration.png' and 'application_form.png' suggests a near-exact match, which is unusual for handwritten signatures. This could indicate that one image was copied from the other, unless a shared digital signature was used.",
             "benign_alternatives": [
                 "An organisation may apply one digital signature image to every document it issues.",
                 "Both pages may be copies of one signed original.",
@@ -3714,7 +3714,7 @@
             "discrepancy_type": null,
             "fused_score": 0.96,
             "reasoning": {
-                "mode": "demo_cache",
+                "mode": "live_llm",
                 "provider": "ollama",
                 "model": "qwen2.5:7b",
                 "prompt_hash": "67f07843d5849cef4ab3ec9c27e84beabd24115fc946cec7bbd932149d53f127"
@@ -3725,17 +3725,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:31.768058Z"
+            "created_at": "2026-11-05T09:37:35.021767Z"
         },
         {
-            "id": "fnd_c27e7f8e51ea",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_e38c6ea579db",
+            "case_id": "case_f246fc0ac744",
             "status": "POTENTIAL_MANIPULATION",
             "category": "visual",
             "severity": "high",
             "confidence": 0.84,
             "title": "Typography differs from other text on the page (3 signals agree)",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "page": 0,
             "bbox": {
                 "x0": 463.0,
@@ -3745,20 +3745,20 @@
             },
             "related_doc_ids": [],
             "related_field_ids": [
-                "fld_1368a8a2556a"
+                "fld_dabc5e63c2a3"
             ],
             "related_finding_ids": [
-                "fnd_6f80dc45590e",
-                "fnd_c5e59e66169d",
-                "fnd_7d6ff07e518b",
-                "fnd_6a0c6dfb883a"
+                "fnd_641d96937a4b",
+                "fnd_4e720f739130",
+                "fnd_c01fa37ecfe3",
+                "fnd_bc76a7c3ed9f"
             ],
             "evidence": [
                 {
                     "kind": "raw_value",
                     "label": "Fused region score",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c27e7f8e51ea_0.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_e38c6ea579db_0.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 463.0,
@@ -3785,8 +3785,8 @@
                 {
                     "kind": "raw_value",
                     "label": "ELA per unit of edge energy",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c27e7f8e51ea_1.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_e38c6ea579db_1.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 471.0,
@@ -3805,8 +3805,8 @@
                 {
                     "kind": "crop",
                     "label": "Region",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/ela_w_p0_471_879.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/ela_w_p0_471_879.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 471.0,
@@ -3820,8 +3820,8 @@
                 {
                     "kind": "heatmap",
                     "label": "ELA heatmap",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/overlays/ela_p0.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/overlays/ela_p0.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": null,
                     "field_id": null,
@@ -3830,8 +3830,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Word style against peers",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c27e7f8e51ea_4.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_e38c6ea579db_4.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 471.0,
@@ -3859,8 +3859,8 @@
                 {
                     "kind": "crop",
                     "label": "Word in context",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/font_p0_471_879.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/font_p0_471_879.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 471.0,
@@ -3874,8 +3874,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Local grain",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c27e7f8e51ea_6.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_e38c6ea579db_6.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 463.0,
@@ -3894,8 +3894,8 @@
                 {
                     "kind": "crop",
                     "label": "Value and surrounding paper",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/grain_p0_463_871.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/grain_p0_463_871.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 463.0,
@@ -3907,7 +3907,7 @@
                     "data": {}
                 }
             ],
-            "explanation": "'84,320.00' doesn't match comparable text or any style used elsewhere on this page. It differs in: ink darkness, edge sharpness. A value typed in later often uses a different font, weight or ink. Other signals on this region. Error level analysis (confidence 0.44): The text '84,320.00' responds to recompression differently from other words on the page (9.7 robust deviations). Text edited in after the page was created can behave this way, but ELA alone is weak evidence on printed text. Background patch check (confidence 0.68): The paper grain behind '84,320.00' is 0.66x that of the paper just around it (0.95 vs 1.43). That fits a patch laid over the original value, since a patch doesn't carry the page's grain. Why it matters: Characters that differ in height, stroke or style from their neighbours can indicate an inserted value. Corroboration: 4 other finding(s) concern the same field or region, from independent contextual and cross-document checks. Independent signals increase the priority for review, but don't establish a conclusion. Cached AI reasoning (ollama/qwen2.5:7b): The text '84,320.00' appears to be a later insertion, differing in ink darkness, edge sharpness, and responds differently to recompression compared to other text on the page. This could indicate an attempt to manipulate the document by altering a value.",
+            "explanation": "'84,320.00' doesn't match comparable text or any style used elsewhere on this page. It differs in: ink darkness, edge sharpness. A value typed in later often uses a different font, weight or ink. Other signals on this region. Error level analysis (confidence 0.44): The text '84,320.00' responds to recompression differently from other words on the page (9.7 robust deviations). Text edited in after the page was created can behave this way, but ELA alone is weak evidence on printed text. Background patch check (confidence 0.68): The paper grain behind '84,320.00' is 0.66x that of the paper just around it (0.95 vs 1.43). That fits a patch laid over the original value, since a patch doesn't carry the page's grain. Why it matters: Characters that differ in height, stroke or style from their neighbours can indicate an inserted value. Corroboration: 4 other finding(s) concern the same field or region, from independent contextual and cross-document checks. Independent signals increase the priority for review, but don't establish a conclusion. AI reasoning (ollama/qwen2.5:7b): The text '84,320.00' appears to be a later insertion, differing in ink darkness, edge sharpness, and responds differently to recompression compared to other text on the page. This could indicate an attempt to manipulate the document by altering a value.",
             "benign_alternatives": [
                 "Scanner or photocopier artefacts, such as uneven lighting or dust.",
                 "Different compression applied by the device or software that produced the file.",
@@ -3933,7 +3933,7 @@
             "discrepancy_type": null,
             "fused_score": 0.84,
             "reasoning": {
-                "mode": "demo_cache",
+                "mode": "live_llm",
                 "provider": "ollama",
                 "model": "qwen2.5:7b",
                 "prompt_hash": "3ad8e761edac0990f688ce12685361d63075ac7ea3f3a32501a328f68e9e70c3"
@@ -3944,17 +3944,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:28.759868Z"
+            "created_at": "2026-11-05T09:37:32.048305Z"
         },
         {
-            "id": "fnd_bc41f6a65960",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_bde7de74240d",
+            "case_id": "case_f246fc0ac744",
             "status": "POTENTIAL_MANIPULATION",
             "category": "visual",
             "severity": "high",
             "confidence": 0.838,
             "title": "Two regions of this page look copied from one another",
-            "doc_id": "doc_b14e287330b4",
+            "doc_id": "doc_fac9f1be7fff",
             "page": 0,
             "bbox": {
                 "x0": 341.0,
@@ -3965,14 +3965,14 @@
             "related_doc_ids": [],
             "related_field_ids": [],
             "related_finding_ids": [
-                "fnd_6a0c6dfb883a"
+                "fnd_bc76a7c3ed9f"
             ],
             "evidence": [
                 {
                     "kind": "raw_value",
                     "label": "Fused region score",
-                    "uri": "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_bc41f6a65960_0.png",
-                    "doc_id": "doc_b14e287330b4",
+                    "uri": "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_bde7de74240d_0.png",
+                    "doc_id": "doc_fac9f1be7fff",
                     "page": 0,
                     "bbox": {
                         "x0": 341.0,
@@ -3995,8 +3995,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Clone match",
-                    "uri": "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_bc41f6a65960_1.png",
-                    "doc_id": "doc_b14e287330b4",
+                    "uri": "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_bde7de74240d_1.png",
+                    "doc_id": "doc_fac9f1be7fff",
                     "page": 0,
                     "bbox": {
                         "x0": 341.0,
@@ -4017,8 +4017,8 @@
                 {
                     "kind": "comparison",
                     "label": "Possible source region",
-                    "uri": "cases/case_523cb46052c3/doc_b14e287330b4/evidence/clone_a_p0_341_1035.png",
-                    "doc_id": "doc_b14e287330b4",
+                    "uri": "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/clone_a_p0_341_1035.png",
+                    "doc_id": "doc_fac9f1be7fff",
                     "page": 0,
                     "bbox": {
                         "x0": 341.0,
@@ -4032,8 +4032,8 @@
                 {
                     "kind": "crop",
                     "label": "Possible copied region",
-                    "uri": "cases/case_523cb46052c3/doc_b14e287330b4/evidence/clone_b_p0_341_1541.png",
-                    "doc_id": "doc_b14e287330b4",
+                    "uri": "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/clone_b_p0_341_1541.png",
+                    "doc_id": "doc_fac9f1be7fff",
                     "page": 0,
                     "bbox": {
                         "x0": 341.0,
@@ -4047,8 +4047,8 @@
                 {
                     "kind": "heatmap",
                     "label": "Clone map",
-                    "uri": "cases/case_523cb46052c3/doc_b14e287330b4/overlays/copy_move_p0.png",
-                    "doc_id": "doc_b14e287330b4",
+                    "uri": "cases/case_f246fc0ac744/doc_fac9f1be7fff/overlays/copy_move_p0.png",
+                    "doc_id": "doc_fac9f1be7fff",
                     "page": 0,
                     "bbox": null,
                     "field_id": null,
@@ -4084,17 +4084,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:29.555926Z"
+            "created_at": "2026-11-05T09:37:32.841521Z"
         },
         {
-            "id": "fnd_9117d4e27721",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_f9d9b4e109ab",
+            "case_id": "case_f246fc0ac744",
             "status": "POTENTIAL_MANIPULATION",
             "category": "visual",
             "severity": "medium",
             "confidence": 0.652,
             "title": "Photo differs from the surrounding page",
-            "doc_id": "doc_c02f3af40d55",
+            "doc_id": "doc_63a5b3081adc",
             "page": 0,
             "bbox": {
                 "x0": 212.0,
@@ -4109,8 +4109,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Fused region score",
-                    "uri": "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_9117d4e27721_0.png",
-                    "doc_id": "doc_c02f3af40d55",
+                    "uri": "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_f9d9b4e109ab_0.png",
+                    "doc_id": "doc_63a5b3081adc",
                     "page": 0,
                     "bbox": {
                         "x0": 212.0,
@@ -4133,8 +4133,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Photo region measurements",
-                    "uri": "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_9117d4e27721_1.png",
-                    "doc_id": "doc_c02f3af40d55",
+                    "uri": "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_f9d9b4e109ab_1.png",
+                    "doc_id": "doc_63a5b3081adc",
                     "page": 0,
                     "bbox": {
                         "x0": 212.0,
@@ -4156,8 +4156,8 @@
                 {
                     "kind": "crop",
                     "label": "Photo and surroundings",
-                    "uri": "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/photo_p0_212_368.png",
-                    "doc_id": "doc_c02f3af40d55",
+                    "uri": "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/photo_p0_212_368.png",
+                    "doc_id": "doc_63a5b3081adc",
                     "page": 0,
                     "bbox": {
                         "x0": 212.0,
@@ -4169,7 +4169,7 @@
                     "data": {}
                 }
             ],
-            "explanation": "This image region shows signs that it wasn't produced together with the page: its smooth areas have almost no grain (0.00) while the page has 1.42, so it wasn't scanned with the page. Why it matters: A photo whose edges or compression differ from the page can have been pasted in. Cached AI reasoning (ollama/qwen2.5:7b): The photo has almost no grain (0.00) compared to the surrounding page (1.42), indicating it was likely scanned separately. This could suggest the photo was pasted in, which is a common method for document tampering.",
+            "explanation": "This image region shows signs that it wasn't produced together with the page: its smooth areas have almost no grain (0.00) while the page has 1.42, so it wasn't scanned with the page. Why it matters: A photo whose edges or compression differ from the page can have been pasted in. AI reasoning (ollama/qwen2.5:7b): The photo has almost no grain (0.00) compared to the surrounding page (1.42), indicating it was likely scanned separately. This could suggest the photo was pasted in, which is a common method for document tampering.",
             "benign_alternatives": [
                 "Photos are often attached or printed separately from the form.",
                 "A digital form that embeds a JPEG photo legitimately.",
@@ -4189,7 +4189,7 @@
             "discrepancy_type": null,
             "fused_score": 0.652,
             "reasoning": {
-                "mode": "demo_cache",
+                "mode": "live_llm",
                 "provider": "ollama",
                 "model": "qwen2.5:7b",
                 "prompt_hash": "c54c264e960fdaf8b3d8ef7502fb83184ee0d535178ead85f901ae85510eef37"
@@ -4200,17 +4200,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:28.160512Z"
+            "created_at": "2026-11-05T09:37:31.453491Z"
         },
         {
-            "id": "fnd_c2a512d613e8",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_c824dc39538b",
+            "case_id": "case_f246fc0ac744",
             "status": "OBSERVATION",
             "category": "visual",
             "severity": "low",
             "confidence": 0.5,
             "title": "Background is noisier than the surrounding paper",
-            "doc_id": "doc_c96d00906936",
+            "doc_id": "doc_ae3cb1b136b1",
             "page": 0,
             "bbox": {
                 "x0": 1248.0,
@@ -4225,8 +4225,8 @@
                 {
                     "kind": "crop",
                     "label": "Highlighted source region",
-                    "uri": "cases/case_523cb46052c3/doc_c96d00906936/evidence/fnd_c2a512d613e8.png",
-                    "doc_id": "doc_c96d00906936",
+                    "uri": "cases/case_f246fc0ac744/doc_ae3cb1b136b1/evidence/fnd_c824dc39538b.png",
+                    "doc_id": "doc_ae3cb1b136b1",
                     "page": 0,
                     "bbox": {
                         "x0": 1248.0,
@@ -4240,8 +4240,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Fused region score",
-                    "uri": "cases/case_523cb46052c3/doc_c96d00906936/evidence/fnd_c2a512d613e8_1.png",
-                    "doc_id": "doc_c96d00906936",
+                    "uri": "cases/case_f246fc0ac744/doc_ae3cb1b136b1/evidence/fnd_c824dc39538b_1.png",
+                    "doc_id": "doc_ae3cb1b136b1",
                     "page": 0,
                     "bbox": {
                         "x0": 1248.0,
@@ -4264,8 +4264,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Noise residual",
-                    "uri": "cases/case_523cb46052c3/doc_c96d00906936/evidence/fnd_c2a512d613e8_2.png",
-                    "doc_id": "doc_c96d00906936",
+                    "uri": "cases/case_f246fc0ac744/doc_ae3cb1b136b1/evidence/fnd_c824dc39538b_2.png",
+                    "doc_id": "doc_ae3cb1b136b1",
                     "page": 0,
                     "bbox": {
                         "x0": 1248.0,
@@ -4284,8 +4284,8 @@
                 {
                     "kind": "heatmap",
                     "label": "Noise residual inconsistency",
-                    "uri": "cases/case_523cb46052c3/doc_c96d00906936/overlays/noise_p0.png",
-                    "doc_id": "doc_c96d00906936",
+                    "uri": "cases/case_f246fc0ac744/doc_ae3cb1b136b1/overlays/noise_p0.png",
+                    "doc_id": "doc_ae3cb1b136b1",
                     "page": 0,
                     "bbox": null,
                     "field_id": null,
@@ -4321,17 +4321,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:29.841464Z"
+            "created_at": "2026-11-05T09:37:33.121697Z"
         },
         {
-            "id": "fnd_38e24a89dd68",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_b664ac38d63c",
+            "case_id": "case_f246fc0ac744",
             "status": "OBSERVATION",
             "category": "visual",
             "severity": "low",
             "confidence": 0.5,
             "title": "Background is noisier than the surrounding paper",
-            "doc_id": "doc_c96d00906936",
+            "doc_id": "doc_ae3cb1b136b1",
             "page": 0,
             "bbox": {
                 "x0": 312.0,
@@ -4346,8 +4346,8 @@
                 {
                     "kind": "crop",
                     "label": "Highlighted source region",
-                    "uri": "cases/case_523cb46052c3/doc_c96d00906936/evidence/fnd_38e24a89dd68.png",
-                    "doc_id": "doc_c96d00906936",
+                    "uri": "cases/case_f246fc0ac744/doc_ae3cb1b136b1/evidence/fnd_b664ac38d63c.png",
+                    "doc_id": "doc_ae3cb1b136b1",
                     "page": 0,
                     "bbox": {
                         "x0": 312.0,
@@ -4361,8 +4361,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Fused region score",
-                    "uri": "cases/case_523cb46052c3/doc_c96d00906936/evidence/fnd_38e24a89dd68_1.png",
-                    "doc_id": "doc_c96d00906936",
+                    "uri": "cases/case_f246fc0ac744/doc_ae3cb1b136b1/evidence/fnd_b664ac38d63c_1.png",
+                    "doc_id": "doc_ae3cb1b136b1",
                     "page": 0,
                     "bbox": {
                         "x0": 312.0,
@@ -4385,8 +4385,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Noise residual",
-                    "uri": "cases/case_523cb46052c3/doc_c96d00906936/evidence/fnd_38e24a89dd68_2.png",
-                    "doc_id": "doc_c96d00906936",
+                    "uri": "cases/case_f246fc0ac744/doc_ae3cb1b136b1/evidence/fnd_b664ac38d63c_2.png",
+                    "doc_id": "doc_ae3cb1b136b1",
                     "page": 0,
                     "bbox": {
                         "x0": 312.0,
@@ -4405,8 +4405,8 @@
                 {
                     "kind": "heatmap",
                     "label": "Noise residual inconsistency",
-                    "uri": "cases/case_523cb46052c3/doc_c96d00906936/overlays/noise_p0.png",
-                    "doc_id": "doc_c96d00906936",
+                    "uri": "cases/case_f246fc0ac744/doc_ae3cb1b136b1/overlays/noise_p0.png",
+                    "doc_id": "doc_ae3cb1b136b1",
                     "page": 0,
                     "bbox": null,
                     "field_id": null,
@@ -4442,17 +4442,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:29.841423Z"
+            "created_at": "2026-11-05T09:37:33.121661Z"
         },
         {
-            "id": "fnd_c4905f239fd0",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_4630200b475e",
+            "case_id": "case_f246fc0ac744",
             "status": "OBSERVATION",
             "category": "visual",
             "severity": "low",
             "confidence": 0.5,
             "title": "Typography differs from other text on the page",
-            "doc_id": "doc_c02f3af40d55",
+            "doc_id": "doc_63a5b3081adc",
             "page": 0,
             "bbox": {
                 "x0": 950.0,
@@ -4462,17 +4462,17 @@
             },
             "related_doc_ids": [],
             "related_field_ids": [
-                "fld_4db024ba9a4e"
+                "fld_8f9c06105650"
             ],
             "related_finding_ids": [
-                "fnd_b25a9a90b545"
+                "fnd_9c198b50a372"
             ],
             "evidence": [
                 {
                     "kind": "raw_value",
                     "label": "Fused region score",
-                    "uri": "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_c4905f239fd0_0.png",
-                    "doc_id": "doc_c02f3af40d55",
+                    "uri": "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_4630200b475e_0.png",
+                    "doc_id": "doc_63a5b3081adc",
                     "page": 0,
                     "bbox": {
                         "x0": 950.0,
@@ -4495,8 +4495,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Word style against peers",
-                    "uri": "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_c4905f239fd0_1.png",
-                    "doc_id": "doc_c02f3af40d55",
+                    "uri": "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_4630200b475e_1.png",
+                    "doc_id": "doc_63a5b3081adc",
                     "page": 0,
                     "bbox": {
                         "x0": 950.0,
@@ -4526,8 +4526,8 @@
                 {
                     "kind": "crop",
                     "label": "Word in context",
-                    "uri": "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/font_p0_950_589.png",
-                    "doc_id": "doc_c02f3af40d55",
+                    "uri": "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/font_p0_950_589.png",
+                    "doc_id": "doc_63a5b3081adc",
                     "page": 0,
                     "bbox": {
                         "x0": 950.0,
@@ -4569,17 +4569,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:28.068259Z"
+            "created_at": "2026-11-05T09:37:31.361836Z"
         },
         {
-            "id": "fnd_c965bb31fb73",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_5f4dbe46117f",
+            "case_id": "case_f246fc0ac744",
             "status": "OBSERVATION",
             "category": "visual",
             "severity": "low",
             "confidence": 0.5,
             "title": "Typography differs from other text on the page",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "page": 0,
             "bbox": {
                 "x0": 400.0,
@@ -4589,15 +4589,15 @@
             },
             "related_doc_ids": [],
             "related_field_ids": [
-                "fld_7a6382d7daa7"
+                "fld_641726abdae9"
             ],
             "related_finding_ids": [],
             "evidence": [
                 {
                     "kind": "raw_value",
                     "label": "Fused region score",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c965bb31fb73_0.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_5f4dbe46117f_0.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 400.0,
@@ -4620,8 +4620,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Word style against peers",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c965bb31fb73_1.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_5f4dbe46117f_1.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 400.0,
@@ -4649,8 +4649,8 @@
                 {
                     "kind": "crop",
                     "label": "Word in context",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/font_p0_400_251.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/font_p0_400_251.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 400.0,
@@ -4692,17 +4692,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:28.760258Z"
+            "created_at": "2026-11-05T09:37:32.048699Z"
         },
         {
-            "id": "fnd_1d8266f11114",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_216e41d44ce2",
+            "case_id": "case_f246fc0ac744",
             "status": "OBSERVATION",
             "category": "visual",
             "severity": "low",
             "confidence": 0.5,
             "title": "Typography differs from other text on the page",
-            "doc_id": "doc_b14e287330b4",
+            "doc_id": "doc_fac9f1be7fff",
             "page": 0,
             "bbox": {
                 "x0": 666.0,
@@ -4712,15 +4712,15 @@
             },
             "related_doc_ids": [],
             "related_field_ids": [
-                "fld_6865789a44bd"
+                "fld_83f65a4d805e"
             ],
             "related_finding_ids": [],
             "evidence": [
                 {
                     "kind": "raw_value",
                     "label": "Fused region score",
-                    "uri": "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_1d8266f11114_0.png",
-                    "doc_id": "doc_b14e287330b4",
+                    "uri": "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_216e41d44ce2_0.png",
+                    "doc_id": "doc_fac9f1be7fff",
                     "page": 0,
                     "bbox": {
                         "x0": 666.0,
@@ -4743,8 +4743,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Word style against peers",
-                    "uri": "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_1d8266f11114_1.png",
-                    "doc_id": "doc_b14e287330b4",
+                    "uri": "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_216e41d44ce2_1.png",
+                    "doc_id": "doc_fac9f1be7fff",
                     "page": 0,
                     "bbox": {
                         "x0": 666.0,
@@ -4772,8 +4772,8 @@
                 {
                     "kind": "crop",
                     "label": "Word in context",
-                    "uri": "cases/case_523cb46052c3/doc_b14e287330b4/evidence/font_p0_666_483.png",
-                    "doc_id": "doc_b14e287330b4",
+                    "uri": "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/font_p0_666_483.png",
+                    "doc_id": "doc_fac9f1be7fff",
                     "page": 0,
                     "bbox": {
                         "x0": 666.0,
@@ -4815,17 +4815,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:29.448898Z"
+            "created_at": "2026-11-05T09:37:32.735271Z"
         },
         {
-            "id": "fnd_b25a9a90b545",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_9c198b50a372",
+            "case_id": "case_f246fc0ac744",
             "status": "OBSERVATION",
             "category": "visual",
             "severity": "low",
             "confidence": 0.4,
             "title": "Typography differs from other text on the page",
-            "doc_id": "doc_c02f3af40d55",
+            "doc_id": "doc_63a5b3081adc",
             "page": 0,
             "bbox": {
                 "x0": 948.0,
@@ -4835,17 +4835,17 @@
             },
             "related_doc_ids": [],
             "related_field_ids": [
-                "fld_4db024ba9a4e"
+                "fld_8f9c06105650"
             ],
             "related_finding_ids": [
-                "fnd_c4905f239fd0"
+                "fnd_4630200b475e"
             ],
             "evidence": [
                 {
                     "kind": "raw_value",
                     "label": "Fused region score",
-                    "uri": "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_b25a9a90b545_0.png",
-                    "doc_id": "doc_c02f3af40d55",
+                    "uri": "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_9c198b50a372_0.png",
+                    "doc_id": "doc_63a5b3081adc",
                     "page": 0,
                     "bbox": {
                         "x0": 948.0,
@@ -4868,8 +4868,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Word style against peers",
-                    "uri": "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_b25a9a90b545_1.png",
-                    "doc_id": "doc_c02f3af40d55",
+                    "uri": "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_9c198b50a372_1.png",
+                    "doc_id": "doc_63a5b3081adc",
                     "page": 0,
                     "bbox": {
                         "x0": 948.0,
@@ -4899,8 +4899,8 @@
                 {
                     "kind": "crop",
                     "label": "Word in context",
-                    "uri": "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/font_p0_948_666.png",
-                    "doc_id": "doc_c02f3af40d55",
+                    "uri": "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/font_p0_948_666.png",
+                    "doc_id": "doc_63a5b3081adc",
                     "page": 0,
                     "bbox": {
                         "x0": 948.0,
@@ -4942,17 +4942,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:28.066878Z"
+            "created_at": "2026-11-05T09:37:31.360364Z"
         },
         {
-            "id": "fnd_3eccfbce9e02",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_07b9c66eed9d",
+            "case_id": "case_f246fc0ac744",
             "status": "OBSERVATION",
             "category": "visual",
             "severity": "low",
             "confidence": 0.4,
             "title": "Typography differs from other text on the page",
-            "doc_id": "doc_c02f3af40d55",
+            "doc_id": "doc_63a5b3081adc",
             "page": 0,
             "bbox": {
                 "x0": 592.0,
@@ -4962,15 +4962,15 @@
             },
             "related_doc_ids": [],
             "related_field_ids": [
-                "fld_f0feca30dc50"
+                "fld_74858f3a05ef"
             ],
             "related_finding_ids": [],
             "evidence": [
                 {
                     "kind": "raw_value",
                     "label": "Fused region score",
-                    "uri": "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_3eccfbce9e02_0.png",
-                    "doc_id": "doc_c02f3af40d55",
+                    "uri": "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_07b9c66eed9d_0.png",
+                    "doc_id": "doc_63a5b3081adc",
                     "page": 0,
                     "bbox": {
                         "x0": 592.0,
@@ -4993,8 +4993,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Word style against peers",
-                    "uri": "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_3eccfbce9e02_1.png",
-                    "doc_id": "doc_c02f3af40d55",
+                    "uri": "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_07b9c66eed9d_1.png",
+                    "doc_id": "doc_63a5b3081adc",
                     "page": 0,
                     "bbox": {
                         "x0": 592.0,
@@ -5024,8 +5024,8 @@
                 {
                     "kind": "crop",
                     "label": "Word in context",
-                    "uri": "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/font_p0_592_1296.png",
-                    "doc_id": "doc_c02f3af40d55",
+                    "uri": "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/font_p0_592_1296.png",
+                    "doc_id": "doc_63a5b3081adc",
                     "page": 0,
                     "bbox": {
                         "x0": 592.0,
@@ -5067,17 +5067,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:28.067828Z"
+            "created_at": "2026-11-05T09:37:31.361392Z"
         },
         {
-            "id": "fnd_37e30749b1c2",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_892fd3dff411",
+            "case_id": "case_f246fc0ac744",
             "status": "OBSERVATION",
             "category": "visual",
             "severity": "low",
             "confidence": 0.4,
             "title": "Typography differs from other text on the page",
-            "doc_id": "doc_c02f3af40d55",
+            "doc_id": "doc_63a5b3081adc",
             "page": 0,
             "bbox": {
                 "x0": 705.0,
@@ -5087,15 +5087,15 @@
             },
             "related_doc_ids": [],
             "related_field_ids": [
-                "fld_8deeb5a70965"
+                "fld_0423660f76c9"
             ],
             "related_finding_ids": [],
             "evidence": [
                 {
                     "kind": "raw_value",
                     "label": "Fused region score",
-                    "uri": "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_37e30749b1c2_0.png",
-                    "doc_id": "doc_c02f3af40d55",
+                    "uri": "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_892fd3dff411_0.png",
+                    "doc_id": "doc_63a5b3081adc",
                     "page": 0,
                     "bbox": {
                         "x0": 705.0,
@@ -5118,8 +5118,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Word style against peers",
-                    "uri": "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_37e30749b1c2_1.png",
-                    "doc_id": "doc_c02f3af40d55",
+                    "uri": "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_892fd3dff411_1.png",
+                    "doc_id": "doc_63a5b3081adc",
                     "page": 0,
                     "bbox": {
                         "x0": 705.0,
@@ -5149,8 +5149,8 @@
                 {
                     "kind": "crop",
                     "label": "Word in context",
-                    "uri": "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/font_p0_705_456.png",
-                    "doc_id": "doc_c02f3af40d55",
+                    "uri": "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/font_p0_705_456.png",
+                    "doc_id": "doc_63a5b3081adc",
                     "page": 0,
                     "bbox": {
                         "x0": 705.0,
@@ -5192,17 +5192,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:28.067364Z"
+            "created_at": "2026-11-05T09:37:31.360914Z"
         },
         {
-            "id": "fnd_05817443d90e",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_f6fa2c5e72ae",
+            "case_id": "case_f246fc0ac744",
             "status": "OBSERVATION",
             "category": "visual",
             "severity": "low",
             "confidence": 0.4,
             "title": "Value is off its column edge",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "page": 0,
             "bbox": {
                 "x0": 862.0,
@@ -5217,8 +5217,8 @@
                 {
                     "kind": "crop",
                     "label": "Highlighted source region",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_05817443d90e.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_f6fa2c5e72ae.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 862.0,
@@ -5232,8 +5232,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Fused region score",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_05817443d90e_1.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_f6fa2c5e72ae_1.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 862.0,
@@ -5256,8 +5256,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Column alignment",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_05817443d90e_2.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_f6fa2c5e72ae_2.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 862.0,
@@ -5303,17 +5303,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:28.760584Z"
+            "created_at": "2026-11-05T09:37:32.049013Z"
         },
         {
-            "id": "fnd_cdea2b6aff33",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_e199dc1ab1bc",
+            "case_id": "case_f246fc0ac744",
             "status": "OBSERVATION",
             "category": "visual",
             "severity": "low",
             "confidence": 0.4,
             "title": "Value is off its column edge",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "page": 0,
             "bbox": {
                 "x0": 862.0,
@@ -5328,8 +5328,8 @@
                 {
                     "kind": "crop",
                     "label": "Highlighted source region",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_cdea2b6aff33.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_e199dc1ab1bc.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 862.0,
@@ -5343,8 +5343,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Fused region score",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_cdea2b6aff33_1.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_e199dc1ab1bc_1.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 862.0,
@@ -5367,8 +5367,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Column alignment",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_cdea2b6aff33_2.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_e199dc1ab1bc_2.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 862.0,
@@ -5414,17 +5414,17 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:28.760614Z"
+            "created_at": "2026-11-05T09:37:32.049039Z"
         },
         {
-            "id": "fnd_89c0d4e5db42",
-            "case_id": "case_523cb46052c3",
+            "id": "fnd_091573333584",
+            "case_id": "case_f246fc0ac744",
             "status": "OBSERVATION",
             "category": "visual",
             "severity": "low",
             "confidence": 0.4,
             "title": "Value is off its column edge",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "page": 0,
             "bbox": {
                 "x0": 862.0,
@@ -5439,8 +5439,8 @@
                 {
                     "kind": "crop",
                     "label": "Highlighted source region",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_89c0d4e5db42.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_091573333584.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 862.0,
@@ -5454,8 +5454,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Fused region score",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_89c0d4e5db42_1.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_091573333584_1.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 862.0,
@@ -5478,8 +5478,8 @@
                 {
                     "kind": "raw_value",
                     "label": "Column alignment",
-                    "uri": "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_89c0d4e5db42_2.png",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "uri": "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_091573333584_2.png",
+                    "doc_id": "doc_5781c4124cdd",
                     "page": 0,
                     "bbox": {
                         "x0": 862.0,
@@ -5525,18 +5525,18 @@
                 "note": null,
                 "at": null
             },
-            "created_at": "2026-11-05T09:01:28.760554Z"
+            "created_at": "2026-11-05T09:37:32.048985Z"
         }
     ],
     "traceability": [
         {
-            "finding_id": "fnd_95ef7d66a051",
+            "finding_id": "fnd_9149d31753fb",
             "title": "The same signature pixels appear on two documents",
             "status": "POTENTIAL_MANIPULATION",
             "category": "visual",
             "confidence": 0.96,
             "detector": "visual.signature_reuse",
-            "doc_id": "doc_2db598654766",
+            "doc_id": "doc_ab836ea47d30",
             "filename": "declaration.png",
             "page": 0,
             "bbox": {
@@ -5547,20 +5547,20 @@
             },
             "fields": [],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_2db598654766/evidence/fnd_95ef7d66a051_0.png",
-                "cases/case_523cb46052c3/doc_2db598654766/evidence/sig_p0_1041_1115.png",
-                "cases/case_523cb46052c3/doc_727ea0cb9259/evidence/sig_p0_1031_1675.png"
+                "cases/case_f246fc0ac744/doc_ab836ea47d30/evidence/fnd_9149d31753fb_0.png",
+                "cases/case_f246fc0ac744/doc_ab836ea47d30/evidence/sig_p0_1041_1115.png",
+                "cases/case_f246fc0ac744/doc_f4e44b267fb3/evidence/sig_p0_1031_1675.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_c27e7f8e51ea",
+            "finding_id": "fnd_e38c6ea579db",
             "title": "Typography differs from other text on the page (3 signals agree)",
             "status": "POTENTIAL_MANIPULATION",
             "category": "visual",
             "confidence": 0.84,
             "detector": "visual.font_consistency",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "filename": "salary_slip.png",
             "page": 0,
             "bbox": {
@@ -5571,10 +5571,10 @@
             },
             "fields": [
                 {
-                    "field_id": "fld_1368a8a2556a",
+                    "field_id": "fld_dabc5e63c2a3",
                     "name": "net_pay",
                     "value": "84,320.00",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "doc_id": "doc_5781c4124cdd",
                     "filename": "salary_slip.png",
                     "page": 0,
                     "bbox": {
@@ -5588,25 +5588,25 @@
                 }
             ],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c27e7f8e51ea_0.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c27e7f8e51ea_1.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/ela_w_p0_471_879.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/overlays/ela_p0.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c27e7f8e51ea_4.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/font_p0_471_879.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c27e7f8e51ea_6.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/grain_p0_463_871.png"
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_e38c6ea579db_0.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_e38c6ea579db_1.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/ela_w_p0_471_879.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/overlays/ela_p0.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_e38c6ea579db_4.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/font_p0_471_879.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_e38c6ea579db_6.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/grain_p0_463_871.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_bc41f6a65960",
+            "finding_id": "fnd_bde7de74240d",
             "title": "Two regions of this page look copied from one another",
             "status": "POTENTIAL_MANIPULATION",
             "category": "visual",
             "confidence": 0.838,
             "detector": "visual.copy_move",
-            "doc_id": "doc_b14e287330b4",
+            "doc_id": "doc_fac9f1be7fff",
             "filename": "bank_statement.pdf",
             "page": 0,
             "bbox": {
@@ -5617,22 +5617,22 @@
             },
             "fields": [],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_bc41f6a65960_0.png",
-                "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_bc41f6a65960_1.png",
-                "cases/case_523cb46052c3/doc_b14e287330b4/evidence/clone_a_p0_341_1035.png",
-                "cases/case_523cb46052c3/doc_b14e287330b4/evidence/clone_b_p0_341_1541.png",
-                "cases/case_523cb46052c3/doc_b14e287330b4/overlays/copy_move_p0.png"
+                "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_bde7de74240d_0.png",
+                "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_bde7de74240d_1.png",
+                "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/clone_a_p0_341_1035.png",
+                "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/clone_b_p0_341_1541.png",
+                "cases/case_f246fc0ac744/doc_fac9f1be7fff/overlays/copy_move_p0.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_9117d4e27721",
+            "finding_id": "fnd_f9d9b4e109ab",
             "title": "Photo differs from the surrounding page",
             "status": "POTENTIAL_MANIPULATION",
             "category": "visual",
             "confidence": 0.652,
             "detector": "visual.photo_insert",
-            "doc_id": "doc_c02f3af40d55",
+            "doc_id": "doc_63a5b3081adc",
             "filename": "id_proof.jpg",
             "page": 0,
             "bbox": {
@@ -5643,20 +5643,20 @@
             },
             "fields": [],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_9117d4e27721_0.png",
-                "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_9117d4e27721_1.png",
-                "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/photo_p0_212_368.png"
+                "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_f9d9b4e109ab_0.png",
+                "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_f9d9b4e109ab_1.png",
+                "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/photo_p0_212_368.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_c5e59e66169d",
+            "finding_id": "fnd_4e720f739130",
             "title": "Net pay in figures differs from net pay in words",
             "status": "INCONSISTENCY",
             "category": "contextual",
             "confidence": 0.949,
             "detector": "context.amount_in_words",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "filename": "salary_slip.png",
             "page": 0,
             "bbox": {
@@ -5667,10 +5667,10 @@
             },
             "fields": [
                 {
-                    "field_id": "fld_1368a8a2556a",
+                    "field_id": "fld_dabc5e63c2a3",
                     "name": "net_pay",
                     "value": "84,320.00",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "doc_id": "doc_5781c4124cdd",
                     "filename": "salary_slip.png",
                     "page": 0,
                     "bbox": {
@@ -5684,20 +5684,20 @@
                 }
             ],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c5e59e66169d.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c5e59e66169d_1.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c5e59e66169d_2.png"
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_4e720f739130.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_4e720f739130_1.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_4e720f739130_2.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_6f80dc45590e",
+            "finding_id": "fnd_641d96937a4b",
             "title": "Net pay does not equal gross pay minus deductions",
             "status": "INCONSISTENCY",
             "category": "contextual",
             "confidence": 0.948,
             "detector": "context.arithmetic_salary",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "filename": "salary_slip.png",
             "page": 0,
             "bbox": {
@@ -5708,10 +5708,10 @@
             },
             "fields": [
                 {
-                    "field_id": "fld_876438eaddfc",
+                    "field_id": "fld_83d5bd9760c1",
                     "name": "gross_pay",
                     "value": "54,000.00",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "doc_id": "doc_5781c4124cdd",
                     "filename": "salary_slip.png",
                     "page": 0,
                     "bbox": {
@@ -5724,10 +5724,10 @@
                     "source": "ocr_rapid"
                 },
                 {
-                    "field_id": "fld_54cdf886852a",
+                    "field_id": "fld_f88c3c50c255",
                     "name": "total_deductions",
                     "value": "5,680.00",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "doc_id": "doc_5781c4124cdd",
                     "filename": "salary_slip.png",
                     "page": 0,
                     "bbox": {
@@ -5740,10 +5740,10 @@
                     "source": "ocr_rapid"
                 },
                 {
-                    "field_id": "fld_1368a8a2556a",
+                    "field_id": "fld_dabc5e63c2a3",
                     "name": "net_pay",
                     "value": "84,320.00",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "doc_id": "doc_5781c4124cdd",
                     "filename": "salary_slip.png",
                     "page": 0,
                     "bbox": {
@@ -5757,21 +5757,21 @@
                 }
             ],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_6f80dc45590e.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_6f80dc45590e_1.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_6f80dc45590e_2.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_6f80dc45590e_3.png"
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_641d96937a4b.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_641d96937a4b_1.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_641d96937a4b_2.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_641d96937a4b_3.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_beec17974b0d",
+            "finding_id": "fnd_7a2dcf0c7048",
             "title": "Running balance breaks in the transaction table",
             "status": "INCONSISTENCY",
             "category": "contextual",
             "confidence": 0.92,
             "detector": "context.arithmetic_balance",
-            "doc_id": "doc_b14e287330b4",
+            "doc_id": "doc_fac9f1be7fff",
             "filename": "bank_statement.pdf",
             "page": 0,
             "bbox": {
@@ -5782,19 +5782,19 @@
             },
             "fields": [],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_beec17974b0d.png",
-                "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_beec17974b0d_1.png"
+                "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_7a2dcf0c7048.png",
+                "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_7a2dcf0c7048_1.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_7d6ff07e518b",
+            "finding_id": "fnd_c01fa37ecfe3",
             "title": "Net pay on the salary slip does not match the bank credit",
             "status": "INCONSISTENCY",
             "category": "cross_document",
             "confidence": 0.919,
             "detector": "cross.salary_vs_bank_credit",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "filename": "salary_slip.png",
             "page": 0,
             "bbox": {
@@ -5805,10 +5805,10 @@
             },
             "fields": [
                 {
-                    "field_id": "fld_1368a8a2556a",
+                    "field_id": "fld_dabc5e63c2a3",
                     "name": "net_pay",
                     "value": "84,320.00",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "doc_id": "doc_5781c4124cdd",
                     "filename": "salary_slip.png",
                     "page": 0,
                     "bbox": {
@@ -5822,20 +5822,20 @@
                 }
             ],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_7d6ff07e518b.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_7d6ff07e518b_1.png",
-                "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_7d6ff07e518b_2.png"
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_c01fa37ecfe3.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_c01fa37ecfe3_1.png",
+                "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_c01fa37ecfe3_2.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_6a0c6dfb883a",
+            "finding_id": "fnd_bc76a7c3ed9f",
             "title": "Declared income is above what the salary slip shows",
             "status": "INCONSISTENCY",
             "category": "cross_document",
             "confidence": 0.872,
             "detector": "cross.declared_vs_actual_income",
-            "doc_id": "doc_727ea0cb9259",
+            "doc_id": "doc_f4e44b267fb3",
             "filename": "application_form.png",
             "page": 0,
             "bbox": {
@@ -5846,10 +5846,10 @@
             },
             "fields": [
                 {
-                    "field_id": "fld_e3db3b8a0afb",
+                    "field_id": "fld_6ab3c8fdd254",
                     "name": "declared_monthly_income",
                     "value": "84,320.00",
-                    "doc_id": "doc_727ea0cb9259",
+                    "doc_id": "doc_f4e44b267fb3",
                     "filename": "application_form.png",
                     "page": 0,
                     "bbox": {
@@ -5862,10 +5862,10 @@
                     "source": "ocr_rapid"
                 },
                 {
-                    "field_id": "fld_876438eaddfc",
+                    "field_id": "fld_83d5bd9760c1",
                     "name": "gross_pay",
                     "value": "54,000.00",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "doc_id": "doc_5781c4124cdd",
                     "filename": "salary_slip.png",
                     "page": 0,
                     "bbox": {
@@ -5878,10 +5878,10 @@
                     "source": "ocr_rapid"
                 },
                 {
-                    "field_id": "fld_1368a8a2556a",
+                    "field_id": "fld_dabc5e63c2a3",
                     "name": "net_pay",
                     "value": "84,320.00",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "doc_id": "doc_5781c4124cdd",
                     "filename": "salary_slip.png",
                     "page": 0,
                     "bbox": {
@@ -5895,24 +5895,24 @@
                 }
             ],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_727ea0cb9259/evidence/fnd_6a0c6dfb883a.png",
-                "cases/case_523cb46052c3/doc_727ea0cb9259/evidence/fnd_6a0c6dfb883a_1.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_6a0c6dfb883a_2.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_6a0c6dfb883a_3.png",
-                "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_6a0c6dfb883a_4.png",
-                "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_6a0c6dfb883a_5.png",
-                "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_6a0c6dfb883a_6.png"
+                "cases/case_f246fc0ac744/doc_f4e44b267fb3/evidence/fnd_bc76a7c3ed9f.png",
+                "cases/case_f246fc0ac744/doc_f4e44b267fb3/evidence/fnd_bc76a7c3ed9f_1.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_bc76a7c3ed9f_2.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_bc76a7c3ed9f_3.png",
+                "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_bc76a7c3ed9f_4.png",
+                "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_bc76a7c3ed9f_5.png",
+                "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_bc76a7c3ed9f_6.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_c2a512d613e8",
+            "finding_id": "fnd_c824dc39538b",
             "title": "Background is noisier than the surrounding paper",
             "status": "OBSERVATION",
             "category": "visual",
             "confidence": 0.5,
             "detector": "visual.noise",
-            "doc_id": "doc_c96d00906936",
+            "doc_id": "doc_ae3cb1b136b1",
             "filename": "address_proof.pdf",
             "page": 0,
             "bbox": {
@@ -5923,21 +5923,21 @@
             },
             "fields": [],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_c96d00906936/evidence/fnd_c2a512d613e8.png",
-                "cases/case_523cb46052c3/doc_c96d00906936/evidence/fnd_c2a512d613e8_1.png",
-                "cases/case_523cb46052c3/doc_c96d00906936/evidence/fnd_c2a512d613e8_2.png",
-                "cases/case_523cb46052c3/doc_c96d00906936/overlays/noise_p0.png"
+                "cases/case_f246fc0ac744/doc_ae3cb1b136b1/evidence/fnd_c824dc39538b.png",
+                "cases/case_f246fc0ac744/doc_ae3cb1b136b1/evidence/fnd_c824dc39538b_1.png",
+                "cases/case_f246fc0ac744/doc_ae3cb1b136b1/evidence/fnd_c824dc39538b_2.png",
+                "cases/case_f246fc0ac744/doc_ae3cb1b136b1/overlays/noise_p0.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_38e24a89dd68",
+            "finding_id": "fnd_b664ac38d63c",
             "title": "Background is noisier than the surrounding paper",
             "status": "OBSERVATION",
             "category": "visual",
             "confidence": 0.5,
             "detector": "visual.noise",
-            "doc_id": "doc_c96d00906936",
+            "doc_id": "doc_ae3cb1b136b1",
             "filename": "address_proof.pdf",
             "page": 0,
             "bbox": {
@@ -5948,21 +5948,21 @@
             },
             "fields": [],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_c96d00906936/evidence/fnd_38e24a89dd68.png",
-                "cases/case_523cb46052c3/doc_c96d00906936/evidence/fnd_38e24a89dd68_1.png",
-                "cases/case_523cb46052c3/doc_c96d00906936/evidence/fnd_38e24a89dd68_2.png",
-                "cases/case_523cb46052c3/doc_c96d00906936/overlays/noise_p0.png"
+                "cases/case_f246fc0ac744/doc_ae3cb1b136b1/evidence/fnd_b664ac38d63c.png",
+                "cases/case_f246fc0ac744/doc_ae3cb1b136b1/evidence/fnd_b664ac38d63c_1.png",
+                "cases/case_f246fc0ac744/doc_ae3cb1b136b1/evidence/fnd_b664ac38d63c_2.png",
+                "cases/case_f246fc0ac744/doc_ae3cb1b136b1/overlays/noise_p0.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_c4905f239fd0",
+            "finding_id": "fnd_4630200b475e",
             "title": "Typography differs from other text on the page",
             "status": "OBSERVATION",
             "category": "visual",
             "confidence": 0.5,
             "detector": "visual.font_consistency",
-            "doc_id": "doc_c02f3af40d55",
+            "doc_id": "doc_63a5b3081adc",
             "filename": "id_proof.jpg",
             "page": 0,
             "bbox": {
@@ -5973,10 +5973,10 @@
             },
             "fields": [
                 {
-                    "field_id": "fld_4db024ba9a4e",
+                    "field_id": "fld_8f9c06105650",
                     "name": "address",
                     "value": "B-17, Shanti Nagar Society, Paud Road, Kothrud, Pune, Maharashtra 411038",
-                    "doc_id": "doc_c02f3af40d55",
+                    "doc_id": "doc_63a5b3081adc",
                     "filename": "id_proof.jpg",
                     "page": 0,
                     "bbox": {
@@ -5990,20 +5990,20 @@
                 }
             ],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_c4905f239fd0_0.png",
-                "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_c4905f239fd0_1.png",
-                "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/font_p0_950_589.png"
+                "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_4630200b475e_0.png",
+                "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_4630200b475e_1.png",
+                "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/font_p0_950_589.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_c965bb31fb73",
+            "finding_id": "fnd_5f4dbe46117f",
             "title": "Typography differs from other text on the page",
             "status": "OBSERVATION",
             "category": "visual",
             "confidence": 0.5,
             "detector": "visual.font_consistency",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "filename": "salary_slip.png",
             "page": 0,
             "bbox": {
@@ -6014,10 +6014,10 @@
             },
             "fields": [
                 {
-                    "field_id": "fld_7a6382d7daa7",
+                    "field_id": "fld_641726abdae9",
                     "name": "person_name",
                     "value": "Arjun Vikram Desai",
-                    "doc_id": "doc_2d1fa84f2195",
+                    "doc_id": "doc_5781c4124cdd",
                     "filename": "salary_slip.png",
                     "page": 0,
                     "bbox": {
@@ -6031,20 +6031,20 @@
                 }
             ],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c965bb31fb73_0.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_c965bb31fb73_1.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/font_p0_400_251.png"
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_5f4dbe46117f_0.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_5f4dbe46117f_1.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/font_p0_400_251.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_1d8266f11114",
+            "finding_id": "fnd_216e41d44ce2",
             "title": "Typography differs from other text on the page",
             "status": "OBSERVATION",
             "category": "visual",
             "confidence": 0.5,
             "detector": "visual.font_consistency",
-            "doc_id": "doc_b14e287330b4",
+            "doc_id": "doc_fac9f1be7fff",
             "filename": "bank_statement.pdf",
             "page": 0,
             "bbox": {
@@ -6055,10 +6055,10 @@
             },
             "fields": [
                 {
-                    "field_id": "fld_6865789a44bd",
+                    "field_id": "fld_83f65a4d805e",
                     "name": "statement_period",
                     "value": "01-May-2026 to 31-Oct-2026",
-                    "doc_id": "doc_b14e287330b4",
+                    "doc_id": "doc_fac9f1be7fff",
                     "filename": "bank_statement.pdf",
                     "page": 0,
                     "bbox": {
@@ -6072,20 +6072,20 @@
                 }
             ],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_1d8266f11114_0.png",
-                "cases/case_523cb46052c3/doc_b14e287330b4/evidence/fnd_1d8266f11114_1.png",
-                "cases/case_523cb46052c3/doc_b14e287330b4/evidence/font_p0_666_483.png"
+                "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_216e41d44ce2_0.png",
+                "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/fnd_216e41d44ce2_1.png",
+                "cases/case_f246fc0ac744/doc_fac9f1be7fff/evidence/font_p0_666_483.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_b25a9a90b545",
+            "finding_id": "fnd_9c198b50a372",
             "title": "Typography differs from other text on the page",
             "status": "OBSERVATION",
             "category": "visual",
             "confidence": 0.4,
             "detector": "visual.font_consistency",
-            "doc_id": "doc_c02f3af40d55",
+            "doc_id": "doc_63a5b3081adc",
             "filename": "id_proof.jpg",
             "page": 0,
             "bbox": {
@@ -6096,10 +6096,10 @@
             },
             "fields": [
                 {
-                    "field_id": "fld_4db024ba9a4e",
+                    "field_id": "fld_8f9c06105650",
                     "name": "address",
                     "value": "B-17, Shanti Nagar Society, Paud Road, Kothrud, Pune, Maharashtra 411038",
-                    "doc_id": "doc_c02f3af40d55",
+                    "doc_id": "doc_63a5b3081adc",
                     "filename": "id_proof.jpg",
                     "page": 0,
                     "bbox": {
@@ -6113,20 +6113,20 @@
                 }
             ],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_b25a9a90b545_0.png",
-                "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_b25a9a90b545_1.png",
-                "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/font_p0_948_666.png"
+                "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_9c198b50a372_0.png",
+                "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_9c198b50a372_1.png",
+                "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/font_p0_948_666.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_3eccfbce9e02",
+            "finding_id": "fnd_07b9c66eed9d",
             "title": "Typography differs from other text on the page",
             "status": "OBSERVATION",
             "category": "visual",
             "confidence": 0.4,
             "detector": "visual.font_consistency",
-            "doc_id": "doc_c02f3af40d55",
+            "doc_id": "doc_63a5b3081adc",
             "filename": "id_proof.jpg",
             "page": 0,
             "bbox": {
@@ -6137,10 +6137,10 @@
             },
             "fields": [
                 {
-                    "field_id": "fld_f0feca30dc50",
+                    "field_id": "fld_74858f3a05ef",
                     "name": "date_of_birth",
                     "value": "05/11/1989",
-                    "doc_id": "doc_c02f3af40d55",
+                    "doc_id": "doc_63a5b3081adc",
                     "filename": "id_proof.jpg",
                     "page": 0,
                     "bbox": {
@@ -6154,20 +6154,20 @@
                 }
             ],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_3eccfbce9e02_0.png",
-                "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_3eccfbce9e02_1.png",
-                "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/font_p0_592_1296.png"
+                "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_07b9c66eed9d_0.png",
+                "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_07b9c66eed9d_1.png",
+                "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/font_p0_592_1296.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_37e30749b1c2",
+            "finding_id": "fnd_892fd3dff411",
             "title": "Typography differs from other text on the page",
             "status": "OBSERVATION",
             "category": "visual",
             "confidence": 0.4,
             "detector": "visual.font_consistency",
-            "doc_id": "doc_c02f3af40d55",
+            "doc_id": "doc_63a5b3081adc",
             "filename": "id_proof.jpg",
             "page": 0,
             "bbox": {
@@ -6178,10 +6178,10 @@
             },
             "fields": [
                 {
-                    "field_id": "fld_8deeb5a70965",
+                    "field_id": "fld_0423660f76c9",
                     "name": "date_of_birth",
                     "value": "05/11/1989",
-                    "doc_id": "doc_c02f3af40d55",
+                    "doc_id": "doc_63a5b3081adc",
                     "filename": "id_proof.jpg",
                     "page": 0,
                     "bbox": {
@@ -6195,20 +6195,20 @@
                 }
             ],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_37e30749b1c2_0.png",
-                "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/fnd_37e30749b1c2_1.png",
-                "cases/case_523cb46052c3/doc_c02f3af40d55/evidence/font_p0_705_456.png"
+                "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_892fd3dff411_0.png",
+                "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/fnd_892fd3dff411_1.png",
+                "cases/case_f246fc0ac744/doc_63a5b3081adc/evidence/font_p0_705_456.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_05817443d90e",
+            "finding_id": "fnd_f6fa2c5e72ae",
             "title": "Value is off its column edge",
             "status": "OBSERVATION",
             "category": "visual",
             "confidence": 0.4,
             "detector": "visual.alignment",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "filename": "salary_slip.png",
             "page": 0,
             "bbox": {
@@ -6219,20 +6219,20 @@
             },
             "fields": [],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_05817443d90e.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_05817443d90e_1.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_05817443d90e_2.png"
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_f6fa2c5e72ae.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_f6fa2c5e72ae_1.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_f6fa2c5e72ae_2.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_cdea2b6aff33",
+            "finding_id": "fnd_e199dc1ab1bc",
             "title": "Value is off its column edge",
             "status": "OBSERVATION",
             "category": "visual",
             "confidence": 0.4,
             "detector": "visual.alignment",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "filename": "salary_slip.png",
             "page": 0,
             "bbox": {
@@ -6243,20 +6243,20 @@
             },
             "fields": [],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_cdea2b6aff33.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_cdea2b6aff33_1.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_cdea2b6aff33_2.png"
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_e199dc1ab1bc.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_e199dc1ab1bc_1.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_e199dc1ab1bc_2.png"
             ],
             "review": "pending"
         },
         {
-            "finding_id": "fnd_89c0d4e5db42",
+            "finding_id": "fnd_091573333584",
             "title": "Value is off its column edge",
             "status": "OBSERVATION",
             "category": "visual",
             "confidence": 0.4,
             "detector": "visual.alignment",
-            "doc_id": "doc_2d1fa84f2195",
+            "doc_id": "doc_5781c4124cdd",
             "filename": "salary_slip.png",
             "page": 0,
             "bbox": {
@@ -6267,9 +6267,9 @@
             },
             "fields": [],
             "evidence_uris": [
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_89c0d4e5db42.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_89c0d4e5db42_1.png",
-                "cases/case_523cb46052c3/doc_2d1fa84f2195/evidence/fnd_89c0d4e5db42_2.png"
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_091573333584.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_091573333584_1.png",
+                "cases/case_f246fc0ac744/doc_5781c4124cdd/evidence/fnd_091573333584_2.png"
             ],
             "review": "pending"
         }
@@ -6312,8 +6312,8 @@
         "The risk level orders review work. It is not a probability and not a finding about intent."
     ],
     "reasoning_modes": [
-        "demo_cache:ollama/qwen2.5:7b",
-        "deterministic"
+        "deterministic",
+        "live_llm:ollama/qwen2.5:7b"
     ],
-    "audit_head_hash": "cfc11c682c41fece4eec0ddce7988953f2a710e7711fc03ff61b4056af953e4b"
+    "audit_head_hash": "1d78a3a2bbb682b7a599185a90e2aca3ee5fadb26418181a54a8efa276927ffb"
 }

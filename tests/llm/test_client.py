@@ -1,4 +1,5 @@
 import json
+import shutil
 
 import httpx
 import pytest
@@ -211,6 +212,8 @@ def test_recorded_answers_are_replayed_when_every_provider_is_down(monkeypatch):
     client = make(lambda r: gemini_ok())
     client.record_demo = True
     client.complete_json("t", "p", Answer)
+    # A fresh clone has the recorded answers but no local cache of its own.
+    shutil.rmtree(client._runtime_cache_dir())
 
     monkeypatch.setattr(settings, "gemini_api_keys", "")
     replay = make(lambda r: down_ollama(r) or httpx.Response(500))
