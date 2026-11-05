@@ -147,10 +147,34 @@ def _phash(crop: np.ndarray) -> imagehash.ImageHash:
     return imagehash.phash(Image.fromarray(crop))
 
 
+def _native_corr(a: np.ndarray, b: np.ndarray) -> float:
+    """Best correlation at native scale. A copied signature keeps its pixels, but ink detection can
+    draw slightly different bounds around each copy, and resizing to a common size would blur that
+    into a poor match. The core of the smaller crop is searched for inside the larger."""
+    small, large = (a, b) if a.size <= b.size else (b, a)
+    h, w = small.shape[:2]
+    if min(h, w) < 16 or max(small.shape[0] / large.shape[0], large.shape[0] / small.shape[0]) > 1.3:
+        return 0.0
+    if max(small.shape[1] / large.shape[1], large.shape[1] / small.shape[1]) > 1.3:
+        return 0.0
+    mx, my = max(2, int(w * 0.08)), max(2, int(h * 0.08))
+    core = small[my : h - my, mx : w - mx]
+    if core.std() < 4:
+        return 0.0
+    pad = 12
+    field = cv2.copyMakeBorder(large, pad, pad, pad, pad, cv2.BORDER_REPLICATE)
+    if field.shape[0] < core.shape[0] or field.shape[1] < core.shape[1]:
+        return 0.0
+    return float(cv2.matchTemplate(field, core, cv2.TM_CCOEFF_NORMED).max())
+
+
 def _pixel_corr(a: np.ndarray, b: np.ndarray) -> float:
-    """Correlation of two signature crops after aligning size and best small translation."""
+    """Correlation of two signature crops: at native scale, or after aligning size and translation."""
     if a.size == 0 or b.size == 0:
         return 0.0
+    native = _native_corr(a, b)
+    if native >= IDENTICAL_CORR:
+        return native
     aspect_a, aspect_b = a.shape[1] / a.shape[0], b.shape[1] / b.shape[0]
     if max(aspect_a, aspect_b) / min(aspect_a, aspect_b) > 1.25:
         return 0.0
@@ -292,7 +316,8 @@ def analyze_signatures(docs: list[Document], workdir: Path, case_id: str) -> lis
             if a.doc.id == b.doc.id and a.page == b.page:
                 continue
             distance = hashes[i] - hashes[j]
-            if distance > PHASH_MAX_DISTANCE:
+            # The hash is only a shortcut. It can't rule out a copy whose crop bounds differ.
+            if distance > PHASH_MAX_DISTANCE and _native_corr(a.crop, b.crop) < IDENTICAL_CORR:
                 continue
             corr = _pixel_corr(a.crop, b.crop)
             if corr < IDENTICAL_CORR:

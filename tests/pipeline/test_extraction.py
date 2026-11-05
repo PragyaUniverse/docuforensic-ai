@@ -205,3 +205,12 @@ def test_amount_split_by_a_stray_space_is_rejoined():
     # Two separate amounts in neighbouring columns stay separate.
     apart = _join_split_amounts([word("1,310.21", 0, 80), word("5.00", 84, 120)], 20)
     assert [w.text for w in apart] == ["1,310.21", "5.00"]
+
+
+def test_amount_with_dropped_digit_is_not_well_formed():
+    from pipeline.extract import WELL_FORMED_MONEY
+
+    for good in ("3,58,260.32", "85,400.00", "1,23,45,678.00", "999.50", "Rs. 45,000.00", "1200"):
+        assert WELL_FORMED_MONEY.fullmatch(good), good
+    for bad in ("3,58,20.32", "12,", "1,23,4.00"):
+        assert not WELL_FORMED_MONEY.fullmatch(bad), bad

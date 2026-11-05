@@ -165,3 +165,22 @@ def test_no_verdict_language():
     findings = run(base_docs(idp__date_of_birth="19/07/1984", slip__net_pay="86,400.00", slip__person_name="Rohit Verma"))
     text = " ".join(f.title + " " + f.explanation for f in findings).lower()
     assert "fraud" not in text
+
+
+def _income_finding(findings):
+    return next(f for f in findings if f.discrepancy_type == "declared_vs_actual_income")
+
+
+def test_declared_income_above_bank_credits_cites_the_bank_too():
+    docs = base_docs(app__declared_monthly_income="1,20,000.00")
+    finding = _income_finding(run(docs))
+    bank = next(d for d in docs if d.doc_type == DocType.bank_statement)
+    assert bank.id in finding.related_doc_ids
+    assert "bank" in finding.explanation
+    assert any(e.doc_id == bank.id for e in finding.evidence)
+
+
+def test_declared_income_is_checked_against_the_bank_with_no_salary_slip():
+    docs = [d for d in base_docs(app__declared_monthly_income="1,20,000.00") if d.doc_type != DocType.salary_slip]
+    finding = _income_finding(run(docs))
+    assert "bank" in finding.title.lower()

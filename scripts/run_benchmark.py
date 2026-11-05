@@ -189,6 +189,19 @@ def score_detection(run: CaseRun, truth: dict) -> dict:
             "detectors": sorted(detectors),
         })
 
+    # Expected within-document conflicts, such as arithmetic an injected edit breaks.
+    within_rows = []
+    for gt in truth.get("within_document", []):
+        hits = [
+            f for f in run.findings
+            if f.detector == gt.get("detector")
+            and f.status == FindingStatus.INCONSISTENCY
+            and filename_of.get(f.doc_id) == gt.get("filename")
+        ]
+        for f in hits:
+            explained[f.id] = gt.get("id", "?")
+        within_rows.append({**gt, "found": bool(hits)})
+
     disc_rows = []
     disc_matched: set[str] = set()
     for gt in discs:
@@ -226,6 +239,7 @@ def score_detection(run: CaseRun, truth: dict) -> dict:
             and (f.id in disc_matched or f.id in explained)
         ),
         "unmatched_findings": unmatched,
+        "within_document": within_rows,
         "finding_counts_by_status": _count(f.status.value for f in run.findings),
         "pipeline_errors": run.errors,
         "seconds": round(run.seconds, 2),
@@ -257,7 +271,8 @@ _MONEY_RE = re.compile(r"^-?\d[\d,]*(\.\d+)?$")
 
 
 def normalize_value(value: Any) -> str:
-    """Forgiving only about formatting: case, whitespace, currency marks and thousands commas."""
+    """Forgiving only about formatting: case, spacing, currency marks, separators and thousands
+    commas. Every letter and digit still has to match."""
     text = re.sub(r"\s+", " ", str(value)).strip().casefold()
     text = re.sub(r"^(rs\.?|inr|₹)\s*", "", text).rstrip("/-").strip()
     if _MONEY_RE.match(text):
@@ -265,6 +280,9 @@ def normalize_value(value: Any) -> str:
             return f"{float(text.replace(',', '')):.2f}"
         except ValueError:
             pass
+    # Addresses and phone numbers: "Society,, Paud Rd - 411038", "+91 90000 01234".
+    if re.search(r"[,+]", text):
+        return re.sub(r"[\s,+\-]+", "", text)
     return text
 
 
@@ -305,6 +323,31 @@ def score_fields(run: CaseRun, truth: dict) -> list[dict]:
     return rows
 
 
+def score_tables(run: CaseRun, truth: dict) -> list[dict]:
+    """One row per ground-truth table row. Correct only if date and all amounts match."""
+    by_name = {doc.filename: doc for doc in run.documents}
+    by_name.update({k: v for k, v in ((run.filename_of.get(d.id), d) for d in run.documents) if k})
+    rows = []
+    for gt_doc in truth.get("documents", []):
+        doc = by_name.get(gt_doc["filename"])
+        for table_name, spec in (gt_doc.get("tables") or {}).items():
+            if table_name != "transactions":  # pay tables have no fixed columns to compare
+                continue
+            extracted = [t for t in doc.tables if t.name == table_name] if doc else []
+            found = [tuple(normalize_value(c.text) for c in r) for t in extracted for r in t.rows]
+            for gt_row in spec.get("rows", []):
+                cells = gt_row["cells"]
+                key = tuple(normalize_value(c) for c in cells)
+                # Every cell but free-text descriptions has to match.
+                numeric = [i for i in range(len(key)) if i != 1]
+                hit = any(len(f) == len(key) and all(f[i] == key[i] for i in numeric) for f in found)
+                rows.append({
+                    "case": run.key, "filename": gt_doc["filename"], "table": table_name,
+                    "format": gt_doc.get("format", "unknown"), "row": cells, "correct": hit,
+                })
+    return rows
+
+
 def _location_ok(pred: BBox, truth: BBox) -> bool:
     ix = max(0.0, min(pred.x1, truth.x1) - max(pred.x0, truth.x0))
     iy = max(0.0, min(pred.y1, truth.y1) - max(pred.y0, truth.y0))
@@ -334,13 +377,16 @@ def score_classification(run: CaseRun, truth: dict) -> list[dict]:
     return rows
 
 
-def aggregate(per_case: list[dict], field_rows: list[dict], class_rows: list[dict]) -> dict:
+def aggregate(per_case: list[dict], field_rows: list[dict], class_rows: list[dict],
+              table_rows: list[dict] | None = None) -> dict:
+    table_rows = table_rows or []
     manips = [m for c in per_case for m in c["manipulations"]]
     discs = [d for c in per_case for d in c["discrepancies"]]
     pm_total = sum(c["potential_manipulation_total"] for c in per_case)
     pm_matched = sum(c["potential_manipulation_matched"] for c in per_case)
     inc_total = sum(c["inconsistency_total"] for c in per_case)
     inc_matched = sum(c["inconsistency_matched"] for c in per_case)
+    within = [w for c in per_case for w in c.get("within_document", [])]
 
     localized = sum(m["localized_potential_manipulation"] for m in manips)
     with_doc = sum(
@@ -395,7 +441,18 @@ def aggregate(per_case: list[dict], field_rows: list[dict], class_rows: list[dic
             "matched": inc_matched,
             "precision": _ratio(inc_matched, inc_total),
         },
+        "within_document": {
+            "total": len(within),
+            "found": sum(w["found"] for w in within),
+            "recall": _ratio(sum(w["found"] for w in within), len(within)),
+        },
         "fields": _field_summary(field_rows),
+        "tables": {
+            "total": len(table_rows),
+            "correct": sum(r["correct"] for r in table_rows),
+            "accuracy": _ratio(sum(r["correct"] for r in table_rows), len(table_rows)),
+            "by_format": _group_accuracy(table_rows, "format", "correct"),
+        },
         "classification": {
             "total": len(class_rows),
             "correct": sum(r["correct"] for r in class_rows),
@@ -479,6 +536,7 @@ def run_pipeline(key: str, files: list[Path], workroot: Path) -> CaseRun:
 
     from backend.contextual import verify_within_document
     from backend.crossdoc import build_entities, correlate
+    from backend.orchestrator import apply_visible_readings
     from pipeline.classify import classify
     from pipeline.extract import extract_fields
     from pipeline.forensics_pdf import analyze_pdf
@@ -529,6 +587,9 @@ def run_pipeline(key: str, files: list[Path], workroot: Path) -> CaseRun:
     for doc in docs:
         own = [f for f in findings if f.doc_id == doc.id]
         fused += guarded(f"fusion[{filename_of[doc.id]}]", fuse_regions, own, doc, default=own)
+    # Same step, same place as backend/orchestrator.py, so this measures the system that actually runs.
+    guarded("visible_readings", apply_visible_readings, docs, fused)
+    for doc in docs:
         fused += guarded(
             f"contextual[{filename_of[doc.id]}]", verify_within_document, doc, default=[]
         )
@@ -582,8 +643,17 @@ def discover_cases(root: Path, include_noise: bool, only: list[str] | None) -> l
             match = NOISE_RE.search(p.name)
             if match and p.suffix.lower() in DOC_SUFFIXES:
                 groups[match.group(1)].append(p)
+        # Reuse can only be seen with the document it was reused from, so that original (not itself
+        # degraded) joins the group. Without it these would be scored as misses no system could avoid.
+        sources: list[Path] = []
+        parent_truth = root / folder.name / "ground_truth.json"
+        if parent_truth.exists():
+            for m in json.loads(parent_truth.read_text()).get("manipulations", []):
+                source = m.get("source_filename")
+                if source and (root / folder.name / source).exists():
+                    sources.append(root / folder.name / source)
         for kind, files in sorted(groups.items()):
-            cases.append(BenchCase(f"{folder.name}__{kind}", files, truth, kind))
+            cases.append(BenchCase(f"{folder.name}__{kind}", [*files, *sources], truth, kind))
     return cases
 
 
@@ -691,9 +761,13 @@ def _summary_table(s: dict) -> list[str]:
         ("Discrepancy recall", _pct(d["recall"]),
          (f"{d['found']}/{d['ground_truth_total']}; "
           f"{len(d['distinct_types_found'])}/{len(d['distinct_types_total'])} types")),
+        ("Within-document conflict recall", _pct(s["within_document"]["recall"]),
+         f"{s['within_document']['found']}/{s['within_document']['total']}"),
         ("Field value accuracy", _pct(f["value_accuracy"]), f"{f['value_correct']}/{f['total']}"),
         ("Field location accuracy", _pct(f["location_accuracy"]),
          f"{f['location_correct']}/{f['location_checked']}"),
+        ("Table row accuracy", _pct(s["tables"]["accuracy"]),
+         f"{s['tables']['correct']}/{s['tables']['total']} rows"),
         ("Classification accuracy", _pct(c["accuracy"]), f"{c['correct']}/{c['total']}"),
         ("Flags on clean cases", str(cl["potential_manipulation_findings"]
                                      + cl["inconsistency_findings"]),
@@ -714,6 +788,7 @@ def _summary_table(s: dict) -> list[str]:
 
 
 def benchmark(cases: list[BenchCase]) -> dict:
+    table_rows: dict[str, list[dict]] = {"orig": [], "noise": []}
     per_case, field_rows, class_rows = {"orig": [], "noise": []}, {"orig": [], "noise": []}, {
         "orig": [], "noise": []}
     with tempfile.TemporaryDirectory(prefix="docuforensic-bench-") as tmp:
@@ -724,6 +799,7 @@ def benchmark(cases: list[BenchCase]) -> dict:
             bucket = "noise" if case.noise else "orig"
             per_case[bucket].append(score_detection(run, truth))
             field_rows[bucket] += score_fields(run, truth)
+            table_rows[bucket] += score_tables(run, truth)
             class_rows[bucket] += score_classification(run, truth)
     result = {
         "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),
@@ -731,14 +807,14 @@ def benchmark(cases: list[BenchCase]) -> dict:
         "disclosure": DISCLOSURE,
         "matching": {"iou": IOU_THRESHOLD, "containment": CONTAINMENT_THRESHOLD,
                      "max_area_ratio": MAX_AREA_RATIO},
-        "summary_clean_scans": aggregate(per_case["orig"], field_rows["orig"], class_rows["orig"]),
+        "summary_clean_scans": aggregate(per_case["orig"], field_rows["orig"], class_rows["orig"], table_rows["orig"]),
         "cases": per_case["orig"] + per_case["noise"],
         "field_rows": field_rows["orig"] + field_rows["noise"],
         "classification_rows": class_rows["orig"] + class_rows["noise"],
     }
     if per_case["noise"]:
         result["summary_noise"] = aggregate(
-            per_case["noise"], field_rows["noise"], class_rows["noise"]
+            per_case["noise"], field_rows["noise"], class_rows["noise"], table_rows["noise"]
         )
     return result
 
@@ -769,7 +845,10 @@ def main(argv: list[str] | None = None) -> int:
         "precision": s["manipulation"]["precision"],
         "recall_localized": s["manipulation"]["recall_localized"],
         "discrepancy_recall": s["discrepancy"]["recall"],
+        "within_document_recall": s["within_document"]["recall"],
+        "inconsistency_precision": s["inconsistency"]["precision"],
         "field_accuracy": s["fields"]["value_accuracy"],
+        "table_row_accuracy": s["tables"]["accuracy"],
         "classification": s["classification"]["accuracy"],
         "clean_case_flags": s["clean_cases"]["potential_manipulation_findings"]
         + s["clean_cases"]["inconsistency_findings"],

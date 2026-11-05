@@ -382,6 +382,15 @@ def _salary_vs_bank(case_id, docs, by_id) -> list[Finding]:
     return out
 
 
+def _typical_salary_credits(docs: list[Document]) -> tuple[list[_Credit], Decimal | None]:
+    """Credits labelled as salary, and their median. The median ignores a single unusual month."""
+    credits = [c for d in docs if d.doc_type == DocType.bank_statement for c in _credits(d) if c.labelled_salary]
+    if not credits:
+        return [], None
+    amounts = sorted(c.amount for c in credits)
+    return credits, amounts[len(amounts) // 2]
+
+
 def _declared_vs_actual(case_id, docs, by_id) -> list[Finding]:
     declared = [f for d in docs for f in d.fields if f.name == "declared_monthly_income"]
     if not declared:
@@ -405,7 +414,23 @@ def _declared_vs_actual(case_id, docs, by_id) -> list[Finding]:
     net_f = next((f for d in slips for f in d.fields if f.name == "net_pay"), None)
     gross, net = money_of(gross_f), money_of(net_f)
     upper = gross if gross is not None else net
+    typical_credits, typical = _typical_salary_credits(docs)
     if upper is None:
+        # No slip to compare with: the bank's salary credits are the only other record of income.
+        if typical is None:
+            return out
+        for f, value in amounts:
+            if value <= typical * (1 + INCOME_TOLERANCE_PCT):
+                continue
+            factor, note = ocr_adjustment([f], str(value), str(typical))
+            out.append(_conflict(
+                case_id, "declared_vs_actual_income", "Declared income is above the salary credits at the bank",
+                f"Declared monthly income {fmt_money(value)} on {_doc_label(by_id.get(f.doc_id))} is above the typical "
+                f"salary credit of {fmt_money(typical)} on the bank statement." + (f" {note}" if note else ""),
+                [f], [], by_id, Severity.high if factor > 0.6 else Severity.medium, 0.85 * factor, primary=f,
+                extra=[_credit_evidence(c, f"Salary credit, row {c.row}") for c in typical_credits[:3]],
+            ))
+            out[-1].related_doc_ids = list(dict.fromkeys(out[-1].related_doc_ids + [typical_credits[0].doc.id]))
         return out
     lower = net if net is not None else gross
     slip_fields = [f for f in (gross_f, net_f) if f is not None]
@@ -426,6 +451,11 @@ def _declared_vs_actual(case_id, docs, by_id) -> list[Finding]:
             [f], slip_fields, by_id, Severity.high if factor > 0.6 and value > limit_hi else Severity.medium,
             0.88 * factor, primary=f,
         ))
+        if typical is not None and value > limit_hi and value > typical * (1 + INCOME_TOLERANCE_PCT):
+            finding = out[-1]
+            finding.explanation += f" The typical salary credit at the bank, {fmt_money(typical)}, is also below it."
+            finding.evidence += [_credit_evidence(c, f"Salary credit, row {c.row}") for c in typical_credits[:3]]
+            finding.related_doc_ids = list(dict.fromkeys(finding.related_doc_ids + [typical_credits[0].doc.id]))
     return out
 
 

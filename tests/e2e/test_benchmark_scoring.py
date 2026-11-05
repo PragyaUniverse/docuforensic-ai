@@ -279,3 +279,10 @@ def test_main_writes_nothing_without_a_dataset(tmp_path):
     out = tmp_path / "out"
     assert rb.main(["--dataset", str(tmp_path), "--out", str(out)]) == 2
     assert not out.exists()
+
+
+def test_separators_are_forgiven_but_characters_are_not():
+    same = "Flat 304, Lakeview Residency, 12th Main Road, Bengaluru 560038"
+    assert rb.normalize_value("Flat 304, Lakeview Residency,, 12th Main Road,, Bengaluru - 560038") == rb.normalize_value(same)
+    assert rb.normalize_value("+91 90000 01234") == rb.normalize_value("+919000001234")
+    assert rb.normalize_value("Flat 305, Lakeview Residency, 12th Main Road, Bengaluru 560038") != rb.normalize_value(same)

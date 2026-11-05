@@ -813,7 +813,7 @@ def _pay_row(table: Table | None, words: list) -> None:
     )
 
 
-WELL_FORMED_MONEY = re.compile(r"(?:(?:rs\.?|inr|₹)\s*)?(?:\d{1,3}(?:,\d{2,3})*|\d+)(?:\.\d{2})?(?:/-)?", re.I)
+WELL_FORMED_MONEY = re.compile(r"(?:(?:rs\.?|inr|₹)\s*)?(?:\d{1,3}(?:,\d{2,3})*,\d{3}|\d+)(?:\.\d{2})?(?:/-)?", re.I)
 LOW_CONFIDENCE_CAP = 0.3
 
 

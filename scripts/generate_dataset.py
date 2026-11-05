@@ -1698,7 +1698,14 @@ def main() -> int:
     ap.add_argument("--no-generate", action="store_true")
     ap.add_argument("--verify", action="store_true")
     ap.add_argument("--overlays", type=Path)
+    ap.add_argument("--seed", type=int, help="Other randomness, for held-out evaluation sets")
+    ap.add_argument("--out", type=Path, help="Write here instead of data/synthetic_cases")
     args = ap.parse_args()
+    global SEED, OUT
+    if args.seed is not None:
+        SEED = args.seed
+    if args.out is not None:
+        OUT = args.out.resolve()
     if not args.no_generate:
         generate()
         total = sum(f.stat().st_size for f in OUT.rglob("*") if f.is_file())

@@ -307,3 +307,13 @@ def test_injected_manipulations_are_localized(case, dataset, workdir):
 def test_images_stay_available_on_disk(prepare):
     doc = prepare(salary_slip()[0])
     assert from_rel(doc.pages[0].image_path).exists()
+
+
+def test_signature_copy_is_found_when_crop_bounds_differ():
+    from pipeline.signatures import IDENTICAL_CORR, _native_corr, _pixel_corr
+
+    sig = np.asarray(draw_signature(seed=3, size=(400, 90)))
+    trimmed = sig[3:-2, 6:-9]  # same pixels, slightly different bounds
+    assert _native_corr(sig, trimmed) >= IDENTICAL_CORR
+    other = np.asarray(draw_signature(seed=8, size=(400, 90)))
+    assert _pixel_corr(sig, other) < IDENTICAL_CORR
