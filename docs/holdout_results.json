@@ -1,0 +1,51 @@
+{
+  "seeds": [
+    8001,
+    8002,
+    8003,
+    8004,
+    8005
+  ],
+  "commit": "9433b6f",
+  "original": {
+    "manipulations_injected": 30,
+    "manipulations_localized": 30,
+    "potential_manipulation_predictions": 30,
+    "potential_manipulation_matched": 30,
+    "discrepancies": 65,
+    "discrepancies_found": 65,
+    "within_document": 20,
+    "within_document_found": 20,
+    "inconsistencies": 85,
+    "inconsistencies_matched": 85,
+    "fields": 1160,
+    "fields_correct": 1159,
+    "table_rows": 540,
+    "table_rows_correct": 540,
+    "documents": 120,
+    "documents_classified": 120,
+    "clean_case_flags": 0,
+    "pipeline_errors": 0
+  },
+  "degraded": {
+    "manipulations_injected": 45,
+    "manipulations_localized": 10,
+    "potential_manipulation_predictions": 11,
+    "potential_manipulation_matched": 10,
+    "discrepancies": 0,
+    "discrepancies_found": 0,
+    "within_document": 0,
+    "within_document_found": 0,
+    "inconsistencies": 35,
+    "inconsistencies_matched": 32,
+    "fields": 1185,
+    "fields_correct": 1175,
+    "table_rows": 0,
+    "table_rows_correct": 0,
+    "documents": 105,
+    "documents_classified": 105,
+    "clean_case_flags": 1,
+    "pipeline_errors": 0
+  },
+  "misses": []
+}

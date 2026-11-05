@@ -154,7 +154,11 @@ export function FindingCard({
   const [reviewer, setName] = useState(getReviewer);
 
   useEffect(() => {
-    if (selected) ref.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    if (!selected) return;
+    // Wait for the previously open card to collapse, or this position would be out of date and the
+    // list could end up scrolled past its content.
+    const timer = window.setTimeout(() => ref.current?.scrollIntoView({ block: "start", behavior: "smooth" }), 240);
+    return () => window.clearTimeout(timer);
   }, [selected]);
 
   const review = useMutation({

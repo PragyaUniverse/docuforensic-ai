@@ -26,7 +26,7 @@ dataset:
 	$(PY) -m scripts.generate_dataset
 
 api:
-	$(PY) -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
+	$(PY) -m uvicorn backend.app:app --host 127.0.0.1 --port 8000
 
 ui:
 	cd frontend && npm run dev

@@ -135,12 +135,14 @@ export function ComparisonPanel({
   }, [groups]);
 
   const delta = useMemo(() => {
-    if (groups.length !== 2) return null;
+    // Only amounts have a meaningful difference. Subtracting account or ID numbers doesn't.
+    const isAmount = /salary|income|bank_credit/.test(finding.discrepancy_type ?? "");
+    if (groups.length !== 2 || !isAmount) return null;
     const a = num(groups[0].value);
     const b = num(groups[1].value);
     if (a === null || b === null) return null;
     return Math.abs(a - b);
-  }, [groups]);
+  }, [groups, finding.discrepancy_type]);
 
   return (
     <div className="flex flex-col gap-3">

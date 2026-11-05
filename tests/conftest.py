@@ -39,7 +39,7 @@ os.environ.update(
 )
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-APP_MODULES = ("backend.main", "backend.app", "backend.api")
+APP_MODULES = ("backend.app",)
 
 
 @pytest.fixture(scope="session")
