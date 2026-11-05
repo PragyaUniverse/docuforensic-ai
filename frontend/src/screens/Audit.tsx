@@ -62,7 +62,7 @@ function Verdict({ v }: { v: AuditVerification }) {
       role="status"
       className={cn("flex items-start gap-3 rounded-md border p-4", ok ? "border-ok bg-ok-dim" : "border-man bg-man-dim")}
     >
-      <Icon className={cn("size-6 shrink-0", ok ? "text-ok" : "text-man")} aria-hidden />
+      <Icon className={cn("pop size-6 shrink-0", ok ? "text-ok" : "text-man")} aria-hidden />
       <div className="min-w-0">
         <div className={cn("text-[18px] font-semibold leading-tight", ok ? "text-ok" : "text-man")}>
           {ok ? "Nothing has been changed" : `Entry #${v.first_bad_seq} was changed after it was written`}

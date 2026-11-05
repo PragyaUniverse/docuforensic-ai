@@ -54,8 +54,8 @@ export function ConflictsScreen() {
         </Empty>
       ) : (
         <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-4 p-6">
-          {crossList.map((x) => (
-            <section key={x.id} className="rounded-md border border-line bg-panel p-4">
+          {crossList.map((x, i) => (
+            <section key={x.id} className="rise rounded-md border border-line bg-panel p-4" style={{ "--i": i } as React.CSSProperties}>
               <ComparisonPanel caseId={caseId} finding={x} docs={byId} fieldsById={fieldsById} label={labels.get(x.id)} />
             </section>
           ))}

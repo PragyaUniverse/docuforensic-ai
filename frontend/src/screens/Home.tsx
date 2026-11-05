@@ -20,7 +20,7 @@ const EXAMPLES: Record<string, { title: string; text: string }> = {
 function CaseRow({ c }: { c: Case }) {
   return (
     <li>
-      <Link to={`/cases/${c.id}`} className="flex items-center gap-3 border-b border-line px-4 py-3 last:border-b-0 hover:bg-hover">
+      <Link to={`/cases/${c.id}`} className="flex items-center gap-3 border-b border-line px-4 py-3 transition-colors duration-150 last:border-b-0 hover:bg-hover">
         <div className="min-w-0 flex-1">
           <div className="truncate font-medium">{c.name}</div>
           <div className="truncate text-[13px] text-ink-3">{fmtTime(c.created_at)}</div>
@@ -92,7 +92,7 @@ export function HomeScreen() {
                   type="button"
                   disabled={load.isPending}
                   onClick={() => load.mutate(d.key)}
-                  className="flex w-full cursor-pointer items-center justify-between gap-4 px-4 py-3 text-left hover:bg-hover disabled:cursor-default"
+                  className="flex w-full cursor-pointer items-center justify-between gap-4 group px-4 py-3 text-left transition-colors duration-150 hover:bg-hover disabled:cursor-default"
                 >
                   <span className="min-w-0">
                     <span className="block font-medium">{copy.title}</span>
@@ -101,7 +101,7 @@ export function HomeScreen() {
                   {busy ? (
                     <Loader2 className="size-4 shrink-0 animate-spin text-ink-3" aria-hidden />
                   ) : (
-                    <span className="link shrink-0 text-[14px]">Open</span>
+                    <span className="link shrink-0 text-[14px] transition-transform duration-150 group-hover:translate-x-0.5">Open</span>
                   )}
                 </button>
               </li>

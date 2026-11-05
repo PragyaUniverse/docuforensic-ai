@@ -151,7 +151,61 @@ details > summary:hover {
   }
 }
 .region-selected {
-  animation: region-pulse 1.3s ease-in-out infinite;
+  /* Draws the eye a few times, then settles rather than blinking forever. */
+  animation: region-pulse 1.1s ease-in-out 3;
+}
+
+/* A new page settles into place. */
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+}
+.page-in {
+  animation: page-in 200ms ease-out backwards;
+}
+
+/* Lists arrive one after another, quickly. Set --i to the item's position. */
+.rise {
+  animation: page-in 220ms ease-out backwards;
+  animation-delay: calc(min(var(--i, 0), 8) * 30ms);
+}
+
+/* A checkmark landing. */
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  70% {
+    transform: scale(1.12);
+  }
+}
+.pop {
+  animation: pop 240ms ease-out backwards;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+.fade-in {
+  animation: fade-in 200ms ease-out backwards;
+}
+/* A quick load shouldn't flash a spinner. */
+.fade-late {
+  animation: fade-in 200ms ease-out 180ms backwards;
+}
+
+/* Light and dark cross-fade instead of snapping. */
+.theme-changing,
+.theme-changing * {
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease,
+    color 220ms ease !important;
 }
 
 /* Graph chrome */

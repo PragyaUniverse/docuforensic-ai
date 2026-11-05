@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Check } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api";
 import type { Document, EvidenceItem, Finding, ReasoningProvenance, ReviewDecision } from "@/api/types";
@@ -159,6 +160,13 @@ export function FindingCard({
   const qc = useQueryClient();
   const [note, setNote] = useState("");
   const [reviewer, setName] = useState(getReviewer);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    if (!saved) return;
+    const timer = window.setTimeout(() => setSaved(false), 2200);
+    return () => window.clearTimeout(timer);
+  }, [saved]);
 
   useEffect(() => {
     if (!selected) return;
@@ -173,6 +181,7 @@ export function FindingCard({
     onSuccess: () => {
       setReviewer(reviewer.trim() || "examiner");
       setNote("");
+      setSaved(true);
       qc.invalidateQueries({ queryKey: ["findings", caseId] });
       qc.invalidateQueries({ queryKey: ["audit", caseId] });
       qc.invalidateQueries({ queryKey: ["dossier", caseId] });
@@ -184,12 +193,12 @@ export function FindingCard({
 
   const dismissedCls = dismissed && "opacity-60";
   return (
-    <article ref={ref} className={cn("border-b border-line", selected ? "bg-raised" : "bg-panel")}>
+    <article ref={ref} className={cn("border-b border-line transition-colors duration-150", selected ? "bg-raised" : "bg-panel")}>
       <button
         type="button"
         aria-expanded={selected}
         onClick={onSelect}
-        className={cn("flex w-full cursor-pointer flex-col gap-0.5 px-4 py-3 text-left hover:bg-hover", dismissedCls)}
+        className={cn("flex w-full cursor-pointer flex-col gap-0.5 px-4 py-3 text-left transition-colors duration-150 hover:bg-hover", dismissedCls)}
       >
         <span className="flex flex-wrap items-center gap-x-2">
           <StatusBadge status={finding.status} />
@@ -213,7 +222,7 @@ export function FindingCard({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
             className="overflow-hidden"
           >
             <div className="flex flex-col gap-3.5 px-4 pb-4">
@@ -227,7 +236,14 @@ export function FindingCard({
               )}
 
               <section className="rounded-md border border-line bg-panel p-3" aria-label="Your decision">
-                <h4 className="eyebrow mb-2">Your decision</h4>
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <h4 className="eyebrow">Your decision</h4>
+                  {saved && (
+                    <span role="status" className="fade-in flex items-center gap-1 text-[13px] font-medium text-ok">
+                      <Check className="pop size-3.5" aria-hidden /> Saved
+                    </span>
+                  )}
+                </div>
                 <div className="flex flex-wrap gap-1.5">
                   {ACTIONS.map(({ d, label: l }) => (
                     <Button

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, FileX } from "lucide-react";
 import { api } from "@/api";
 import { useCase, useCaseDocuments, useFindings } from "@/api/hooks";
@@ -193,12 +194,13 @@ export function ViewerScreen() {
                 title={s.filename}
                 onClick={() => update({ doc: s.id, page: "0", field: null })}
                 className={cn(
-                  "shrink-0 cursor-pointer border-b-2 px-2.5 py-2 text-[14px]",
-                  active ? "border-accent font-medium text-ink" : "border-transparent text-ink-2 hover:text-ink",
+                  "relative shrink-0 cursor-pointer px-2.5 py-2 text-[14px] transition-colors duration-150",
+                  active ? "font-medium text-ink" : "text-ink-2 hover:text-ink",
                 )}
               >
                 {s.doc_type === "unknown" ? s.filename : humanize(s.doc_type)}
                 {n > 0 && <span className="ml-1.5 text-[13px] font-normal text-ink-3">{n}</span>}
+                {active && <motion.span layoutId="doc-tab" transition={{ duration: 0.2, ease: "easeOut" }} className="absolute inset-x-0 bottom-0 h-0.5 bg-accent" />}
               </button>
             );
           })}
@@ -311,7 +313,11 @@ export function ViewerScreen() {
           {findingsQ.data && important.length === 0 && minor.length > 0 && (
             <p className="border-b border-line px-4 py-3 text-[14px] text-ink-2">Nothing here needs attention. A clean result doesn't prove the documents are genuine.</p>
           )}
-          {important.map(renderCard)}
+          {important.map((f, i) => (
+            <div key={f.id} className="rise" style={{ "--i": i } as React.CSSProperties}>
+              {renderCard(f)}
+            </div>
+          ))}
           {minor.length > 0 && (
             <>
               <button
@@ -320,11 +326,16 @@ export function ViewerScreen() {
                 onClick={() => setShowMinor((v) => !v)}
                 className="flex w-full cursor-pointer items-center gap-1.5 border-b border-line bg-raised px-4 py-2.5 text-left text-[14px] text-ink-2 hover:bg-hover"
               >
-                <ChevronRight className={cn("size-4 shrink-0 text-ink-3", minorOpen && "rotate-90")} aria-hidden />
+                <ChevronRight className={cn("size-4 shrink-0 text-ink-3 transition-transform duration-150", minorOpen && "rotate-90")} aria-hidden />
                 {minor.length} minor observation{minor.length === 1 ? "" : "s"}
                 <span className="text-ink-3">, usually nothing to worry about</span>
               </button>
-              {minorOpen && minor.map(renderCard)}
+              {minorOpen &&
+                minor.map((f, i) => (
+                  <div key={f.id} className="rise" style={{ "--i": i } as React.CSSProperties}>
+                    {renderCard(f)}
+                  </div>
+                ))}
             </>
           )}
         </div>

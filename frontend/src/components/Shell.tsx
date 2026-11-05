@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { NavLink, Outlet, useLocation, useMatch } from "react-router-dom";
 import { Moon, Sun } from "lucide-react";
+import { motion } from "framer-motion";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { MOCK_MODE } from "@/api";
 import { accountApi } from "@/api/account";
@@ -88,7 +89,9 @@ function ThemeToggle() {
       title={`Switch to ${next} mode`}
       className="flex size-8 cursor-pointer items-center justify-center rounded-md text-ink-2 hover:bg-hover hover:text-ink"
     >
-      <Icon className="size-4" aria-hidden />
+      <motion.span key={theme} initial={{ rotate: -45, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} transition={{ duration: 0.22 }}>
+        <Icon className="size-4" aria-hidden />
+      </motion.span>
     </button>
   );
 }
@@ -169,11 +172,12 @@ export function Shell() {
                   to={`/cases/${routeCase}${t.to ? `/${t.to}` : ""}`}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "shrink-0 border-b-2 px-3 pb-2 pt-1 text-[14px]",
-                    active ? "border-accent font-medium text-ink" : "border-transparent text-ink-2 hover:text-ink",
+                    "relative shrink-0 px-3 pb-2.5 pt-1 text-[14px] transition-colors duration-150",
+                    active ? "font-medium text-ink" : "text-ink-2 hover:text-ink",
                   )}
                 >
                   {t.label}
+                  {active && <motion.span layoutId="case-tab" transition={{ duration: 0.2, ease: "easeOut" }} className="absolute inset-x-0 bottom-0 h-0.5 bg-accent" />}
                 </NavLink>
               );
             })}
@@ -181,7 +185,9 @@ export function Shell() {
         )}
       </header>
       <main className="relative min-h-0 min-w-0 flex-1 overflow-auto">
-        <Outlet />
+        <div key={location.pathname} className="page-in h-full">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

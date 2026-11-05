@@ -63,7 +63,7 @@ function Upload({ caseId, large }: { caseId: string; large: boolean }) {
           onFiles(e.dataTransfer.files);
         }}
         className={cn(
-          "flex flex-col items-center justify-center gap-2 rounded-md border border-dashed px-6 text-center",
+          "flex flex-col items-center justify-center gap-2 rounded-md border border-dashed px-6 text-center transition-colors duration-150",
           large ? "py-12" : "py-5",
           over ? "border-accent bg-obs-dim" : "border-line-strong bg-panel",
         )}
@@ -134,7 +134,7 @@ export function CaseScreen() {
 
       <div className="flex flex-col gap-6 px-6">
         {done && (
-          <section className="rounded-md border border-line bg-panel p-5">
+          <section className="rise rounded-md border border-line bg-panel p-5">
             <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
               <RiskPlate risk={cs.risk_level} large />
               <HumanReviewPlate />

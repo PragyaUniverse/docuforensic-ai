@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 export function Loading({ label = "Loading", className }: { label?: string; className?: string }) {
   return (
-    <div role="status" className={cn("flex items-center justify-center gap-2 p-8 text-ink-3", className)}>
+    <div role="status" className={cn("fade-late flex items-center justify-center gap-2 p-8 text-ink-3", className)}>
       <Loader2 className="size-4 animate-spin" aria-hidden />
       <span>{label}</span>
     </div>
@@ -52,7 +52,7 @@ export function Empty({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col items-center justify-center gap-2 p-10 text-center", className)}>
+    <div className={cn("fade-in flex flex-col items-center justify-center gap-2 p-10 text-center", className)}>
       <p className="font-medium text-ink">{title}</p>
       {children && <p className="max-w-md text-ink-3">{children}</p>}
       {action && <div className="mt-2">{action}</div>}

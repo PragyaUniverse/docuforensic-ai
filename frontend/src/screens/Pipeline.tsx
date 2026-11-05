@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { motion } from "framer-motion";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, Check, Circle, Loader2, WifiOff, X } from "lucide-react";
 import { api } from "@/api";
@@ -27,8 +28,8 @@ const STAGES: { id: PipelineStage; label: string }[] = [
 function StageIcon({ state }: { state: string }) {
   const cls = "size-[18px]";
   if (state === "running") return <Loader2 className={cn(cls, "animate-spin text-accent")} aria-hidden />;
-  if (state === "done") return <Check className={cn(cls, "text-ok")} aria-hidden />;
-  if (state === "degraded") return <AlertTriangle className={cn(cls, "text-inc")} aria-hidden />;
+  if (state === "done") return <Check className={cn(cls, "pop text-ok")} aria-hidden />;
+  if (state === "degraded") return <AlertTriangle className={cn(cls, "pop text-inc")} aria-hidden />;
   if (state === "failed") return <X className={cn(cls, "text-man")} aria-hidden />;
   return <Circle className={cn(cls, "text-line-strong")} aria-hidden />;
 }
@@ -95,6 +96,7 @@ export function PipelineScreen() {
   if (c.isError) return <ErrorState title="Progress could not load" error={c.error} onRetry={() => c.refetch()} />;
   const { documents } = c.data!;
   const finished = status === "complete" || status === "failed";
+  const stepsDone = stages.filter((s) => s.p?.state === "done" || s.p?.state === "degraded").length;
   const problems = documents.filter((d) => d.status === "unsupported" || d.status === "failed" || d.status === "degraded");
 
   return (
@@ -124,20 +126,36 @@ export function PipelineScreen() {
         )}
         {status === "failed" && <p className="text-ink-2">The messages below say why. Nothing was made up for the steps that didn't run.</p>}
 
+        {running && (
+          <div>
+            <div className="mb-1 text-[14px] text-ink-2">
+              {stepsDone} of {stages.length} steps done
+            </div>
+            <div className="h-1.5 overflow-hidden rounded-full bg-line" aria-hidden>
+              <motion.div
+                className="h-full rounded-full bg-accent"
+                initial={false}
+                animate={{ width: `${(stepsDone / stages.length) * 100}%` }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              />
+            </div>
+          </div>
+        )}
+
         <ol aria-label="Steps" className="rounded-md border border-line bg-panel">
           {stages.map((s) => {
             const state = s.p?.state ?? "pending";
             const warn = state === "degraded" || state === "failed";
             return (
-              <li key={s.id} className="flex items-start gap-3 border-b border-line px-4 py-2.5 last:border-b-0">
+              <li key={s.id} className={cn("flex items-start gap-3 border-b border-line px-4 py-2.5 transition-colors duration-200 last:border-b-0", state === "running" && "bg-obs-dim")}>
                 <span className="pt-0.5">
                   <StageIcon state={state} />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <div className={state === "pending" ? "text-ink-3" : "text-ink"}>{s.label}</div>
-                  {s.p?.message && <div className={cn("mt-0.5 text-[14px]", warn ? "text-inc" : "text-ink-3")}>{s.p.message}</div>}
+                  <div className={cn("transition-colors duration-200", state === "pending" ? "text-ink-3" : "text-ink")}>{s.label}</div>
+                  {s.p?.message && <div className={cn("fade-in mt-0.5 text-[14px]", warn ? "text-inc" : "text-ink-3")}>{s.p.message}</div>}
                 </div>
-                {!!s.p?.duration_ms && <span className="shrink-0 text-[13px] text-ink-3">{fmtMs(s.p.duration_ms)}</span>}
+                {!!s.p?.duration_ms && <span className="fade-in shrink-0 text-[13px] text-ink-3">{fmtMs(s.p.duration_ms)}</span>}
               </li>
             );
           })}
