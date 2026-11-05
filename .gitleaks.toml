@@ -1,0 +1,7 @@
+# Tests use obviously fake keys to exercise rotation and masking. Real keys only ever live in .env.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fake keys in unit tests"
+paths = ['''tests/llm/test_client\.py''']

@@ -1,0 +1,9 @@
+{
+ "task": "summarize_case",
+ "provider": "ollama",
+ "model": "qwen2.5:7b",
+ "recorded_at": "2026-11-05T09:00:58Z",
+ "answer": {
+  "summary": "The document analysis indicates high risk with multiple inconsistencies and potential manipulations. Notable issues include discrepancies between visible text and PDF text layers, net pay mismatches, and running balance breaks. These findings warrant immediate human review."
+ }
+}

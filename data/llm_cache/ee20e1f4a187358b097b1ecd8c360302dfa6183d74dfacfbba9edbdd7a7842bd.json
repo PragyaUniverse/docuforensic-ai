@@ -1,0 +1,22 @@
+{
+ "task": "investigate_finding",
+ "provider": "ollama",
+ "model": "qwen2.5:7b",
+ "recorded_at": "2026-11-05T08:59:59Z",
+ "answer": {
+  "reasoning": "The address on the application form, id proof, bank statement, and declaration all match 'Flat 12B', while the address proof shows 'Flat 21B'. The pin codes differ (560003 vs 560055), which is significant after normalization.",
+  "benign_alternatives": [
+   "Typographical error in the address proof",
+   "Different residence used for different documents",
+   "Normalization process might have introduced a mistake"
+  ],
+  "what_would_confirm": [
+   "Further evidence of a different address",
+   "Confirmation of the address proof being the most recent or primary address"
+  ],
+  "what_would_refute": [
+   "Consistent address across all documents",
+   "Corroboration from additional documents or sources"
+  ]
+ }
+}

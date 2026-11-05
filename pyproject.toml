@@ -18,3 +18,9 @@ extend-exclude = ["frontend", "data"]
 # Real errors, import order and modern syntax. Broad `except` stays allowed on purpose: a failing
 # detector must degrade its stage, never crash a case.
 select = ["E4", "E7", "E9", "F", "I", "UP"]
+ignore = ["UP042"]  # str-and-Enum classes serialize as plain strings in the API
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/*" = ["E402"]  # these put the repo root on sys.path before importing project modules
+"pipeline/extract.py" = ["E741"]  # one-letter aliases keep the label table readable
+"tests/*" = ["E731"]

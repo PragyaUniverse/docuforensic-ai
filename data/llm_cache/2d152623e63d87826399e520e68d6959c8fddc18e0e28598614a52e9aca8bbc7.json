@@ -1,0 +1,21 @@
+{
+ "task": "investigate_finding",
+ "provider": "ollama",
+ "model": "qwen2.5:7b",
+ "recorded_at": "2026-11-05T08:59:28Z",
+ "answer": {
+  "reasoning": "The PAN number differs between the application form and the ID proof, which is inconsistent as the PAN number should be unique and consistent across documents.",
+  "benign_alternatives": [
+   "OCR errors in the ID proof",
+   "Manual entry errors during form filling"
+  ],
+  "what_would_confirm": [
+   "Further OCR errors in other fields",
+   "Multiple handwriting samples showing the same inconsistency"
+  ],
+  "what_would_refute": [
+   "Consistent PAN number across all documents",
+   "Evidence of a single, corrected document version"
+  ]
+ }
+}

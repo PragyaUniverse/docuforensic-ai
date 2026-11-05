@@ -1,0 +1,9 @@
+{
+ "task": "summarize_case",
+ "provider": "ollama",
+ "model": "qwen2.5:7b",
+ "recorded_at": "2026-11-05T08:59:01Z",
+ "answer": {
+  "summary": "The document analysis indicates a high risk of potential manipulation, primarily due to the presence of identical signatures, inconsistent net pay, and discrepancies in financial calculations. These findings suggest that the documents may have been altered or copied, warranting a thorough human review."
+ }
+}
