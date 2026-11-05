@@ -109,3 +109,11 @@ ID numbers, watermarked SYNTHETIC. No real personal data or third-party dataset 
 ISO/IEC 27037, 27041 and 27042, NIST SP 800-86 and the OWASP Machine Learning Security Top 10 are
 used as guidance only. This project is aligned with the principles of these references and does not
 claim formal compliance with any of them.
+
+## Added models and data
+
+| Component | Role | License | Notes |
+|---|---|---|---|
+| Tesseract `tessdata_fast` (`hin`, `eng`), in `data/tessdata` | Hindi OCR | Apache-2.0 | Bundled |
+| Granite 3.2 Vision through Ollama | Optional handwriting reading | Apache-2.0 | Local, downloaded separately |
+| Caveat font (OFL-1.1) | Used once to measure handwriting reading | OFL-1.1 | Not bundled |

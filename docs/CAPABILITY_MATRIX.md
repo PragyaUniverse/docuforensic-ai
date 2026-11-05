@@ -13,7 +13,7 @@ synthetic data, and nothing here has been tested on real documents.
 | Printed OCR with confidence and location | 5.2 | Implemented | Fields 232/232 located on the demo set |
 | Structured field and table extraction | 5.2 | Implemented | Fields 1160/1160, rows 540/540 held-out. Layout must resemble our templates |
 | Layout, sections, missing and duplicated fields | 5.3 | Implemented | Unit tests, dossier output |
-| Suspicious regions and visual inconsistencies | 5.4 | Implemented | Manipulations 30/30 held-out. **24% on degraded scans** |
+| Suspicious regions and visual inconsistencies | 5.4 | Implemented | Manipulations 30/30 held-out. **40% on degraded scans** |
 | Signature reuse and placement analysis | 5.4 | Partial | Pixel reuse and placement only. Doesn't identify who signed |
 | Inconsistencies within a document | 5.5 | Implemented | 30/30 held-out |
 | Cross-document correlation, 5+ discrepancy types | 5.6 | Implemented | 9 types, 65/65 held-out |
@@ -37,13 +37,16 @@ synthetic data, and nothing here has been tested on real documents.
 | Provider fallback, key rotation, retry | Implemented | Simulated network tests |
 | PII redaction before external calls | Implemented | Unit tests. Not exercised against a real provider |
 | Hosted LLMs: Gemini, Groq, OpenRouter | Partial | **No real call made**, as no keys were available. Simulated network only |
-| Degraded scans | Partial | Measured: 24% manipulation recall |
-| Docker deployment | Partial | Files written, **never run** |
+| Degraded scans | Partial | Measured: 40% manipulation recall, 85.7% precision |
+| Docker deployment | Partial | Files written, **never run**: Docker isn't installed on the build machine |
 | CI | Partial | Workflow written, **not yet run**. Its lint and test steps pass locally |
-| Tablet layout | Partial | Findings checked at tablet size. Not designed for phones |
-| Investigation analytics | Planned | Not started |
-| Handwritten text recognition | **Unsupported** | Not built |
-| Multilingual documents | **Unsupported** | Not built |
-| Signature identity verification | **Unsupported** | Not attempted |
-| Verification against external registries | **Unsupported** | Not attempted |
-| Authentication, multiple users | **Unsupported** | Out of scope for this prototype |
+| Tablet and phone layouts | Implemented | Checked for overflow at tablet and phone sizes. Wide report tables scroll on phones |
+| Investigation analytics | Implemented | Counts by finding type, check and reviewer decision, checked in the browser |
+| Light and dark mode | Implemented | Toggle checked in the browser; the choice persists |
+| Login | Implemented | Optional, off by default. Tested through the API only, not clicked through in a browser. All users share the same cases |
+| Registry checks | Partial | Runs against a **bundled synthetic test registry** only. Live sources need authorized access |
+| Handwriting | Partial | 61/80 exact on distorted handwriting-style text, **never tested on real handwriting**. Needs the optional vision model to fill unread rows |
+| Hindi and English documents | Partial | Printed Hindi, common labels, one synthetic test document. Other languages unsupported |
+| Signature identity (who signed) | **Unsupported** | Tried and dropped: shape comparison couldn't separate same-person from different-person pairs |
+| Live government or bank registries | **Unsupported** | Needs authorized access |
+| Per-user permissions | **Unsupported** | Out of scope for this prototype |

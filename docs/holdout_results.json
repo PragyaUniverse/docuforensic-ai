@@ -1,16 +1,16 @@
 {
   "seeds": [
-    9201,
-    9202,
-    9203,
-    9204,
-    9205
+    9301,
+    9302,
+    9303,
+    9304,
+    9305
   ],
-  "commit": "3606ff9",
+  "commit": "758df49",
   "original": {
     "manipulations_injected": 30,
     "manipulations_localized": 30,
-    "potential_manipulation_predictions": 31,
+    "potential_manipulation_predictions": 30,
     "potential_manipulation_matched": 30,
     "discrepancies": 65,
     "discrepancies_found": 65,
@@ -29,25 +29,23 @@
   },
   "degraded": {
     "manipulations_injected": 45,
-    "manipulations_localized": 19,
-    "potential_manipulation_predictions": 19,
-    "potential_manipulation_matched": 19,
+    "manipulations_localized": 18,
+    "potential_manipulation_predictions": 21,
+    "potential_manipulation_matched": 18,
     "discrepancies": 0,
     "discrepancies_found": 0,
     "within_document": 0,
     "within_document_found": 0,
-    "inconsistencies": 44,
-    "inconsistencies_matched": 44,
+    "inconsistencies": 47,
+    "inconsistencies_matched": 45,
     "fields": 1185,
-    "fields_correct": 1178,
+    "fields_correct": 1175,
     "table_rows": 0,
     "table_rows_correct": 0,
     "documents": 105,
     "documents_classified": 105,
-    "clean_case_flags": 0,
+    "clean_case_flags": 4,
     "pipeline_errors": 0
   },
-  "misses": [
-    "Seed 9204, case_d_pdf: unmatched POTENTIAL_MANIPULATION from visual.signature_reuse"
-  ]
+  "misses": []
 }
