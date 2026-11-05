@@ -1,0 +1,20 @@
+{
+ "task": "investigate_finding",
+ "provider": "ollama",
+ "model": "qwen2.5:7b",
+ "recorded_at": "2026-11-05T11:10:18Z",
+ "answer": {
+  "reasoning": "The date of birth on the application form and declaration match, but the ID proof shows a different year. This could be due to a simple OCR error or a genuine discrepancy.",
+  "benign_alternatives": [
+   "OCR error on the ID proof",
+   "Human error in filling out the ID proof"
+  ],
+  "what_would_confirm": [
+   "A third document showing the same date of birth as the application form and declaration"
+  ],
+  "what_would_refute": [
+   "Further documents or evidence showing the date of birth as '1986-07-19'",
+   "Confirmation from the individual that their date of birth is '1988-07-19'"
+  ]
+ }
+}

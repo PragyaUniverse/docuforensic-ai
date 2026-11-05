@@ -2,7 +2,7 @@
  "task": "investigate_finding",
  "provider": "ollama",
  "model": "qwen2.5:7b",
- "recorded_at": "2026-11-05T09:35:46Z",
+ "recorded_at": "2026-11-05T11:11:19Z",
  "answer": {
   "reasoning": "The net pay stated on the document (86,400.00) does not match the recomputed net pay (62,400.00), indicating a discrepancy. This could be due to an error in the document or a deliberate alteration.",
   "benign_alternatives": [

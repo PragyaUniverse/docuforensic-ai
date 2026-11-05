@@ -2,7 +2,7 @@
  "task": "investigate_finding",
  "provider": "ollama",
  "model": "qwen2.5:7b",
- "recorded_at": "2026-11-05T09:35:08Z",
+ "recorded_at": "2026-11-05T11:10:29Z",
  "answer": {
   "reasoning": "The address on the application form, id proof, bank statement, and declaration all match 'Flat 12B', while the address proof shows 'Flat 21B'. The pin codes differ (560003 vs 560055), which is significant after normalization.",
   "benign_alternatives": [

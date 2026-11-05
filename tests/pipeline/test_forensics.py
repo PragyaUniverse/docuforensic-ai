@@ -342,12 +342,12 @@ def test_second_engine_overrules_a_single_misread_of_the_render():
 def test_signature_copy_survives_blur_and_a_small_rotation():
     import cv2
 
-    from pipeline.signatures import IDENTICAL_CORR, _degraded_corr
+    from pipeline.signatures import SOFTENED_IDENTICAL_CORR, _degraded_corr
 
     sig = np.asarray(draw_signature(seed=3, size=(400, 90)))
     h, w = sig.shape
     turned = cv2.warpAffine(sig, cv2.getRotationMatrix2D((w / 2, h / 2), 1.5, 1.0), (w, h), borderValue=255)
-    assert _degraded_corr(sig, cv2.GaussianBlur(turned, (0, 0), 1.5)) >= IDENTICAL_CORR
+    assert _degraded_corr(sig, cv2.GaussianBlur(turned, (0, 0), 1.5)) >= SOFTENED_IDENTICAL_CORR
     # Softening must not make two different signatures look alike.
     other = np.asarray(draw_signature(seed=8, size=(400, 90)))
-    assert _degraded_corr(sig, other) < IDENTICAL_CORR
+    assert _degraded_corr(sig, other) < SOFTENED_IDENTICAL_CORR

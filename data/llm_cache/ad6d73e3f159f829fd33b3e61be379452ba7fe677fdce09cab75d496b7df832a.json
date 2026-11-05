@@ -1,0 +1,22 @@
+{
+ "task": "investigate_finding",
+ "provider": "ollama",
+ "model": "qwen2.5:7b",
+ "recorded_at": "2026-11-05T11:09:58Z",
+ "answer": {
+  "reasoning": "The PAN number differs between the application form and the ID proof, indicating a potential error or fraud. The salary slip shows a value consistent with the application form, but the ID proof shows a different value, which is inconsistent.",
+  "benign_alternatives": [
+   "OCR errors in the ID proof",
+   "Manual entry mistake on the ID proof",
+   "Temporary change in PAN number"
+  ],
+  "what_would_confirm": [
+   "Further discrepancies in other fields",
+   "Evidence of a recent change in PAN number"
+  ],
+  "what_would_refute": [
+   "Consistent PAN number across all documents",
+   "Confirmation of OCR errors in the ID proof"
+  ]
+ }
+}

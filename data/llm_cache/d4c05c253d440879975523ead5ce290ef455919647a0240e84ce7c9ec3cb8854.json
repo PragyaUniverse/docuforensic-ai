@@ -1,0 +1,24 @@
+{
+ "task": "investigate_finding",
+ "provider": "ollama",
+ "model": "qwen2.5:7b",
+ "recorded_at": "2026-11-05T11:10:35Z",
+ "answer": {
+  "reasoning": "The date of birth in the ID proof (19/07/1986) does not match the registry record (1988-07-19), indicating a potential error or fraud. This inconsistency is supported by multiple findings, increasing the need for human review.",
+  "benign_alternatives": [
+   "OCR error in the ID proof",
+   "Registry update not yet reflected in the ID",
+   "Human error in entering the date of birth"
+  ],
+  "what_would_confirm": [
+   "A government-issued document with the correct date of birth",
+   "Confirmation from the individual that the date of birth is correct",
+   "Registry update logs showing the date of birth was recently changed"
+  ],
+  "what_would_refute": [
+   "A government-issued document with the incorrect date of birth",
+   "Registry records showing the date of birth was never changed",
+   "Consistent date of birth across multiple documents and records"
+  ]
+ }
+}

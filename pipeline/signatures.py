@@ -42,6 +42,9 @@ from pipeline.layout import doc_lines
 LABEL_RE = re.compile(r"(signature|signatory|signed\s*by|sign\.?$|^sign\b|sign\s+here|thumb\s*impression)", re.IGNORECASE)
 PHASH_MAX_DISTANCE = 14
 IDENTICAL_CORR = 0.93
+# Softening makes everything more alike, so it needs a higher bar. Measured: real copies on degraded
+# scans score 0.987 or more, and the closest pair of genuinely different signatures scored 0.944.
+SOFTENED_IDENTICAL_CORR = 0.97
 
 
 @dataclass
@@ -191,7 +194,7 @@ def _pixel_corr(a: np.ndarray, b: np.ndarray) -> float:
     if native >= IDENTICAL_CORR:
         return native
     degraded = _degraded_corr(a, b)
-    if degraded >= IDENTICAL_CORR:
+    if degraded >= SOFTENED_IDENTICAL_CORR:
         return degraded
     aspect_a, aspect_b = a.shape[1] / a.shape[0], b.shape[1] / b.shape[0]
     if max(aspect_a, aspect_b) / min(aspect_a, aspect_b) > 1.25:
@@ -335,7 +338,7 @@ def analyze_signatures(docs: list[Document], workdir: Path, case_id: str) -> lis
                 continue
             distance = hashes[i] - hashes[j]
             # The hash is only a shortcut. It can't rule out a copy whose crop bounds differ.
-            if distance > PHASH_MAX_DISTANCE and max(_native_corr(a.crop, b.crop), _degraded_corr(a.crop, b.crop)) < IDENTICAL_CORR:
+            if distance > PHASH_MAX_DISTANCE and _native_corr(a.crop, b.crop) < IDENTICAL_CORR and _degraded_corr(a.crop, b.crop) < SOFTENED_IDENTICAL_CORR:
                 continue
             corr = _pixel_corr(a.crop, b.crop)
             if corr < IDENTICAL_CORR:

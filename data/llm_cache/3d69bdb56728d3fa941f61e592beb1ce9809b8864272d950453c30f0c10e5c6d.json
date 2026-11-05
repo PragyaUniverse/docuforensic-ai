@@ -2,7 +2,7 @@
  "task": "investigate_finding",
  "provider": "ollama",
  "model": "qwen2.5:7b",
- "recorded_at": "2026-11-05T09:34:52Z",
+ "recorded_at": "2026-11-05T11:10:13Z",
  "answer": {
   "reasoning": "The declared monthly income of 120,000.00 is significantly higher than the salary slip's range of 78,250.00 to 88,000.00, indicating a possible discrepancy. This could be due to various benign reasons or could indicate a fraudulent claim.",
   "benign_alternatives": [

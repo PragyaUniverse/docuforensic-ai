@@ -2,7 +2,7 @@
  "task": "investigate_finding",
  "provider": "ollama",
  "model": "qwen2.5:7b",
- "recorded_at": "2026-11-05T09:34:06Z",
+ "recorded_at": "2026-11-05T11:09:25Z",
  "answer": {
   "reasoning": "The declared monthly income of 84,320.00 on the application form is significantly higher than the salary slip's net pay of 84,320.00 and gross pay of 54,000.00. This discrepancy could indicate an error in the application form or a misunderstanding of the salary details.",
   "benign_alternatives": [

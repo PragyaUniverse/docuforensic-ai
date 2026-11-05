@@ -2,7 +2,7 @@
  "task": "investigate_finding",
  "provider": "ollama",
  "model": "qwen2.5:7b",
- "recorded_at": "2026-11-05T09:35:01Z",
+ "recorded_at": "2026-11-05T11:10:23Z",
  "answer": {
   "reasoning": "The joining date on the application form is 2019-06-15, while the salary slip states 2024-02-01. This discrepancy could indicate an error in data entry or a deliberate change in the employment date.",
   "benign_alternatives": [

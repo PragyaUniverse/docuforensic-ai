@@ -2,7 +2,7 @@
  "task": "investigate_finding",
  "provider": "ollama",
  "model": "qwen2.5:7b",
- "recorded_at": "2026-11-05T09:34:43Z",
+ "recorded_at": "2026-11-05T11:10:03Z",
  "answer": {
   "reasoning": "The name 'Meenakshi Sundaram Iyer' is consistent across multiple documents, but the name 'Minakshi S. Iyengar' on the salary slip is significantly different (68/100 similarity). This discrepancy could indicate a typo, a different document, or a person with a similar name.",
   "benign_alternatives": [

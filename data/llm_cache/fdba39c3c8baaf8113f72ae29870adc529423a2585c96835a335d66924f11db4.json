@@ -1,0 +1,9 @@
+{
+ "task": "summarize_case",
+ "provider": "ollama",
+ "model": "qwen2.5:7b",
+ "recorded_at": "2026-11-05T11:10:44Z",
+ "answer": {
+  "summary": "The document set exhibits significant inconsistencies, particularly in bank account numbers, net pay, and PAN, which are flagged as high priority. These discrepancies may indicate potential fraud or errors, necessitating a thorough human review to confirm or refute the presence of manipulation."
+ }
+}
