@@ -184,3 +184,39 @@ def test_declared_income_is_checked_against_the_bank_with_no_salary_slip():
     docs = [d for d in base_docs(app__declared_monthly_income="1,20,000.00") if d.doc_type != DocType.salary_slip]
     finding = _income_finding(run(docs))
     assert "bank" in finding.title.lower()
+
+
+def _registry(monkeypatch, tmp_path, records):
+    import json
+
+    from config.settings import settings
+
+    monkeypatch.setattr(settings, "demo_cases_dir", tmp_path)
+    (tmp_path / "registry.json").write_text(json.dumps({"records": records}))
+
+
+def test_registry_flags_a_name_that_differs_and_says_the_source_is_synthetic(monkeypatch, tmp_path):
+    from backend import registry
+
+    docs = base_docs()
+    pan = next(f for d in docs for f in d.fields if f.name == "pan_number")
+    _registry(monkeypatch, tmp_path, {pan.value_raw.replace(" ", ""): {"person_name": "Somebody Else Entirely", "date_of_birth": None}})
+    found = registry.check(docs, "c")
+    mismatch = [f for f in found if f.detector == "registry.name_mismatch"]
+    assert mismatch and "synthetic" in mismatch[0].explanation and mismatch[0].bbox is not None
+
+
+def test_registry_absent_means_no_findings_and_no_guessing(monkeypatch, tmp_path):
+    from backend import registry
+    from config.settings import settings
+
+    monkeypatch.setattr(settings, "demo_cases_dir", tmp_path)
+    assert registry.check(base_docs(), "c") == []
+
+
+def test_unknown_number_is_only_an_observation(monkeypatch, tmp_path):
+    from backend import registry
+
+    _registry(monkeypatch, tmp_path, {})
+    found = registry.check(base_docs(), "c")
+    assert found and all(f.status == FindingStatus.OBSERVATION for f in found)

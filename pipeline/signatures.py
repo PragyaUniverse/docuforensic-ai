@@ -168,13 +168,31 @@ def _native_corr(a: np.ndarray, b: np.ndarray) -> float:
     return float(cv2.matchTemplate(field, core, cv2.TM_CCOEFF_NORMED).max())
 
 
+def _degraded_corr(a: np.ndarray, b: np.ndarray) -> float:
+    """The same comparison for scans. Softening both crops removes blur and JPEG differences, and a
+    small rotation search handles a skewed page. Different writers stay far below the threshold, since
+    softening doesn't make different strokes line up."""
+    soft_a = cv2.GaussianBlur(a, (0, 0), 1.6)
+    soft_b = cv2.GaussianBlur(b, (0, 0), 1.6)
+    best = _native_corr(soft_a, soft_b)
+    h, w = soft_b.shape[:2]
+    for angle in (-2.5, -2.0, -1.5, -1.0, -0.5, 0.5, 1.0, 1.5, 2.0, 2.5):
+        turn = cv2.getRotationMatrix2D((w / 2, h / 2), angle, 1.0)
+        turned = cv2.warpAffine(soft_b, turn, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+        best = max(best, _native_corr(soft_a, turned))
+    return best
+
+
 def _pixel_corr(a: np.ndarray, b: np.ndarray) -> float:
-    """Correlation of two signature crops: at native scale, or after aligning size and translation."""
+    """Correlation of two signature crops: at native scale, after softening, or after aligning size."""
     if a.size == 0 or b.size == 0:
         return 0.0
     native = _native_corr(a, b)
     if native >= IDENTICAL_CORR:
         return native
+    degraded = _degraded_corr(a, b)
+    if degraded >= IDENTICAL_CORR:
+        return degraded
     aspect_a, aspect_b = a.shape[1] / a.shape[0], b.shape[1] / b.shape[0]
     if max(aspect_a, aspect_b) / min(aspect_a, aspect_b) > 1.25:
         return 0.0
@@ -317,7 +335,7 @@ def analyze_signatures(docs: list[Document], workdir: Path, case_id: str) -> lis
                 continue
             distance = hashes[i] - hashes[j]
             # The hash is only a shortcut. It can't rule out a copy whose crop bounds differ.
-            if distance > PHASH_MAX_DISTANCE and _native_corr(a.crop, b.crop) < IDENTICAL_CORR:
+            if distance > PHASH_MAX_DISTANCE and max(_native_corr(a.crop, b.crop), _degraded_corr(a.crop, b.crop)) < IDENTICAL_CORR:
                 continue
             corr = _pixel_corr(a.crop, b.crop)
             if corr < IDENTICAL_CORR:

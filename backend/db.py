@@ -10,6 +10,8 @@ from models.schemas import Case, Document, Dossier, Entity, EvidenceGraph, Findi
 
 _lock = threading.RLock()
 _SCHEMA = """
+CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, salt TEXT NOT NULL, hash TEXT NOT NULL, created_at TEXT);
+CREATE TABLE IF NOT EXISTS sessions (token_hash TEXT PRIMARY KEY, username TEXT NOT NULL, expires REAL NOT NULL);
 CREATE TABLE IF NOT EXISTS cases (id TEXT PRIMARY KEY, created_at TEXT, json TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS documents (id TEXT PRIMARY KEY, case_id TEXT NOT NULL, seq INTEGER,
     source_path TEXT, json TEXT NOT NULL);

@@ -16,7 +16,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 from audit import chain
-from backend import contextual, crossdoc, db
+from backend import contextual, crossdoc, db, registry
 from backend import dossier as dossier_mod
 from config.settings import settings
 from llm import investigator
@@ -356,6 +356,12 @@ def _run(case: Case) -> None:
             ctx.degrade("Field extraction module is unavailable.")
         else:
             _for_each_doc(docs, ctx, "Field extraction", extract_fields)
+            read_handwriting = pipeline_fn("handwriting", "read_handwriting")
+            if read_handwriting is not None:
+                _for_each_doc(docs, ctx, "Handwriting", read_handwriting)
+                pages = [d.filename for d in docs if d.metadata.get("handwriting")]
+                if pages:
+                    ctx.payload["message"] = f"Handwriting found on {', '.join(pages)}. Please check these values by eye."
         ctx.payload["fields"] = {d.id: len(d.fields) for d in docs}
 
     with run.stage(PipelineStage.structure) as ctx:
@@ -415,6 +421,7 @@ def _run(case: Case) -> None:
     with run.stage(PipelineStage.cross_document) as ctx:
         entities = crossdoc.build_entities(active, case.id)
         items = crossdoc.correlate(active, entities, case.id)
+        items += registry.check(active, case.id)
         findings += items
         db.replace_entities(case.id, entities)
         ctx.payload.update({"entities": len(entities), "findings": len(items),

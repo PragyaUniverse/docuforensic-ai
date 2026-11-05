@@ -24,7 +24,7 @@ from pydantic import Field as PField
 from starlette.datastructures import UploadFile
 
 from audit import chain
-from backend import capabilities, db, orchestrator
+from backend import analytics, auth, capabilities, db, orchestrator
 from backend import dossier as dossier_mod
 from backend.logging_conf import configure_logging
 from config.settings import REPO_ROOT, settings
@@ -91,6 +91,18 @@ app.add_middleware(CORSMiddleware, allow_origins=settings.cors_list(), allow_met
 
 _hits: dict[str, deque[float]] = defaultdict(deque)
 _hits_lock = threading.Lock()
+
+
+_OPEN_PATHS = {"/api/health", "/api/auth/login", "/api/auth/me", "/api/auth/logout"}
+
+
+@app.middleware("http")
+async def require_login(request: Request, call_next):
+    path = request.url.path
+    if settings.auth_enabled and path.startswith("/api/") and path not in _OPEN_PATHS and request.method != "OPTIONS":
+        if not auth.session_user(request.cookies.get(auth.COOKIE)):
+            return JSONResponse({"detail": "Please sign in."}, status_code=401)
+    return await call_next(request)
 
 
 @app.middleware("http")
@@ -194,6 +206,40 @@ def _manifest() -> list[dict]:
 @app.get("/api/health")
 def health() -> dict:
     return {"status": "ok", "version": VERSION, "offline": settings.offline, "demo_cache": settings.demo_cache}
+
+
+class LoginBody(BaseModel):
+    username: str
+    password: str
+
+
+@app.post("/api/auth/login")
+def login(body: LoginBody, response: Response) -> dict:
+    token = auth.login(body.username, body.password)
+    if token is None:
+        chain.append("auth.login_failed", "system", None, {"username": body.username})
+        raise HTTPException(401, "That username and password don't match.")
+    chain.append("auth.login", f"reviewer:{body.username.strip()}")
+    response.set_cookie(auth.COOKIE, token, httponly=True, samesite="lax", secure=settings.auth_cookie_secure,
+                        max_age=auth.SESSION_SECONDS, path="/")
+    return {"user": body.username.strip()}
+
+
+@app.post("/api/auth/logout")
+def logout(request: Request, response: Response) -> dict:
+    auth.logout(request.cookies.get(auth.COOKIE))
+    response.delete_cookie(auth.COOKIE, path="/")
+    return {"ok": True}
+
+
+@app.get("/api/auth/me")
+def me(request: Request) -> dict:
+    return {"auth_enabled": settings.auth_enabled, "user": auth.session_user(request.cookies.get(auth.COOKIE))}
+
+
+@app.get("/api/analytics")
+def analytics_report() -> dict:
+    return analytics.report()
 
 
 @app.get("/api/capabilities")
@@ -418,10 +464,12 @@ class ReviewBody(BaseModel):
 
 
 @app.post("/api/findings/{finding_id}/review", response_model=Finding)
-def review(finding_id: str, body: ReviewBody) -> Finding:
+def review(finding_id: str, body: ReviewBody, request: Request) -> Finding:
     finding = db.get_finding(finding_id)
     if finding is None:
         raise HTTPException(404, "Finding not found.")
+    if settings.auth_enabled:  # with login on, the decision belongs to whoever is signed in
+        body.reviewer = auth.session_user(request.cookies.get(auth.COOKIE)) or body.reviewer
     previous = finding.review.decision.value
     finding.review = ReviewRecord(decision=ReviewDecision(body.decision), reviewer=body.reviewer.strip() or "reviewer",
                                   note=body.note, at=utcnow())

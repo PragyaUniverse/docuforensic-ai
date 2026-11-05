@@ -27,6 +27,7 @@ import { PageCrop } from "@/components/PageCrop";
 import { StatusBadge } from "@/components/StatusBadge";
 import { findingLabels, sortFindings } from "@/lib/findings";
 import { cn, fmtBBox, humanize } from "@/lib/utils";
+import { useTheme } from "@/lib/theme";
 
 type NodeData = {
   label: string;
@@ -218,6 +219,7 @@ export default function GraphScreen() {
   const entitiesQ = useQuery({ queryKey: ["entities", caseId], queryFn: () => api.entities(caseId) });
   const findingsQ = useFindings(caseId);
   const { byId, fieldsById } = useCaseDocuments(caseId);
+  const theme = useTheme();
   const [view, setView] = useState<View>("documents");
   const [sel, setSel] = useState<Selection>(null);
   const [showObs, setShowObs] = useState(false);
@@ -298,7 +300,7 @@ export default function GraphScreen() {
             label,
             data: { dim, on, labelAt: 0.38 + (i % 3) * 0.12 },
             style: {
-              stroke: p.conflict ? "#b3261e" : "#c8c4ba",
+              stroke: p.conflict ? "var(--color-man)" : "var(--color-line-strong)",
               strokeWidth: p.conflict ? Math.min(1.5 + p.findingIds.length * 0.75, 4) : 1,
               strokeDasharray: p.conflict ? undefined : "2 4",
               opacity: dim ? 0.12 : 1,
@@ -346,7 +348,7 @@ export default function GraphScreen() {
     const edges: Edge[] = e.edges.map((x) => {
       const on = x.id === selectedEdge || (!!selectedId && (x.source === selectedId || x.target === selectedId));
       const dim = !!neighbors && !on;
-      const color = x.conflict ? "#b3261e" : on ? "#6b7078" : "#c8c4ba";
+      const color = x.conflict ? "var(--color-man)" : on ? "var(--color-ink-3)" : "var(--color-line-strong)";
       const entityPair = kinds.get(x.source) === "entity" && kinds.get(x.target) === "entity";
       // Same-column entity links run vertically, top to bottom, between adjacent values.
       const swap = entityPair && (pos.get(x.source)?.y ?? 0) > (pos.get(x.target)?.y ?? 0);
@@ -357,8 +359,8 @@ export default function GraphScreen() {
         sourceHandle: entityPair ? "b" : undefined,
         targetHandle: entityPair ? "t" : undefined,
         label: x.conflict && on ? humanize(x.label ?? "conflict") : undefined,
-        labelStyle: { fill: "#b3261e", fontFamily: "var(--font-mono)", fontSize: 10 },
-        labelBgStyle: { fill: "#ffffff" },
+        labelStyle: { fill: "var(--color-man)", fontFamily: "var(--font-mono)", fontSize: 10 },
+        labelBgStyle: { fill: "var(--color-panel)" },
         labelBgPadding: [4, 2] as [number, number],
         style: {
           stroke: color,
@@ -475,7 +477,7 @@ export default function GraphScreen() {
           edges={edges}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
-          colorMode="light"
+          colorMode={theme}
           fitView
           fitViewOptions={{ padding: 0.14 }}
           minZoom={0.15}
@@ -487,7 +489,7 @@ export default function GraphScreen() {
           style={{ background: "transparent" }}
           aria-label="Evidence graph of documents, entities and findings"
         >
-          <Background color="#dcd9d1" gap={18} size={1} />
+          <Background color="var(--color-line)" gap={18} size={1} />
           <Controls showInteractive={false} position="bottom-left" />
         </ReactFlow>
       </div>

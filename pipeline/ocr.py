@@ -128,6 +128,58 @@ def _repair_month(m: re.Match) -> str:
     return m.group(1) + candidate.capitalize() + m.group(3) if candidate in _MONTHS else m.group(0)
 
 
+_TESSDATA = Path(__file__).resolve().parent.parent / "data" / "tessdata"
+_DEVANAGARI = re.compile(r"[\u0900-\u097F]")
+_CJK = re.compile(r"[\u3400-\u9FFF]")
+_DEVANAGARI_DIGITS = str.maketrans("०१२३४५६७८९", "0123456789")
+
+
+def looks_non_latin(lines: list[OcrLine]) -> bool:
+    """The Latin and Chinese line recognizer reads Hindi as Chinese characters or low-confidence
+    noise, so either is the cue to read the page again with a Hindi model."""
+    if not lines:
+        return True
+    garbled = sum(bool(_CJK.search(ln.text)) or ln.confidence < 0.7 for ln in lines)
+    return garbled >= max(2, 0.08 * len(lines))
+
+
+def hindi_words(img: np.ndarray, page: int) -> list[Word]:
+    """Devanagari words from Tesseract. Empty if the model or engine isn't available."""
+    if not (_TESSDATA / "hin.traineddata").exists():
+        return []
+    try:
+        data = pytesseract.image_to_data(
+            Image.fromarray(img), lang="hin+eng", config=f'--tessdata-dir "{_TESSDATA}" --psm 6',
+            output_type=pytesseract.Output.DICT, timeout=90,
+        )
+    except Exception as exc:
+        log.warning("Hindi OCR failed: %s", type(exc).__name__)
+        return []
+    out = []
+    for i, text in enumerate(data["text"]):
+        # Tesseract emits invisible joiners and doubled virama marks that break label matching.
+        text = re.sub(r"\u094d+", "\u094d", re.sub(r"[\u200c\u200d]", "", text or "")).strip().translate(_DEVANAGARI_DIGITS)
+        conf = float(data["conf"][i])
+        if not text or conf < 40:
+            continue
+        x, y, w, h = data["left"][i], data["top"][i], data["width"][i], data["height"][i]
+        out.append(Word(text=text, confidence=round(conf / 100.0, 4), bbox=BBox(x0=x, y0=y, x1=x + w, y1=y + h),
+                        page=page, source=TextSource.ocr_tesseract))
+    return out
+
+
+def _with_latin_lines(hindi: list[Word], lines: list[OcrLine], tess: list[tuple[str, float, BBox]], page: int) -> list[Word]:
+    """Dates, amounts and IDs on a Hindi page are usually in Latin digits, which the Hindi model reads
+    poorly. Where the Latin engine read something confidently, keep its reading."""
+    out = list(hindi)
+    for ln in lines:
+        if ln.confidence < 0.8 or not ln.text.isascii() or not any(c.isdigit() for c in ln.text):
+            continue
+        out = [w for w in out if _DEVANAGARI.search(w.text) or not _center_inside(w.bbox, ln.bbox)]
+        out.extend(_line_to_words(ln, tess, page))
+    return out
+
+
 def reread_region(doc: Document, page: int, bbox: BBox) -> str | None:
     """Independent second reading of one region with Tesseract. None if it can't be read."""
     try:
@@ -287,6 +339,11 @@ def ocr_image(img: np.ndarray, page: int = 0) -> tuple[list[Word], TextSource | 
         return words, TextSource.ocr_tesseract
 
     tess = tess or []
+    if looks_non_latin(lines):
+        hindi = hindi_words(img, page)
+        # Only when it really is Hindi. A noisy English scan must keep the stronger English engine.
+        if sum(bool(_DEVANAGARI.search(w.text)) for w in hindi) >= 3:
+            return _with_latin_lines(hindi, lines, tess, page), TextSource.ocr_tesseract
     lines = merge_fragments(lines, tess)
     kept = [ln for ln in lines if abs(ln.tilt_deg) <= MAX_LINE_TILT_DEG]
     words: list[Word] = []

@@ -49,6 +49,8 @@ class Settings(BaseSettings):
     # Local LLM: free, no key, no quota.
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "qwen2.5:7b"
+    # Reads handwriting. Optional: without it, messy handwriting is reported as unread.
+    ollama_vision_model: str = "granite3.2-vision"
 
     # Provider order. "deterministic" is always the implicit final link.
     llm_chain: str = "gemini,groq,openrouter,ollama"
@@ -73,6 +75,10 @@ class Settings(BaseSettings):
     rate_limit_per_minute: int = 120
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     audit_tamper_demo: bool = True
+    # AUTH_ENABLED=true requires a login. Create users with scripts/create_user.py.
+    auth_enabled: bool = False
+    # Secure cookies need HTTPS, so turn this on behind TLS.
+    auth_cookie_secure: bool = False
 
     @computed_field  # type: ignore[prop-decorator]
     @property

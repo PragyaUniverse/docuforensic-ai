@@ -1606,6 +1606,13 @@ def write_manifest():
         docs = [f"{d}.{EXT[FORMATS[key][d]]}" for d in ORDER]
         data.append({"key": key, "name": name, "description": desc, "dir": key, "documents": docs})
     (OUT / "manifest.json").write_text(json.dumps(data, indent=2) + "\n")
+    # A stand-in for an issuer's records, so registry checks can be exercised. Entirely made up.
+    records = {}
+    for p in (PA, PB, PC, PD):
+        for number in (p.pan, p.aadhaar):
+            records[number.replace(" ", "")] = {"person_name": p.name, "date_of_birth": p.dob}
+    (OUT / "registry.json").write_text(json.dumps(
+        {"synthetic": True, "note": "Made-up test records. Not a government source.", "records": records}, indent=2) + "\n")
 
 
 def generate():

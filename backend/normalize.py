@@ -353,7 +353,8 @@ def ocr_adjustment(fields: list[Field], a: str | None = None, b: str | None = No
     but they aren't assumed to be true either. With `docs`, values that differ only by confusable
     characters are re-read by a second OCR engine rather than simply being discounted.
     """
-    ocr_fields = [f for f in fields if f.source not in (TextSource.text_layer, TextSource.llm)]
+    # An AI reading of handwriting is the least certain source, so it gets the same discount.
+    ocr_fields = [f for f in fields if f.source != TextSource.text_layer]
     if not ocr_fields:
         return 1.0, None
     low = min(f.confidence for f in ocr_fields)

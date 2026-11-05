@@ -1,0 +1,38 @@
+{
+  "synthetic": true,
+  "note": "Made-up test records. Not a government source.",
+  "records": {
+    "ZZAPM4821K": {
+      "person_name": "Priya Raman Menon",
+      "date_of_birth": "1991-03-14"
+    },
+    "999959661312": {
+      "person_name": "Priya Raman Menon",
+      "date_of_birth": "1991-03-14"
+    },
+    "ZZBPD7316L": {
+      "person_name": "Arjun Vikram Desai",
+      "date_of_birth": "1989-11-05"
+    },
+    "999948611759": {
+      "person_name": "Arjun Vikram Desai",
+      "date_of_birth": "1989-11-05"
+    },
+    "ZZCPI5502R": {
+      "person_name": "Meenakshi Sundaram Iyer",
+      "date_of_birth": "1988-07-19"
+    },
+    "999901315981": {
+      "person_name": "Meenakshi Sundaram Iyer",
+      "date_of_birth": "1988-07-19"
+    },
+    "ZZDPK9144M": {
+      "person_name": "Rohan Aditya Kulkarni",
+      "date_of_birth": "1993-02-27"
+    },
+    "999917193734": {
+      "person_name": "Rohan Aditya Kulkarni",
+      "date_of_birth": "1993-02-27"
+    }
+  }
+}

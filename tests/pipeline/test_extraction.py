@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -221,3 +222,38 @@ def test_amount_with_dropped_digit_is_not_well_formed():
         assert WELL_FORMED_MONEY.fullmatch(good), good
     for bad in ("3,58,20.32", "12,", "1,23,4.00"):
         assert not WELL_FORMED_MONEY.fullmatch(bad), bad
+
+
+DEVANAGARI_FONT = Path("/System/Library/Fonts/Supplemental/Devanagari Sangam MN.ttc")
+
+
+@pytest.mark.skipif(not DEVANAGARI_FONT.exists(), reason="needs a Devanagari font")
+def test_hindi_salary_slip_is_read_and_extracted(prepare):
+    from PIL import Image, ImageDraw, ImageFont
+
+    im = Image.new("RGB", (1654, 1400), "white")
+    draw = ImageDraw.Draw(im)
+    font = ImageFont.truetype(str(DEVANAGARI_FONT), 36, layout_engine=ImageFont.Layout.RAQM)
+    rows = [("वेतन पर्ची", "Salary Slip"), ("कर्मचारी का नाम:", "आशा वर्मा"), ("जन्म तिथि:", "14/03/1991"),
+            ("नियोक्ता का नाम:", "नॉर्थविंड टूल्स"), ("खाता संख्या:", "501002233445"), ("शुद्ध वेतन:", "63,600.00")]
+    for i, (label, value) in enumerate(rows):
+        draw.text((120, 100 + i * 100), label, font=font, fill=(20, 20, 20))
+        draw.text((750, 100 + i * 100), value, font=font, fill=(20, 20, 20))
+    doc = prepare(im)
+    assert doc.doc_type.value == "salary_slip"
+    got = {f.name: f.value_raw for f in doc.fields}
+    assert got["person_name"] == "आशा वर्मा"
+    assert got["date_of_birth"] == "14/03/1991"
+    assert got["bank_account_number"] == "501002233445"
+    assert got["net_pay"] == "63,600.00"
+
+
+def test_an_english_page_is_never_sent_to_the_hindi_model():
+    from models.schemas import BBox
+    from pipeline.ocr import OcrLine, looks_non_latin
+
+    box = BBox(x0=0, y0=0, x1=10, y1=10)
+    clean = [OcrLine(text="Net Pay 85,400.00", confidence=0.98, bbox=box, tilt_deg=0, chars=[]) for _ in range(20)]
+    assert not looks_non_latin(clean)
+    garbled = [OcrLine(text="वेतन", confidence=0.3, bbox=box, tilt_deg=0, chars=[]) for _ in range(5)]
+    assert looks_non_latin(garbled)

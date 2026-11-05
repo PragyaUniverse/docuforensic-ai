@@ -33,6 +33,35 @@
   --radius-lg: 8px;
 }
 
+/* Dark mode only changes the colours above. The paper-white documents themselves stay as they are. */
+:root {
+  color-scheme: light;
+  --color-canvas: #e6e3dc;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-canvas: #101214;
+  --color-ground: #17191c;
+  --color-panel: #1f2226;
+  --color-raised: #272b30;
+  --color-hover: #2c3036;
+  --color-line: #33383e;
+  --color-line-strong: #4b5159;
+  --color-ink: #e8e6e1;
+  --color-ink-2: #bcbfc4;
+  --color-ink-3: #91969e;
+  --color-accent: #4a8fd6;
+  --color-accent-dark: #6aa6e3;
+  --color-obs: #79b3ee;
+  --color-obs-dim: #1b2c3f;
+  --color-inc: #e0ad4b;
+  --color-inc-dim: #372a10;
+  --color-man: #f0827a;
+  --color-man-dim: #3f1e1b;
+  --color-ok: #5cc196;
+  --color-ok-dim: #16332a;
+}
+
 html,
 body {
   height: 100%;
@@ -89,7 +118,7 @@ a.link,
 }
 
 ::selection {
-  background: #cfe0f2;
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
 }
 
 * {

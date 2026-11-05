@@ -52,9 +52,6 @@ def matrix() -> list[dict[str, str]]:
          "notes": "Type comes from file content. Bad files get a clear status, not a crash."},
         {"capability": "Printed text OCR with confidence and location", "status": _status(["ocr"]),
          "notes": "RapidOCR with Tesseract as fallback. Readings are not treated as verified."},
-        {"capability": "Handwriting recognition", "status": "Unsupported",
-         "notes": "Handwritten values are often unread or misread; low confidence is flagged where measurable."},
-        {"capability": "Languages other than English", "status": "Unsupported", "notes": "Models and field labels are English only."},
         {"capability": "Document classification", "status": _status(["classify"], "Partial"),
          "notes": "Keyword and layout based, for six document types. Other types come back as unknown."},
         {"capability": "Field, table and layout extraction", "status": _status(["extract", "structure"], "Partial"),
@@ -78,7 +75,17 @@ def matrix() -> list[dict[str, str]]:
          "notes": "Optional. Adds counter-hypotheses only and can't change findings."},
         {"capability": "Remote LLM reasoning (Gemini, Groq, OpenRouter)", "status": "Partial",
          "notes": "Adapters tested with mocked HTTP only; unverified until a key is provided."},
-        {"capability": "Issuer or registry verification", "status": "Unsupported", "notes": "No external source is contacted."},
+        {"capability": "Registry checks", "status": "Partial",
+         "notes": "Works against a bundled synthetic test registry. No real government or bank source is connected, since that needs authorized access."},
+        {"capability": "Handwriting", "status": "Partial",
+         "notes": "Detected by shape, and read by OCR plus a local vision model. 61 of 80 values exact on distorted handwriting-style text, and never tested on real handwriting. Every value is marked for checking."},
+        {"capability": "Hindi and English documents", "status": "Partial",
+         "notes": "Printed Hindi with common field labels. Other Indian languages aren't supported."},
+        {"capability": "Analytics across cases", "status": "Implemented", "notes": "Counts by finding type, check and reviewer decision."},
+        {"capability": "Login", "status": "Implemented",
+         "notes": "Optional, off by default. All signed-in users share the same cases, with no per-user permissions."},
+        {"capability": "Signature identity (who signed)", "status": "Unsupported",
+         "notes": "We tried a shape comparison, and same-person pairs overlapped different-person pairs, so it isn't offered. Reuse of the same pixels is still detected."},
     ]
 
 
@@ -87,7 +94,8 @@ LIMITATIONS = [
     "Forensic detectors are heuristic and can flag re-saved, compressed or noisy scans.",
     "An absence of findings isn't proof of authenticity: a careful edit can leave no signal.",
     "Accuracy figures come from a synthetic dataset, and real documents may perform differently.",
-    "Handwriting and non-English documents are not supported.",
+    "Handwriting is read unreliably, and every handwritten value needs checking by eye.",
+    "Only English and printed Hindi are supported.",
     "Field extraction relies on printed labels, so unfamiliar templates yield fewer fields.",
     "Cross-document checks assume every document in a case concerns one applicant.",
 ]

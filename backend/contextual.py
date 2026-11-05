@@ -85,6 +85,22 @@ def _downgrade(sev: Severity, factor: float) -> Severity:
     return order[max(0, order.index(sev) - 1)]
 
 
+# ---- handwriting read two different ways
+def _check_handwriting(doc: Document, fm: dict[str, Field]) -> list[Finding]:
+    by_id = {f.id: f for f in doc.fields}
+    out = []
+    for item in (doc.metadata.get("handwriting") or {}).get("disagreements", []):
+        field = by_id.get(item["field_id"])
+        if field is not None:
+            out.append(_finding(
+                doc, "ocr.handwriting_disagreement", f"Handwritten {field.name.replace('_', ' ')} was read two ways",
+                f"The text reader saw '{item['ocr_read']}' and an AI vision model saw '{item['ai_read']}'. "
+                "The first is used for now. Please read it from the document.",
+                field, [field], status=FindingStatus.OBSERVATION, severity=Severity.low, confidence=0.5,
+            ))
+    return out
+
+
 # ---- figures against the same amount written in words
 _NUMBER_WORDS = {
     "zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9,
@@ -575,6 +591,7 @@ def verify_within_document(doc: Document, today: date | None = None) -> list[Fin
     checks = [
         lambda: _check_salary(doc, fm) if doc.doc_type in (DocType.salary_slip, DocType.unknown) else [],
         lambda: _check_amount_in_words(doc, fm),
+        lambda: _check_handwriting(doc, fm),
         lambda: _check_balance(doc, fm),
         lambda: _check_dates(doc, fm, today),
         lambda: _check_ids(doc, fm),

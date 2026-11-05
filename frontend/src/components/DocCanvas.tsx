@@ -203,7 +203,7 @@ export function DocCanvas({
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
         onKeyDown={onKey}
-        className="relative min-h-0 flex-1 cursor-grab touch-none select-none overflow-hidden bg-[#e6e3dc] active:cursor-grabbing"
+        className="relative min-h-0 flex-1 cursor-grab touch-none select-none overflow-hidden bg-[var(--color-canvas)] active:cursor-grabbing"
         >
         <div
           className={animate ? "transition-transform duration-[360ms] ease-[cubic-bezier(.2,.7,.2,1)]" : ""}
@@ -226,7 +226,7 @@ export function DocCanvas({
             draggable={false}
             onLoad={() => setImgState("ok")}
             onError={() => setImgState("error")}
-            className="absolute inset-0 block bg-white shadow-[0_0_0_1px_#c8c4ba]"
+            className="absolute inset-0 block bg-white shadow-[0_0_0_1px_var(--color-line-strong)]"
           />
           <AnimatePresence>
             {heatmap && (

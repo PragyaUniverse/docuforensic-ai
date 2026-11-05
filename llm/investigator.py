@@ -122,6 +122,10 @@ PLAYBOOK: dict[str, tuple[str, list[str], list[str]]] = {
         "Creation and modification dates that differ, or that don't fit the document date, show later handling.",
         ["Re-saving or printing to PDF updates these dates.", "Wrong system clock on the issuing machine."],
         ["Compare the dates with the expected issuing workflow."]),
+    "ocr.handwriting_disagreement": (
+        "Handwriting is hard for machines to read, so two different readings mean this value needs a person.",
+        ["Untidy writing that both readers struggled with."],
+        ["Read the value from the original document."]),
     "context.amount_in_words": (
         "A document's words and figures state the same amount, and an edit to the figure often leaves the words behind.",
         ["A typing error when the document was prepared.", "An OCR misreading of the figure or the words."],

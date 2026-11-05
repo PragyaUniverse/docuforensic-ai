@@ -1,9 +1,14 @@
 import { useEffect } from "react";
 import { NavLink, Outlet, useLocation, useMatch } from "react-router-dom";
+import { Moon, Sun } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { MOCK_MODE } from "@/api";
+import { accountApi } from "@/api/account";
+import { LoginScreen } from "@/screens/Login";
 import { useCapabilities, useCase } from "@/api/hooks";
 import type { CapabilityMode } from "@/api/types";
 import { cn } from "@/lib/utils";
+import { setTheme, useTheme } from "@/lib/theme";
 import { HumanReviewPlate, RiskPlate } from "./StatusBadge";
 
 const LAST = "docuforensic.lastCase";
@@ -55,6 +60,39 @@ function ModeNote() {
   );
 }
 
+function Account() {
+  const qc = useQueryClient();
+  const me = useQuery({ queryKey: ["me"], queryFn: () => accountApi.me() });
+  if (!me.data?.user) return null;
+  return (
+    <button
+      type="button"
+      className="cursor-pointer text-[14px] text-ink-2 hover:text-ink hover:underline"
+      title={`Signed in as ${me.data.user}`}
+      onClick={() => accountApi.logout().then(() => qc.invalidateQueries())}
+    >
+      Sign out
+    </button>
+  );
+}
+
+function ThemeToggle() {
+  const theme = useTheme();
+  const next = theme === "dark" ? "light" : "dark";
+  const Icon = theme === "dark" ? Sun : Moon;
+  return (
+    <button
+      type="button"
+      onClick={() => setTheme(next)}
+      aria-label={`Switch to ${next} mode`}
+      title={`Switch to ${next} mode`}
+      className="flex size-8 cursor-pointer items-center justify-center rounded-md text-ink-2 hover:bg-hover hover:text-ink"
+    >
+      <Icon className="size-4" aria-hidden />
+    </button>
+  );
+}
+
 function CaseTitle({ caseId }: { caseId: string }) {
   const c = useCase(caseId);
   if (!c.data) return <span className="text-ink-3">{c.isLoading ? "Loading" : "Case unavailable"}</span>;
@@ -73,6 +111,7 @@ function CaseTitle({ caseId }: { caseId: string }) {
 }
 
 export function Shell() {
+  const me = useQuery({ queryKey: ["me"], queryFn: () => accountApi.me(), retry: false });
   const match = useMatch("/cases/:caseId/*");
   const routeCase = match?.params.caseId ?? null;
   const rest = match?.params["*"] ?? "";
@@ -81,6 +120,8 @@ export function Shell() {
     if (routeCase) rememberCase(routeCase);
   }, [routeCase]);
   const caseId = routeCase ?? (location.pathname === "/capabilities" ? lastCase() : null);
+
+  if (!MOCK_MODE && me.data?.auth_enabled && !me.data.user) return <LoginScreen />;
 
   return (
     <div className="flex h-full flex-col">
@@ -107,9 +148,14 @@ export function Shell() {
             <NavLink to="/" end className="text-[14px] text-ink-2 hover:text-ink hover:underline">
               All cases
             </NavLink>
+            <NavLink to="/analytics" className="hidden text-[14px] text-ink-2 hover:text-ink hover:underline sm:block">
+              Analytics
+            </NavLink>
             <NavLink to="/capabilities" className="text-[14px] text-ink-2 hover:text-ink hover:underline">
               About
             </NavLink>
+            <Account />
+            <ThemeToggle />
           </div>
         </div>
         {routeCase && (
