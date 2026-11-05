@@ -1,27 +1,27 @@
 {
   "seeds": [
-    9001,
-    9002,
-    9003,
-    9004,
-    9005
+    9101,
+    9102,
+    9103,
+    9104,
+    9105
   ],
-  "commit": "adad780",
+  "commit": "d2976c3",
   "original": {
     "manipulations_injected": 30,
     "manipulations_localized": 30,
-    "potential_manipulation_predictions": 32,
+    "potential_manipulation_predictions": 30,
     "potential_manipulation_matched": 30,
     "discrepancies": 65,
     "discrepancies_found": 65,
     "within_document": 30,
     "within_document_found": 30,
-    "inconsistencies": 97,
+    "inconsistencies": 95,
     "inconsistencies_matched": 95,
     "fields": 1160,
-    "fields_correct": 1158,
+    "fields_correct": 1160,
     "table_rows": 540,
-    "table_rows_correct": 538,
+    "table_rows_correct": 540,
     "documents": 120,
     "documents_classified": 120,
     "clean_case_flags": 0,
@@ -29,17 +29,17 @@
   },
   "degraded": {
     "manipulations_injected": 45,
-    "manipulations_localized": 10,
-    "potential_manipulation_predictions": 10,
-    "potential_manipulation_matched": 10,
+    "manipulations_localized": 11,
+    "potential_manipulation_predictions": 13,
+    "potential_manipulation_matched": 11,
     "discrepancies": 0,
     "discrepancies_found": 0,
     "within_document": 0,
     "within_document_found": 0,
-    "inconsistencies": 43,
-    "inconsistencies_matched": 43,
+    "inconsistencies": 46,
+    "inconsistencies_matched": 45,
     "fields": 1185,
-    "fields_correct": 1177,
+    "fields_correct": 1178,
     "table_rows": 0,
     "table_rows_correct": 0,
     "documents": 105,
@@ -47,10 +47,5 @@
     "clean_case_flags": 0,
     "pipeline_errors": 0
   },
-  "misses": [
-    "Seed 9001, case_c_crossdoc: unmatched POTENTIAL_MANIPULATION from pdf.text_vs_pixels",
-    "Seed 9001, case_c_crossdoc: unmatched INCONSISTENCY from context.arithmetic_balance",
-    "Seed 9002, case_c_crossdoc: unmatched POTENTIAL_MANIPULATION from pdf.text_vs_pixels",
-    "Seed 9002, case_c_crossdoc: unmatched INCONSISTENCY from context.arithmetic_balance"
-  ]
+  "misses": []
 }

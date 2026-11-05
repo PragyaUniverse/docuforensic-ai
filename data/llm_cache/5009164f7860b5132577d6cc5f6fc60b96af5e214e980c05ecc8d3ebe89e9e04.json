@@ -2,7 +2,7 @@
  "task": "summarize_case",
  "provider": "ollama",
  "model": "qwen2.5:7b",
- "recorded_at": "2026-11-05T09:00:02Z",
+ "recorded_at": "2026-11-05T09:35:11Z",
  "answer": {
   "summary": "The document set exhibits multiple inconsistencies, including differing bank account numbers, net pay discrepancies, and variations in personal and employment details. These findings suggest a high risk and warrant immediate human review to investigate potential fraud or errors."
  }

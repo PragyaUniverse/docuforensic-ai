@@ -2,7 +2,7 @@
  "task": "investigate_finding",
  "provider": "ollama",
  "model": "qwen2.5:7b",
- "recorded_at": "2026-11-05T08:58:35Z",
+ "recorded_at": "2026-11-05T09:33:40Z",
  "answer": {
   "reasoning": "The text 'NEFT CR-KESTREL-SALARY 48,320.00' appears twice with near-perfect pixel correlation, suggesting a potential copy-move forgery. The low mean difference in grey levels and high noise correlation further support this.",
   "benign_alternatives": [

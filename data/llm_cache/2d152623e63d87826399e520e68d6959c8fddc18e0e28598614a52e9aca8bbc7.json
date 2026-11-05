@@ -2,7 +2,7 @@
  "task": "investigate_finding",
  "provider": "ollama",
  "model": "qwen2.5:7b",
- "recorded_at": "2026-11-05T08:59:28Z",
+ "recorded_at": "2026-11-05T09:34:38Z",
  "answer": {
   "reasoning": "The PAN number differs between the application form and the ID proof, which is inconsistent as the PAN number should be unique and consistent across documents.",
   "benign_alternatives": [

@@ -2,7 +2,7 @@
  "task": "investigate_finding",
  "provider": "ollama",
  "model": "qwen2.5:7b",
- "recorded_at": "2026-11-05T08:59:38Z",
+ "recorded_at": "2026-11-05T09:34:47Z",
  "answer": {
   "reasoning": "The employer name on the salary slip differs from the application form and declaration, with a similarity of 70/100 after removing legal suffixes. This discrepancy could indicate an error in data entry or a change in the employer's name.",
   "benign_alternatives": [

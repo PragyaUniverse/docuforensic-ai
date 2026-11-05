@@ -2,7 +2,7 @@
  "task": "investigate_finding",
  "provider": "ollama",
  "model": "qwen2.5:7b",
- "recorded_at": "2026-11-05T08:59:47Z",
+ "recorded_at": "2026-11-05T09:34:56Z",
  "answer": {
   "reasoning": "The date of birth on the application form and declaration match, but differ from the date of birth on the ID proof. This could be due to a simple OCR error or a genuine discrepancy.",
   "benign_alternatives": [

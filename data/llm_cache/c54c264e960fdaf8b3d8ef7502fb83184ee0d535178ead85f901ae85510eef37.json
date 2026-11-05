@@ -2,7 +2,7 @@
  "task": "investigate_finding",
  "provider": "ollama",
  "model": "qwen2.5:7b",
- "recorded_at": "2026-11-05T08:58:38Z",
+ "recorded_at": "2026-11-05T09:33:43Z",
  "answer": {
   "reasoning": "The photo has almost no grain (0.00) compared to the surrounding page (1.42), indicating it was likely scanned separately. This could suggest the photo was pasted in, which is a common method for document tampering.",
   "benign_alternatives": [
