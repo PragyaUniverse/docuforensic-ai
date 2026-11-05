@@ -8,10 +8,10 @@ Recorded at project start (Wed 4 Nov 2026). Values were checked directly; key va
 | OS | macOS (Darwin 27.0.0) |
 | Python | 3.12.13 used for the venv. **3.11 is not installed**, so the project targets 3.12. |
 | Node | v20.20.2, npm 10.8.2 |
-| Docker | Client 29.9.2. The daemon did not respond when checked, so Compose is untested at this point. |
+| Docker | Client 29.9.2. The daemon never responded, so Compose is untested. |
 | Installed for this project | tesseract, gitleaks, poppler (Homebrew) |
 | Not installed | `gh`, ffmpeg, uv, pnpm |
-| Ollama | Server running on `:11434`, no models at the start; model pulled for this project |
+| Ollama | `qwen2.5:7b` pulled and used for all live reasoning |
 | LLM API keys in the environment | **None** (no Gemini, Groq, OpenRouter, Hugging Face, Mistral or Anthropic key) |
 | MCP/tools usable for verification | Built-in browser (UI checks), Artifact and document tools |
 

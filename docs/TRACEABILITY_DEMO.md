@@ -3,9 +3,6 @@
 Required deliverable 7: showing that any finding can be traced to its original document location, and
 back again.
 
-> **Draft.** This is the procedure to demonstrate. Step results, finding names and screenshots are
-> filled in from a real run once the application works end to end. Nothing here is a recorded result.
-
 ## The chain being demonstrated
 
 ```
@@ -39,5 +36,11 @@ Original file (SHA-256 recorded on submission)
 
 ## Automated check
 
-TODO (phase 2): a test that walks the chain programmatically for every finding in the demo cases and
-asserts each bbox sits within its page and each referenced field exists.
+`tests/e2e/test_traceability.py` walks the chain on all four demo cases. For every finding, it asserts
+that the document and page exist and that the region sits within the page. It also asserts that every
+referenced field exists and locates its value, and that every cross-document finding is located on at
+least two documents.
+
+```bash
+.venv/bin/python -m pytest tests/e2e/test_traceability.py
+```

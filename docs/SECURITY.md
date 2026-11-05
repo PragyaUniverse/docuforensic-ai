@@ -1,7 +1,6 @@
 # Security and Privacy Review
 
-> **Draft, status as of phase 1 of QA.** Items marked **Pending** are tested by `tests/e2e/` but the
-> code under test hasn't landed yet, so they are design intent and not verified behaviour.
+All verification used the test suite and synthetic data. This is a self-review, not a professional audit.
 
 ## Threat model
 
@@ -17,27 +16,23 @@ leaked API keys, and personal data reaching an external service.
 | Secrets in repo and history | **Verified clean** at this review | `scripts/secret_scan.sh` runs gitleaks over the full history and the working tree, a key-pattern grep, and a check that `.env` was never tracked. `.env` was in `.gitignore` before the first commit. Re-run before every public push. |
 | Key handling in code | **Verified** | Only `config/settings.py` reads environment variables; no `os.environ` in `backend`, `pipeline`, `llm` or `audit`. The Gemini key goes in a header, not the URL. Tests with a fake network assert a canary key never appears in errors. |
 | Upload: real type check | Verified in `pipeline/ingest.py` by reading | Magic-byte sniffing; a pixel limit guards against decompression bombs; encrypted PDFs handled; page count capped by `max_pages_per_doc`. |
-| Upload: limits and filename handling | **Pending** | `test_upload_over_the_limit_is_413`, `test_upload_filename_cannot_escape_the_data_dir`. |
-| `/files` path traversal, symlinks | **Pending** | Encoded and double-dot variants, the database file, and a symlink pointing out of `data_dir`. |
-| CORS | **Pending** | Allow-list from settings. Test asserts an arbitrary origin isn't allowed. |
-| Prompt injection | **Pending** | See below. |
-| PII redaction before external LLM calls | **Partial, 1 bug** | Applied to the prompt, verified on the wire with a fake transport. See open issues. |
+| Upload: limits and filename handling | **Verified** | `test_upload_over_the_limit_is_413`, `test_upload_filename_cannot_escape_the_data_dir`. |
+| `/files` path traversal, symlinks | **Verified** | Encoded and double-dot variants, the database file, and a symlink pointing out of `data_dir`. |
+| CORS | **Verified** | Allow-list from settings. Test asserts an arbitrary origin isn't allowed. |
+| Prompt injection | **Verified structurally** | See below. |
+| PII redaction before external LLM calls | **Verified on a simulated network** | Applied to the prompt, checked on the wire with a fake transport. Never exercised against a real provider. |
 | PII in logs | Verified by reading the current log statements | Log lines carry exception types and provider names, not field values. `pipeline/ingest.py` uses `log.exception`, so a traceback could include a file path. Re-check when the backend lands. |
-| Dependencies | `npm audit --omit=dev`: 0 vulnerabilities at this review | Python dependencies not yet audited (`pip-audit` not run). |
-| Audit log integrity | **Pending** | Tamper test against the API. |
+| Dependencies | **Verified at this review** | `npm audit --omit=dev` and `pip-audit -r requirements.lock`: no known vulnerabilities. |
+| Audit log integrity | **Verified** | Tamper test through the API and in the UI: detected at the exact entry, then restored. |
 
 ## Open issues
 
-1. **Redaction misses identifiers followed by punctuation.** In `llm/redact.py`, the Aadhaar, phone,
-   account and pincode patterns end in `(?![\d.,])`. An ID directly before a comma or full stop, such
-   as `2345 6789 0123,`, is sent unredacted. Using `(?!\d|[.,]\d)` keeps money values safe while
-   fixing this. `test_redaction_removes_identifiers_and_restores_them_locally` fails until it's fixed.
-2. **Names and addresses are redacted only if passed in.** They have no pattern, so the investigator
-   must pass them as `pii_values`. Must be confirmed when `llm/investigator.py` lands. The `system`
-   prompt isn't redacted at all, so it must never contain document data.
-3. **The tamper-demo endpoints are on by default** (`AUDIT_TAMPER_DEMO`) and unauthenticated. They
+1. **Names and addresses are redacted only if passed in.** They have no pattern, so the investigator
+   passes them as `pii_values` from extracted fields. A name that extraction missed would not be
+   redacted. The `system` prompt isn't redacted, so it must never contain document data.
+2. **The tamper-demo endpoints are on by default** (`AUDIT_TAMPER_DEMO`) and unauthenticated. They
    exist for the demo. Anything beyond a local demo must set this to false.
-4. **Stored data isn't encrypted.** Uploaded documents, extracted fields and audit payloads sit in
+3. **Stored data isn't encrypted.** Uploaded documents, extracted fields and audit payloads sit in
    plain files and SQLite under `var/`, with no retention policy. Acceptable for synthetic data, not
    for real personal data.
 
@@ -55,7 +50,7 @@ obeyed an attacker:
 - Document text in a prompt is fenced and described as untrusted data.
 - Injected text can't auto-dismiss anything end to end.
 
-The tests that exercise `llm/investigator.py` are **pending**, because it hasn't landed.
+These tests pass. They show a model can't change findings, not that its prose is free of influence: injected text could still skew an explanation, which is one more reason AI text is labelled and advisory.
 
 ## OWASP Machine Learning Security Top 10 notes
 
