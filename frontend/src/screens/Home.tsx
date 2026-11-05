@@ -6,6 +6,7 @@ import { api } from "@/api";
 import type { Case } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { ErrorState, Loading } from "@/components/ui/states";
+import { Mascot } from "@/components/Mascot";
 import { RiskPlate } from "@/components/StatusBadge";
 import { fmtTime } from "@/lib/utils";
 
@@ -47,12 +48,19 @@ export function HomeScreen() {
 
   return (
     <div className="mx-auto flex max-w-[760px] flex-col gap-9 px-6 py-10">
-      <section>
-        <h1 className="text-[26px] font-semibold leading-tight">Check a set of documents</h1>
-        <p className="mt-2 text-ink-2">
-          Add the documents from one application. We'll read them, compare them with each other, and point out anything
-          worth a second look. You make the final call.
-        </p>
+      <section className="rise overflow-hidden rounded-xl border border-line bg-panel p-6 shadow-sm">
+        <div className="flex items-start gap-5">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-[26px] font-semibold leading-tight">Hi, I'm Doc. Let's check some documents.</h1>
+            <p className="mt-2 text-ink-2">
+              Add the documents from one application. I'll help read them, compare them with each other, and point out
+              anything worth a second look. You make the final call.
+            </p>
+          </div>
+          <div className="hidden shrink-0 sm:block">
+            <Mascot mood={create.isPending || load.isPending ? "thinking" : "hello"} size={104} />
+          </div>
+        </div>
         <form
           className="mt-4 flex flex-wrap gap-2"
           onSubmit={(e) => {
@@ -65,7 +73,7 @@ export function HomeScreen() {
             onChange={(e) => setName(e.target.value)}
             placeholder="Name this case, e.g. Loan application 1042"
             aria-label="Case name"
-            className="h-10 min-w-[240px] flex-1 rounded-md border border-line-strong bg-panel px-3 text-ink placeholder:text-ink-3"
+            className="h-10 min-w-[240px] flex-1 rounded-md border border-line-strong bg-panel px-3 text-ink transition-shadow duration-150 placeholder:text-ink-3 focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent)_22%,transparent)] focus:outline-none"
           />
           <Button variant="primary" type="submit" disabled={create.isPending}>
             Start a new case
@@ -82,7 +90,7 @@ export function HomeScreen() {
         <p className="mt-0.5 text-[14px] text-ink-3">All example documents are made up, with fictional people.</p>
         {demos.isLoading && <Loading label="Loading examples" />}
         {demos.isError && <ErrorState title="Examples are unavailable" error={demos.error} onRetry={() => demos.refetch()} />}
-        <ul className="mt-3 overflow-hidden rounded-md border border-line bg-panel">
+        <ul className="mt-3 overflow-hidden rounded-lg border border-line bg-panel shadow-sm">
           {demos.data?.map((d) => {
             const copy = EXAMPLES[d.key] ?? { title: d.name, text: d.description };
             const busy = load.isPending && load.variables === d.key;
@@ -116,7 +124,7 @@ export function HomeScreen() {
           <h2 id="recent-h" className="text-[17px] font-semibold">
             Recent cases
           </h2>
-          <ul className="mt-3 overflow-hidden rounded-md border border-line bg-panel">
+          <ul className="mt-3 overflow-hidden rounded-lg border border-line bg-panel shadow-sm">
             {cases.data.slice(0, 6).map((c) => (
               <CaseRow key={c.id} c={c} />
             ))}

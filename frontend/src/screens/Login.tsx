@@ -18,7 +18,7 @@ export function LoginScreen() {
   return (
     <div className="flex h-full items-center justify-center bg-ground p-6">
       <form
-        className="w-full max-w-[360px] rounded-md border border-line bg-panel p-6"
+        className="w-full max-w-[360px] rounded-lg border border-line bg-panel shadow-sm p-6"
         onSubmit={(e) => {
           e.preventDefault();
           login.mutate();

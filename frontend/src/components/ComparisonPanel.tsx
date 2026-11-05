@@ -60,7 +60,7 @@ function GroupCard({
   const doc = docs.get(source.docId);
   const conf = source.field?.confidence;
   return (
-    <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-md border border-line bg-panel">
+    <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-line bg-panel shadow-sm">
       <div className="flex items-start justify-between gap-2 border-b border-line px-3 py-2">
         <div className="min-w-0">
           <div className="eyebrow">{humanize(doc?.doc_type ?? "document")}</div>

@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { MOCK_MODE } from "@/api";
 import { accountApi } from "@/api/account";
 import { LoginScreen } from "@/screens/Login";
+import { Assistant } from "./Assistant";
 import { useCapabilities, useCase } from "@/api/hooks";
 import type { CapabilityMode } from "@/api/types";
 import { cn } from "@/lib/utils";
@@ -189,6 +190,8 @@ export function Shell() {
           <Outlet />
         </div>
       </main>
+      {/* Home and the progress screen have their own, larger Doc. */}
+      {!MOCK_MODE && location.pathname !== "/" && !location.pathname.endsWith("/pipeline") && <Assistant />}
     </div>
   );
 }

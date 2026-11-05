@@ -145,7 +145,7 @@ export function DossierScreen() {
         </nav>
 
         <article className="flex min-w-0 max-w-[920px] flex-col gap-10">
-          <div className="flex flex-col gap-2 rounded-md border border-line bg-panel p-4">
+          <div className="flex flex-col gap-2 rounded-lg border border-line bg-panel shadow-sm p-4">
             <div className="flex flex-wrap items-center gap-2">
               <RiskPlate risk={d.risk_level} large />
               <HumanReviewPlate />

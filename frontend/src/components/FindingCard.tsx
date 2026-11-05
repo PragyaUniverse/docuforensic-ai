@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api";
 import type { Document, EvidenceItem, Finding, ReasoningProvenance, ReviewDecision } from "@/api/types";
 import { CATEGORY_LABEL, STATUS_META, splitExplanation } from "@/lib/findings";
+import { docSays } from "@/lib/assistant";
 import { getReviewer, setReviewer } from "@/lib/reviewer";
 import { cn, fmtBBox, fmtTime } from "@/lib/utils";
 import { Button } from "./ui/button";
@@ -178,7 +179,8 @@ export function FindingCard({
 
   const review = useMutation({
     mutationFn: (d: ReviewDecision) => api.reviewFinding(finding.id, d, reviewer.trim() || "examiner", note.trim()),
-    onSuccess: () => {
+    onSuccess: (updated) => {
+      docSays(`Noted: ${updated.review.decision}. That's in the history now.`);
       setReviewer(reviewer.trim() || "examiner");
       setNote("");
       setSaved(true);
@@ -235,7 +237,7 @@ export function FindingCard({
                 </Button>
               )}
 
-              <section className="rounded-md border border-line bg-panel p-3" aria-label="Your decision">
+              <section className="rounded-lg border border-line bg-panel shadow-sm p-3" aria-label="Your decision">
                 <div className="mb-2 flex items-center justify-between gap-2">
                   <h4 className="eyebrow">Your decision</h4>
                   {saved && (
@@ -272,7 +274,7 @@ export function FindingCard({
                     onChange={(e) => setName(e.target.value)}
                     aria-label="Reviewer name"
                     placeholder="Your name"
-                    className="h-7 min-w-0 flex-1 rounded-md border border-line bg-panel px-1.5 text-[13px] text-ink placeholder:text-ink-3"
+                    className="h-7 min-w-0 flex-1 rounded-lg border border-line bg-panel shadow-sm px-1.5 text-[13px] text-ink placeholder:text-ink-3"
                   />
                 </label>
                 {finding.review.at && (

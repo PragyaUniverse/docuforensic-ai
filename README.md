@@ -49,6 +49,8 @@ local model, install [Ollama](https://ollama.com) and run `ollama pull qwen2.5:7
 free tiers, copy `.env.example` to `.env`, add keys, and run `make keys`. API docs are at
 http://localhost:8000/docs.
 
+**Meet Doc.** The animated character is a guide: it reacts to what's happening and repeats what the checks found. It doesn't find or decide anything, and you can drag it around or hide it.
+
 ## Why this deserves to win
 
 Most document systems stop at "what does it say?" This one asks "should it be believed?", and it can

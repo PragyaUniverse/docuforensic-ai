@@ -10,7 +10,7 @@ import { humanize } from "@/lib/utils";
 
 function Stat({ value, label }: { value: number; label: string }) {
   return (
-    <div className="rounded-md border border-line bg-panel px-4 py-3">
+    <div className="rounded-lg border border-line bg-panel shadow-sm px-4 py-3">
       <div className="text-[24px] font-semibold leading-tight">{value}</div>
       <div className="text-[14px] text-ink-2">{label}</div>
     </div>
@@ -19,7 +19,7 @@ function Stat({ value, label }: { value: number; label: string }) {
 
 function CountTable({ title, rows, note }: { title: string; rows: [string, number, number?][]; note?: string }) {
   return (
-    <section className="rounded-md border border-line bg-panel">
+    <section className="rounded-lg border border-line bg-panel shadow-sm">
       <h2 className="border-b border-line px-4 py-2.5 font-semibold">{title}</h2>
       {rows.length === 0 ? (
         <p className="px-4 py-3 text-[14px] text-ink-3">Nothing yet.</p>
@@ -79,7 +79,7 @@ export function AnalyticsScreen() {
             note="A check that reviewers often dismiss may be raising too many false alarms."
           />
         </div>
-        <section className="rounded-md border border-line bg-panel">
+        <section className="rounded-lg border border-line bg-panel shadow-sm">
           <h2 className="border-b border-line px-4 py-2.5 font-semibold">Recent cases</h2>
           <ul>
             {a.recent.map((c) => (

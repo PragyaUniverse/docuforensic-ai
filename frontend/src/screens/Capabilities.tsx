@@ -39,16 +39,19 @@ export function CapabilitiesScreen() {
         This list comes from the running service, so it reflects what's actually working right now.
       </PageHeading>
       <div className="grid gap-6 p-6 xl:grid-cols-2">
-        <section className="rounded-md border border-line bg-panel p-4 xl:col-span-2">
+        <section className="rounded-lg border border-line bg-panel shadow-sm p-4 xl:col-span-2">
           <div className="text-[18px] font-semibold">{mode.label}</div>
           <p className="mt-1 max-w-[80ch] text-ink-2">{mode.text}</p>
+          <p className="mt-1 max-w-[80ch] text-[14px] text-ink-3">
+            Doc, the animated character, is only a guide. It repeats what the checks found, and it doesn't find or decide anything.
+          </p>
           <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 font-mono text-[13px] text-ink-3">
             <span>AI calls {c.llm_usage?.calls ?? 0}</span>
             
                       </div>
         </section>
 
-        <section className="rounded-md border border-line bg-panel xl:col-span-2">
+        <section className="rounded-lg border border-line bg-panel shadow-sm xl:col-span-2">
           <h2 className="eyebrow border-b border-line px-4 py-2">Features</h2>
           {c.matrix.length === 0 ? (
             <p className="px-4 py-3 text-ink-3">The service reported no capability matrix.</p>
@@ -77,7 +80,7 @@ export function CapabilitiesScreen() {
           )}
         </section>
 
-        <section className="rounded-md border border-line bg-panel p-4 xl:col-span-2">
+        <section className="rounded-lg border border-line bg-panel shadow-sm p-4 xl:col-span-2">
           <h2 className="eyebrow mb-2">Known limitations and expected false positives</h2>
           {c.limitations.length === 0 ? (
             <p className="text-ink-3">The service reported no limitations.</p>
@@ -92,7 +95,7 @@ export function CapabilitiesScreen() {
         <details className="xl:col-span-2">
           <summary>Technical status: AI providers and local tools</summary>
           <div className="mt-3 grid gap-6 xl:grid-cols-2">
-        <section className="rounded-md border border-line bg-panel">
+        <section className="rounded-lg border border-line bg-panel shadow-sm">
           <h2 className="eyebrow border-b border-line px-4 py-2">AI providers</h2>
           {c.providers.length === 0 ? (
             <p className="px-4 py-3 text-ink-3">No providers configured.</p>
@@ -122,7 +125,7 @@ export function CapabilitiesScreen() {
           )}
         </section>
 
-        <section className="rounded-md border border-line bg-panel">
+        <section className="rounded-lg border border-line bg-panel shadow-sm">
           <h2 className="eyebrow border-b border-line px-4 py-2">Local tools</h2>
           {c.tools.length === 0 ? (
             <p className="px-4 py-3 text-ink-3">No tool status reported.</p>

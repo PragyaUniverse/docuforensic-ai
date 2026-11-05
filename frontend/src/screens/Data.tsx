@@ -290,7 +290,7 @@ function StructureView({ docs, onPick }: { docs: Document[]; onPick: (t: Target)
   return (
     <div className="grid min-h-0 flex-1 content-start gap-3 overflow-auto p-4 xl:grid-cols-2">
       {docs.map((d) => (
-        <section key={d.id} className="rounded-md border border-line bg-panel">
+        <section key={d.id} className="rounded-lg border border-line bg-panel shadow-sm">
           <header className="border-b border-line px-3 py-2">
             <div className="eyebrow">{humanize(d.doc_type)}</div>
             <div className="truncate font-mono text-[13px] text-ink-2">{d.filename}</div>

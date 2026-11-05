@@ -9,6 +9,7 @@ import type { Case, PipelineStage, ProgressEvent, StageProgress } from "@/api/ty
 import { Button } from "@/components/ui/button";
 import { ErrorState, Loading } from "@/components/ui/states";
 import { PageHeading } from "@/components/Shell";
+import { Mascot } from "@/components/Mascot";
 import { ProcBadge } from "@/components/StatusBadge";
 import { cn, fmtMs } from "@/lib/utils";
 
@@ -126,11 +127,24 @@ export function PipelineScreen() {
         )}
         {status === "failed" && <p className="text-ink-2">The messages below say why. Nothing was made up for the steps that didn't run.</p>}
 
+        <div className="flex items-center gap-4 rounded-xl border border-line bg-panel p-4 shadow-sm">
+          <Mascot mood={running ? "thinking" : status === "complete" ? "happy" : status === "failed" ? "oops" : "idle"} size={84} className="shrink-0" />
+          <div className="min-w-0 flex-1" aria-live="polite">
+            <p className="font-medium">
+              {running
+                ? `${stages.find((x) => x.p?.state === "running")?.label ?? "Getting started"}…`
+                : status === "complete"
+                  ? "Finished! Have a look at what I found."
+                  : status === "failed"
+                    ? "Something stopped the check."
+                    : "Ready when you are."}
+            </p>
+            {running && <p className="text-[14px] text-ink-3">{stepsDone} of {stages.length} steps done</p>}
+          </div>
+        </div>
+
         {running && (
           <div>
-            <div className="mb-1 text-[14px] text-ink-2">
-              {stepsDone} of {stages.length} steps done
-            </div>
             <div className="h-1.5 overflow-hidden rounded-full bg-line" aria-hidden>
               <motion.div
                 className="h-full rounded-full bg-accent"
@@ -142,7 +156,7 @@ export function PipelineScreen() {
           </div>
         )}
 
-        <ol aria-label="Steps" className="rounded-md border border-line bg-panel">
+        <ol aria-label="Steps" className="rounded-lg border border-line bg-panel shadow-sm">
           {stages.map((s) => {
             const state = s.p?.state ?? "pending";
             const warn = state === "degraded" || state === "failed";
@@ -164,7 +178,7 @@ export function PipelineScreen() {
         {problems.length > 0 && (
           <section>
             <h2 className="mb-2 text-[17px] font-semibold">Files with problems</h2>
-            <ul className="rounded-md border border-line bg-panel">
+            <ul className="rounded-lg border border-line bg-panel shadow-sm">
               {problems.map((d) => (
                 <li key={d.id} className="border-b border-line px-4 py-2.5 last:border-b-0">
                   <div className="flex items-center justify-between gap-2">

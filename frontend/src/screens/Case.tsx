@@ -134,7 +134,7 @@ export function CaseScreen() {
 
       <div className="flex flex-col gap-6 px-6">
         {done && (
-          <section className="rise rounded-md border border-line bg-panel p-5">
+          <section className="rise rounded-lg border border-line bg-panel shadow-sm p-5">
             <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
               <RiskPlate risk={cs.risk_level} large />
               <HumanReviewPlate />
@@ -183,7 +183,7 @@ export function CaseScreen() {
             <h2 id="docs-h" className="mb-2 text-[17px] font-semibold">
               {plural(documents.length, "document")}
             </h2>
-            <ul className="rounded-md border border-line bg-panel">
+            <ul className="rounded-lg border border-line bg-panel shadow-sm">
               {documents.map((d) => (
                 <DocRow
                   key={d.id}

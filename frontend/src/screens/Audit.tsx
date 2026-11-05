@@ -8,6 +8,7 @@ import type { AuditEntry, AuditVerification } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { Empty, ErrorState, Loading } from "@/components/ui/states";
 import { PageHeading } from "@/components/Shell";
+import { docSays } from "@/lib/assistant";
 import { cn, fmtTime, humanize } from "@/lib/utils";
 
 function Row({ e, bad, afterBad }: { e: AuditEntry; bad: boolean; afterBad: boolean }) {
@@ -89,7 +90,14 @@ export function AuditScreen() {
   const [result, setResult] = useState<AuditVerification | null>(null);
   const [tampered, setTampered] = useState<number | null>(null);
 
-  const verify = useMutation({ mutationFn: () => api.verifyAudit(caseId), onSuccess: setResult });
+  const verify = useMutation({
+    mutationFn: () => api.verifyAudit(caseId),
+    onSuccess: (r) => {
+      setResult(r);
+      if (r.ok) docSays("All good. Nothing has been changed.");
+      else docSays(`Hold on! Entry #${r.first_bad_seq} was changed after it was written.`, "oops");
+    },
+  });
   const tamper = useMutation({
     mutationFn: () => api.tamperAudit(),
     onSuccess: (r) => {
