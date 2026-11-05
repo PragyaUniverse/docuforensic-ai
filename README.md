@@ -105,7 +105,7 @@ what is partial, planned or unsupported.
 | Contextual Intelligence | 20 | Entity matching, salary and balance arithmetic, figures vs words, 9 cross-document discrepancy types | Discrepancies 13/13 across 9/9 types |
 | Evidence & Traceability | 10 | Finding to document, page and region in both directions, evidence graph, audit chain | Automated test walks every finding on all 4 cases |
 | AI Reasoning & Explainability | 10 | Benign alternatives and what would confirm or refute each, with the source of every explanation labelled | Run live on a local LLM: 28 calls, 0 errors |
-| Technical Implementation | 10 | Typed contracts, 379 tests, CI config, safe failure handling, tested clean clone | See below |
+| Technical Implementation | 10 | Typed contracts, 378 tests, CI config, safe failure handling, tested clean clone | See below |
 | Innovation | 5 | Text layer vs pixels, second-engine confirmation, counter-hypotheses, verifiable audit tamper demo | Live in the app |
 
 ## Benchmark
