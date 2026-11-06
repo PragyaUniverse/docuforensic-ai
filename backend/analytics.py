@@ -34,6 +34,8 @@ def report() -> dict:
             "id": case.id, "name": case.name, "status": case.status.value, "risk_level": case.risk_level.value,
             "created_at": case.created_at.isoformat(), "documents": len(docs),
             "to_review": sum(f.status.value != "OBSERVATION" and f.review.decision.value == "pending" for f in findings),
+            "findings": sum(f.status.value != "OBSERVATION" for f in findings),
+            "conflicts": sum(bool(f.discrepancy_type) and f.status.value != "OBSERVATION" for f in findings),
         })
     return {
         "cases": len(cases), "documents": documents, "by_risk": dict(by_risk), "by_status": dict(by_status),

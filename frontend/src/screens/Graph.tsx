@@ -44,7 +44,7 @@ const hiddenHandle = "!h-px !w-px !min-h-0 !min-w-0 !border-0 !bg-transparent !o
 
 function DocNode({ data }: NodeProps<Node<NodeData>>) {
   return (
-    <div className={cn("w-[210px] border bg-raised px-2.5 py-2 transition-opacity", data.selected ? "border-ink" : "border-line-strong", data.dim && "opacity-30")}>
+    <div className={cn("w-[210px] rounded-lg border bg-raised px-3 py-2 transition-[opacity,box-shadow]", data.selected ? "border-accent glow-cyan" : data.count ? "border-man/60 glow-red" : "border-line-strong", data.dim && "opacity-30")}>
       <Handle type="source" position={Position.Right} className={handleCls} />
       <Handle type="target" position={Position.Right} className={handleCls} />
       <div className="eyebrow flex items-center justify-between gap-1 !text-[13px]">
@@ -61,7 +61,7 @@ function DocNode({ data }: NodeProps<Node<NodeData>>) {
 /** Document as a point on the ring. Edges attach to the centre through a floating edge. */
 function RingNode({ data }: NodeProps<Node<NodeData>>) {
   return (
-    <div className={cn("w-[190px] cursor-pointer border bg-raised px-2.5 py-2 transition-opacity", data.selected ? "border-ink" : data.count ? "border-man" : "border-line-strong", data.dim && "opacity-30")}>
+    <div className={cn("w-[190px] cursor-pointer rounded-lg border bg-raised px-3 py-2 transition-[opacity,box-shadow] hover:border-accent", data.selected ? "border-accent glow-cyan" : data.count ? "border-man/60 glow-red" : "border-line-strong", data.dim && "opacity-30")}>
       <Handle type="source" position={Position.Top} className={hiddenHandle} />
       <Handle type="target" position={Position.Top} className={hiddenHandle} />
       <div className="eyebrow flex items-center gap-1 truncate !text-[13px]">
@@ -77,7 +77,7 @@ function RingNode({ data }: NodeProps<Node<NodeData>>) {
 
 function EntityNode({ data }: NodeProps<Node<NodeData>>) {
   return (
-    <div className={cn("w-[230px] border bg-panel px-2.5 py-1.5 transition-opacity", data.conflict ? "border-man" : "border-line-strong", data.selected && "outline outline-1 outline-ink", data.dim && "opacity-30")}>
+    <div className={cn("w-[230px] rounded-md border bg-panel px-2.5 py-1.5 transition-[opacity,box-shadow]", data.conflict ? "border-man/70 glow-red" : "border-line-strong", data.selected && "border-accent glow-cyan", data.dim && "opacity-30")}>
       <Handle type="target" position={Position.Left} className={handleCls} />
       <Handle type="source" position={Position.Right} className={handleCls} />
       <Handle id="t" type="target" position={Position.Top} className={hiddenHandle} />
@@ -95,7 +95,7 @@ function EntityNode({ data }: NodeProps<Node<NodeData>>) {
 
 function FindingNode({ data }: NodeProps<Node<NodeData>>) {
   return (
-    <div className={cn("w-[250px] border bg-panel px-2.5 py-1.5 transition-opacity", data.selected ? "border-ink" : "border-line-strong", data.dim && "opacity-30")}>
+    <div className={cn("w-[250px] rounded-md border bg-panel px-2.5 py-1.5 transition-[opacity,box-shadow]", data.selected ? "border-accent glow-cyan" : "border-line-strong", data.dim && "opacity-30")}>
       <Handle type="target" position={Position.Left} className={handleCls} />
       <Handle type="source" position={Position.Left} className={handleCls} />
       <div className="flex items-center justify-between gap-2">
@@ -298,9 +298,10 @@ export default function GraphScreen() {
             target: p.b,
             type: "floating",
             label,
+            className: p.conflict && !dim ? "edge-conflict" : undefined,
             data: { dim, on, labelAt: 0.38 + (i % 3) * 0.12 },
             style: {
-              stroke: p.conflict ? "var(--color-man)" : "var(--color-line-strong)",
+              stroke: p.conflict ? "var(--color-man)" : "color-mix(in srgb, var(--color-ok) 55%, transparent)",
               strokeWidth: p.conflict ? Math.min(1.5 + p.findingIds.length * 0.75, 4) : 1,
               strokeDasharray: p.conflict ? undefined : "2 4",
               opacity: dim ? 0.12 : 1,
@@ -348,7 +349,13 @@ export default function GraphScreen() {
     const edges: Edge[] = e.edges.map((x) => {
       const on = x.id === selectedEdge || (!!selectedId && (x.source === selectedId || x.target === selectedId));
       const dim = !!neighbors && !on;
-      const color = x.conflict ? "var(--color-man)" : on ? "var(--color-ink-3)" : "var(--color-line-strong)";
+      const color = x.conflict
+        ? "var(--color-man)"
+        : x.kind === "supports"
+          ? "color-mix(in srgb, var(--color-ok) 60%, transparent)"
+          : on
+            ? "var(--color-accent)"
+            : "color-mix(in srgb, var(--color-accent) 35%, transparent)";
       const entityPair = kinds.get(x.source) === "entity" && kinds.get(x.target) === "entity";
       // Same-column entity links run vertically, top to bottom, between adjacent values.
       const swap = entityPair && (pos.get(x.source)?.y ?? 0) > (pos.get(x.target)?.y ?? 0);
@@ -362,6 +369,7 @@ export default function GraphScreen() {
         labelStyle: { fill: "var(--color-man)", fontFamily: "var(--font-mono)", fontSize: 10 },
         labelBgStyle: { fill: "var(--color-panel)" },
         labelBgPadding: [4, 2] as [number, number],
+        className: x.conflict && !dim ? "edge-conflict" : undefined,
         style: {
           stroke: color,
           strokeWidth: x.conflict ? (on ? 3 : 2) : 1,
@@ -416,11 +424,11 @@ export default function GraphScreen() {
   return (
     <div className={cn("grid h-full min-h-[560px]", sel ? "grid-rows-[minmax(0,1fr)_minmax(0,50%)] lg:grid-cols-[minmax(0,1fr)_400px] lg:grid-rows-1 xl:grid-cols-[minmax(0,1fr)_460px]" : "grid-cols-1")}>
       <div className="relative min-h-0">
-        <div className="absolute left-3 top-3 z-10 flex flex-col gap-2 rounded-lg border border-line bg-panel shadow-sm p-2.5">
+        <div className="absolute left-3 top-3 z-10 flex flex-col gap-2 panel p-2.5">
           <Link className="link text-[14px]" to={`/cases/${caseId}/conflicts`}>
             Back to the list
           </Link>
-          <div className="flex gap-1" role="group" aria-label="Graph view">
+          <div className="flex gap-0.5 rounded-lg border border-line bg-ground/60 p-0.5" role="group" aria-label="Graph view">
             {(
               [
                 ["documents", "By document"],
@@ -435,7 +443,7 @@ export default function GraphScreen() {
                   setView(v);
                   setSel(null);
                 }}
-                className={cn("cursor-pointer border px-1.5 py-0.5 text-[13px]", view === v ? "border-accent bg-accent text-white" : "border-line-strong text-ink-2 hover:bg-hover hover:text-ink")}
+                className={cn("cursor-pointer rounded-md px-2 py-1 font-mono text-[11.5px] uppercase tracking-[0.08em] transition-colors", view === v ? "bg-accent/15 text-accent shadow-[inset_0_0_0_1px_var(--color-accent)]" : "text-ink-3 hover:text-ink")}
               >
                 {l}
               </button>
@@ -447,7 +455,7 @@ export default function GraphScreen() {
             </span>
             {view === "documents" ? (
               <span className="flex items-center gap-1.5">
-                <span aria-hidden className="block w-5 border-t border-dotted border-line-strong" /> agree
+                <span aria-hidden className="block w-5 border-t border-dashed border-ok/60" /> agree
               </span>
             ) : (
               <>
@@ -489,7 +497,7 @@ export default function GraphScreen() {
           style={{ background: "transparent" }}
           aria-label="Evidence graph of documents, entities and findings"
         >
-          <Background color="var(--color-line)" gap={18} size={1} />
+          <Background color="var(--color-line-strong)" gap={22} size={1} />
           <Controls showInteractive={false} position="bottom-left" />
         </ReactFlow>
       </div>

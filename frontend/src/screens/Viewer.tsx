@@ -280,8 +280,9 @@ export function ViewerScreen() {
 
       <aside aria-label="Findings" data-tour="findings" className="flex min-h-0 flex-col bg-panel">
         <div className="flex shrink-0 items-center justify-between gap-2 border-b border-line px-4 py-2.5">
-          <h1 className="text-[17px] font-semibold">
-            Findings{findingsQ.data ? <span className="ml-1.5 font-normal text-ink-3">{important.length}</span> : null}
+          <h1 className="mono-label flex items-center gap-2 !text-[12px] !text-ink">
+            <span className="status-dot" aria-hidden />
+            Doc's findings{findingsQ.data ? <span className="rounded border border-line px-1.5 text-ink-2">{important.length}</span> : null}
           </h1>
           <label className="flex items-center gap-1.5 text-[13px] text-ink-2">
             <input type="checkbox" checked={onlyThisDoc} onChange={(e) => setOnlyThisDoc(e.target.checked)} />

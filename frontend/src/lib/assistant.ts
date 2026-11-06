@@ -1,4 +1,4 @@
-import type { Mood } from "@/components/Mascot";
+export type Mood = "idle" | "hello" | "thinking" | "happy" | "concerned" | "oops";
 
 const EVENT = "doc-says";
 

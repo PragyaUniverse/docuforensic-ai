@@ -9,7 +9,46 @@ import { Button } from "@/components/ui/button";
 import { Empty, ErrorState, Loading } from "@/components/ui/states";
 import { PageHeading } from "@/components/Shell";
 import { docSays } from "@/lib/assistant";
-import { cn, fmtTime, humanize } from "@/lib/utils";
+import { cn, humanize } from "@/lib/utils";
+
+const STAGE_LABEL: Record<string, string> = {
+  submission: "Evidence secured",
+  classification: "Evidence read and classified",
+  ocr_extraction: "Entity extraction complete",
+  structure: "Document structure mapped",
+  visual_forensics: "Forensic checks complete",
+  contextual_verification: "Internal consistency verified",
+  cross_document: "Cross-document comparison complete",
+  anomaly_investigation: "Anomaly investigation complete",
+  evidence: "Evidence graph built",
+  dossier: "Report compiled",
+};
+
+function describe(e: AuditEntry): { label: string; tone: "cyan" | "amber" | "red" | "green" | "muted" } {
+  const p = e.payload as Record<string, unknown>;
+  if (e.action.startsWith("stage.")) {
+    const stage = e.action.slice(6);
+    const failed = p.state === "failed" || p.state === "degraded";
+    return { label: `${STAGE_LABEL[stage] ?? humanize(stage)}${failed ? " (with problems)" : ""}`, tone: failed ? "amber" : "cyan" };
+  }
+  if (e.action === "finding.recorded") {
+    const status = String(p.status ?? "");
+    const title = String(p.title ?? humanize(String(p.detector ?? "finding")));
+    if (status === "POTENTIAL_MANIPULATION") return { label: `Potential manipulation: ${title}`, tone: "red" };
+    if (status === "INCONSISTENCY") return { label: `Inconsistency: ${title}`, tone: "amber" };
+    return { label: `Observation: ${title}`, tone: "muted" };
+  }
+  if (e.action === "finding.review") return { label: `Reviewer ${String(p.decision ?? "decided")} a finding`, tone: "green" };
+  if (e.action === "case.created") return { label: "Investigation opened", tone: "cyan" };
+  if (e.action === "case.started") return { label: "Forensic analysis started", tone: "cyan" };
+  if (e.action === "case.finished") return { label: "Forensic analysis complete", tone: "green" };
+  if (e.action === "document.submitted") return { label: `Evidence submitted: ${String(p.filename ?? "file")}`, tone: "cyan" };
+  if (e.action.includes("tamper")) return { label: humanize(e.action.replace("audit.", "")), tone: "amber" };
+  return { label: humanize(e.action), tone: "muted" };
+}
+
+const DOT = { cyan: "bg-accent shadow-[0_0_10px_rgba(var(--color-glow),0.9)]", amber: "bg-inc shadow-[0_0_10px_var(--color-inc)]", red: "bg-man shadow-[0_0_10px_var(--color-man)]", green: "bg-ok shadow-[0_0_8px_var(--color-ok)]", muted: "bg-line-strong" };
+const TEXT = { cyan: "text-ink", amber: "text-inc", red: "text-man", green: "text-ok", muted: "text-ink-3" };
 
 function Row({ e, bad, afterBad }: { e: AuditEntry; bad: boolean; afterBad: boolean }) {
   const [open, setOpen] = useState(false);
@@ -17,34 +56,36 @@ function Row({ e, bad, afterBad }: { e: AuditEntry; bad: boolean; afterBad: bool
   useEffect(() => {
     if (bad) ref.current?.scrollIntoView({ block: "center", behavior: "smooth" });
   }, [bad]);
+  const d = describe(e);
+  const time = new Date(e.ts).toLocaleTimeString(undefined, { hour12: false });
   return (
-    <li ref={ref} className={cn("relative border-b border-line", bad && "bg-man-dim", afterBad && "opacity-55")}>
+    <li ref={ref} className={cn("relative", afterBad && "opacity-45")}>
       <button
         type="button"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
-        className="grid w-full cursor-pointer grid-cols-[52px_minmax(0,1fr)_auto] items-center gap-3 px-4 py-2 text-left hover:bg-hover"
+        className={cn("grid w-full cursor-pointer grid-cols-[78px_28px_minmax(0,1fr)_auto] items-start gap-2 rounded-lg py-2 pr-3 text-left transition-colors hover:bg-hover", bad && "bg-man-dim")}
       >
-        <span className={cn("font-mono text-[13px]", bad ? "font-medium text-man" : "text-ink-3")}>#{e.seq}</span>
+        <span className="pt-0.5 text-right font-mono text-[11.5px] text-ink-3">{time}</span>
+        <span className="relative flex justify-center pt-1.5">
+          <span className={cn("relative z-10 size-2 rounded-full", bad ? "bg-man shadow-[0_0_12px_var(--color-man)]" : DOT[d.tone])} />
+        </span>
         <span className="min-w-0">
-          <span className="block truncate text-[14px] text-ink">
-            {humanize(e.action.replace(/^stage\./, "step: ").replace("finding.review", "review decision"))}
-            {e.actor.startsWith("reviewer:") && <span className="ml-2 text-[13px] text-ink-3">by {e.actor.slice(9)}</span>}
+          <span className={cn("block truncate text-[13.5px] font-medium", bad ? "text-man" : TEXT[d.tone])}>{d.label}</span>
+          <span className="font-mono text-[10.5px] text-ink-3">
+            #{e.seq} · {e.actor.startsWith("reviewer:") ? `REVIEWER ${e.actor.slice(9).toUpperCase()}` : e.actor.toUpperCase()}
           </span>
         </span>
-        <span className="flex items-center gap-2 font-mono text-[13px] text-ink-3">
-          <span className="hidden lg:inline">{fmtTime(e.ts)}</span>
-          <ChevronRight className={cn("size-3.5 transition-transform", open && "rotate-90")} aria-hidden />
-        </span>
+        <ChevronRight className={cn("mt-1 size-3.5 text-ink-3 transition-transform", open && "rotate-90")} aria-hidden />
       </button>
       {open && (
-        <div className="border-t border-line bg-ground px-4 py-2">
-          <div className="mb-1 code break-all text-ink-3">
-            prev {e.prev_hash}
+        <div className="mb-2 ml-[114px] rounded-lg border border-line bg-ground px-3 py-2">
+          <div className="code mb-1 break-all text-ink-3">
+            PREV {e.prev_hash}
             <br />
-            hash {e.entry_hash}
+            HASH {e.entry_hash}
           </div>
-          <pre className="max-h-64 overflow-auto code whitespace-pre-wrap break-words text-ink-2">{JSON.stringify(e.payload, null, 2)}</pre>
+          <pre className="code max-h-64 overflow-auto whitespace-pre-wrap break-words text-ink-2">{JSON.stringify(e.payload, null, 2)}</pre>
         </div>
       )}
     </li>
@@ -121,7 +162,8 @@ export function AuditScreen() {
   return (
     <div className="flex h-full flex-col">
       <PageHeading
-        title="History"
+        eyebrow="Tamper-evident record"
+        title="Investigation timeline"
         actions={
           <>
             <Button variant="primary" onClick={() => verify.mutate()} disabled={verify.isPending}>
@@ -139,7 +181,7 @@ export function AuditScreen() {
           </>
         }
       >
-        Everything that happened on this case, in order. Each entry is locked to the one before it, so any later edit gets noticed.
+        Every step and decision, in order. Each entry is chained to the one before it by hash, so any later edit is detected.
       </PageHeading>
 
       <div className="flex min-h-0 flex-1 flex-col gap-4 p-6">
@@ -155,11 +197,12 @@ export function AuditScreen() {
             Entry #{bad} belongs to another case in the same chain, so it is not listed below. Verification covers the whole chain.
           </p>
         )}
-        <div className="min-h-[260px] flex-1 overflow-y-auto border-x border-t border-line bg-panel">
+        <div className="panel relative min-h-[260px] flex-1 overflow-y-auto p-3">
+          <span aria-hidden className="pointer-events-none absolute bottom-4 left-[105px] top-4 w-px bg-gradient-to-b from-transparent via-[rgba(var(--color-glow),0.45)] to-transparent" />
           {q.isLoading && <Loading label="Loading history" />}
           {q.isError && <ErrorState title="The history could not load" error={q.error} onRetry={() => q.refetch()} />}
           {q.data?.length === 0 && <Empty title="Nothing has happened on this case yet" />}
-          <ol>
+          <ol className="relative">
             {q.data?.map((e) => (
               <Row key={e.seq} e={e} bad={bad === e.seq} afterBad={bad !== null && e.seq > bad} />
             ))}

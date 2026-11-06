@@ -51,6 +51,8 @@ not vendored into this repository.
 
 | Package | Version | License | Used for |
 |---|---|---|---|
+| @fontsource-variable/inter | 5.1.1 | OFL-1.1 | runtime |
+| @fontsource-variable/jetbrains-mono | 5.1.2 | OFL-1.1 | runtime |
 | @radix-ui/react-dialog | 1.3.1 | MIT | runtime |
 | @radix-ui/react-slider | 1.6.1 | MIT | runtime |
 | @radix-ui/react-slot | 1.5.0 | MIT | runtime |
@@ -117,3 +119,5 @@ claim formal compliance with any of them.
 | Tesseract `tessdata_fast` (`hin`, `eng`), in `data/tessdata` | Hindi OCR | Apache-2.0 | Bundled |
 | Granite 3.2 Vision through Ollama | Optional handwriting reading | Apache-2.0 | Local, downloaded separately |
 | Caveat font (OFL-1.1) | Used once to measure handwriting reading | OFL-1.1 | Not bundled |
+| Inter (`@fontsource-variable/inter`) | Interface typeface | OFL-1.1 | Bundled in the frontend build |
+| JetBrains Mono (`@fontsource-variable/jetbrains-mono`) | Monospace typeface for technical values | OFL-1.1 | Bundled in the frontend build |

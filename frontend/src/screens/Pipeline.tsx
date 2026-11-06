@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { motion } from "framer-motion";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, Check, Circle, Loader2, WifiOff, X } from "lucide-react";
 import { api } from "@/api";
@@ -8,28 +7,28 @@ import { useCase } from "@/api/hooks";
 import type { Case, PipelineStage, ProgressEvent, StageProgress } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { ErrorState, Loading } from "@/components/ui/states";
-import { PageHeading } from "@/components/Shell";
-import { Mascot } from "@/components/Mascot";
+import { DocOrb } from "@/components/DocOrb";
+import { CountUp, Ring } from "@/components/Metrics";
 import { ProcBadge } from "@/components/StatusBadge";
-import { openDocChat } from "@/lib/assistant";
+import { caseCode } from "@/lib/case";
 import { cn, fmtMs } from "@/lib/utils";
 
 const STAGES: { id: PipelineStage; label: string }[] = [
-  { id: "submission", label: "Receiving the documents" },
-  { id: "classification", label: "Reading each page and working out what it is" },
-  { id: "ocr_extraction", label: "Pulling out fields and tables" },
-  { id: "structure", label: "Understanding the layout" },
-  { id: "visual_forensics", label: "Looking for signs of editing" },
-  { id: "contextual_verification", label: "Checking each document adds up" },
-  { id: "cross_document", label: "Comparing the documents with each other" },
-  { id: "anomaly_investigation", label: "Writing up what was found" },
-  { id: "evidence", label: "Collecting the evidence" },
-  { id: "dossier", label: "Preparing the report" },
+  { id: "submission", label: "Securing evidence" },
+  { id: "classification", label: "Reading evidence" },
+  { id: "ocr_extraction", label: "Extracting entities" },
+  { id: "structure", label: "Mapping document structure" },
+  { id: "visual_forensics", label: "Running forensic checks" },
+  { id: "contextual_verification", label: "Verifying internal consistency" },
+  { id: "cross_document", label: "Comparing documents" },
+  { id: "anomaly_investigation", label: "Detecting anomalies" },
+  { id: "evidence", label: "Building evidence graph" },
+  { id: "dossier", label: "Compiling report" },
 ];
 
 function StageIcon({ state }: { state: string }) {
   const cls = "size-[18px]";
-  if (state === "running") return <Loader2 className={cn(cls, "animate-spin text-accent")} aria-hidden />;
+  if (state === "running") return <Loader2 className={cn(cls, "animate-spin text-accent drop-shadow-[0_0_6px_rgba(var(--color-glow),0.9)]")} aria-hidden />;
   if (state === "done") return <Check className={cn(cls, "pop text-ok")} aria-hidden />;
   if (state === "degraded") return <AlertTriangle className={cn(cls, "pop text-inc")} aria-hidden />;
   if (state === "failed") return <X className={cn(cls, "text-man")} aria-hidden />;
@@ -101,108 +100,116 @@ export function PipelineScreen() {
   const stepsDone = stages.filter((s) => s.p?.state === "done" || s.p?.state === "degraded").length;
   const problems = documents.filter((d) => d.status === "unsupported" || d.status === "failed" || d.status === "degraded");
 
+  const percent = Math.round((stepsDone / stages.length) * 100);
+  const current = stages.find((x) => x.p?.state === "running");
+
   return (
-    <div className="mx-auto flex max-w-[760px] flex-col gap-4 pb-10">
-      <PageHeading
-        title={running ? "Checking your documents" : status === "complete" ? "All done" : status === "failed" ? "The check stopped" : "Not checked yet"}
-      >
-        {running ? "This usually takes under a minute." : undefined}
-      </PageHeading>
-      {run.isError && <ErrorState title="The check didn't start" error={run.error} />}
+    <div className="mx-auto flex max-w-[980px] flex-col gap-6 px-6 pb-16 pt-8">
+      {run.isError && <ErrorState title="The analysis didn't start" error={run.error} />}
       {streamLost && running && (
-        <p role="status" className="mx-6 flex items-center gap-2 rounded-md bg-inc-dim px-3 py-2 text-[14px] text-inc">
-          <WifiOff className="size-4" aria-hidden /> Live updates dropped, so we're checking for progress every few seconds.
+        <p role="status" className="flex items-center gap-2 rounded-lg border border-inc/30 bg-inc-dim px-3 py-2 text-[13.5px] text-inc">
+          <WifiOff className="size-4" aria-hidden /> Live updates dropped. Checking progress every few seconds instead.
         </p>
       )}
 
-      <div className="flex flex-col gap-5 px-6">
-        {status === "complete" && (
-          <div className="flex flex-wrap items-center gap-3">
-            <Button asChild variant="primary">
-              <Link to={`/cases/${caseId}/viewer`}>Review findings</Link>
-            </Button>
-            <Button asChild>
-              <Link to={`/cases/${caseId}`}>See the summary</Link>
-            </Button>
+      <section className={cn("panel relative overflow-hidden p-8", running && "glow-cyan")}>
+        <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_30%_0%,rgba(var(--color-glow),0.12),transparent_60%)]" />
+        <div className="relative grid items-center gap-10 md:grid-cols-[auto_minmax(0,1fr)]">
+          <div className="flex flex-col items-center gap-4">
+            <div className={cn("scanline relative flex h-[168px] w-[132px] flex-col gap-2 rounded-lg border border-[rgba(var(--color-glow),0.35)] bg-ground p-4", running && "scanning")}>
+              {[70, 92, 55, 88, 64, 80, 46].map((w, i) => (
+                <span key={i} className="h-1.5 rounded-full bg-line-strong" style={{ width: `${w}%`, opacity: stepsDone > i ? 0.9 : 0.35 }} />
+              ))}
+              <span className="mt-auto flex items-center justify-between font-mono text-[9px] tracking-[0.14em] text-ink-3">
+                <span>EVIDENCE</span>
+                <span>{documents.length}</span>
+              </span>
+            </div>
+            <span className="font-mono text-[11px] tracking-[0.14em] text-ink-3">CASE {caseCode(caseId)}</span>
           </div>
-        )}
-        {status === "failed" && <p className="text-ink-2">The messages below say why. Nothing was made up for the steps that didn't run.</p>}
-
-        <div className="flex items-center gap-4 rounded-xl border border-line bg-panel p-4 shadow-sm">
-          <button type="button" onClick={openDocChat} title="Ask Doc a question" aria-label="Ask Doc a question" className="shrink-0 cursor-pointer">
-            <Mascot mood={running ? "thinking" : status === "complete" ? "happy" : status === "failed" ? "oops" : "idle"} size={84} />
-          </button>
-          <div className="min-w-0 flex-1" aria-live="polite">
-            <p className="font-medium">
-              {running
-                ? `${stages.find((x) => x.p?.state === "running")?.label ?? "Getting started"}…`
-                : status === "complete"
-                  ? "Finished! Have a look at what I found."
-                  : status === "failed"
-                    ? "Something stopped the check."
-                    : "Ready when you are."}
-            </p>
-            {running && <p className="text-[14px] text-ink-3">{stepsDone} of {stages.length} steps done</p>}
-          </div>
-        </div>
-
-        {running && (
           <div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-line" aria-hidden>
-              <motion.div
-                className="h-full rounded-full bg-accent"
-                initial={false}
-                animate={{ width: `${(stepsDone / stages.length) * 100}%` }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-              />
+            <div className="flex items-center gap-3">
+              <DocOrb state={running ? "thinking" : status === "complete" ? "done" : status === "failed" ? "alert" : "idle"} size={34} />
+              <div className="mono-label text-accent">{running ? "Doc is analyzing" : status === "complete" ? "Analysis complete" : status === "failed" ? "Analysis stopped" : "Ready"}</div>
+            </div>
+            <h1 className="mt-3 text-[30px] font-semibold uppercase tracking-tight text-ink">
+              {running ? "Analyzing investigation" : status === "complete" ? "Investigation ready" : status === "failed" ? "Analysis stopped" : "Not analyzed yet"}
+            </h1>
+            <p className="mt-1.5 text-[14.5px] text-ink-2" aria-live="polite">
+              {running ? `${current?.label ?? "Starting"}…` : status === "complete" ? "Every step finished. Review the findings next." : status === "failed" ? "The step messages below say why. Nothing was made up for steps that didn't run." : "Add evidence, then run the analysis."}
+            </p>
+            <div className="mt-6 flex items-center gap-6">
+              <Ring fraction={stepsDone / stages.length} size={104} tone={status === "complete" ? "var(--color-ok)" : "var(--color-accent)"}>
+                <span className="font-mono text-[22px] font-semibold text-ink">
+                  <CountUp value={percent} />%
+                </span>
+              </Ring>
+              <div className="flex flex-col gap-2">
+                {status === "complete" && (
+                  <>
+                    <Button asChild variant="primary">
+                      <Link to={`/cases/${caseId}`}>Open investigation</Link>
+                    </Button>
+                    <Link to={`/cases/${caseId}/viewer`} className="text-[13.5px] text-ink-2 hover:text-ink">
+                      Go straight to findings →
+                    </Link>
+                  </>
+                )}
+                {!running && status !== "complete" && (
+                  <Button variant="primary" disabled={documents.length === 0 || run.isPending} onClick={() => run.mutate()}>
+                    {finished ? "Run again" : "Run forensic analysis"}
+                  </Button>
+                )}
+                {running && <span className="font-mono text-[12px] text-ink-3">{stepsDone} OF {stages.length} STEPS</span>}
+              </div>
             </div>
           </div>
-        )}
+        </div>
+      </section>
 
-        <ol aria-label="Steps" className="rounded-lg border border-line bg-panel shadow-sm">
-          {stages.map((s) => {
-            const state = s.p?.state ?? "pending";
-            const warn = state === "degraded" || state === "failed";
-            return (
-              <li key={s.id} className={cn("flex items-start gap-3 border-b border-line px-4 py-2.5 transition-colors duration-200 last:border-b-0", state === "running" && "bg-obs-dim")}>
-                <span className="pt-0.5">
-                  <StageIcon state={state} />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <div className={cn("transition-colors duration-200", state === "pending" ? "text-ink-3" : "text-ink")}>{s.label}</div>
-                  {s.p?.message && <div className={cn("fade-in mt-0.5 text-[14px]", warn ? "text-inc" : "text-ink-3")}>{s.p.message}</div>}
+      <ol aria-label="Steps" className="panel divide-y divide-line">
+        {stages.map((s, i) => {
+          const state = s.p?.state ?? "pending";
+          const warn = state === "degraded" || state === "failed";
+          return (
+            <li key={s.id} className={cn("flex items-start gap-4 px-5 py-3 transition-colors duration-300", state === "running" && "bg-[rgba(var(--color-glow),0.06)]")}>
+              <span className="w-6 pt-0.5 font-mono text-[11px] text-ink-3">{String(i + 1).padStart(2, "0")}</span>
+              <span className="pt-0.5">
+                <StageIcon state={state} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className={cn("text-[14px] transition-colors duration-300", state === "pending" ? "text-ink-3" : "text-ink", state === "running" && "font-medium")}>{s.label}</div>
+                {s.p?.message && <div className={cn("fade-in mt-0.5 text-[13px]", warn ? "text-inc" : "text-ink-3")}>{s.p.message}</div>}
+              </div>
+              {!!s.p?.duration_ms && <span className="fade-in shrink-0 font-mono text-[11.5px] text-ink-3">{fmtMs(s.p.duration_ms)}</span>}
+            </li>
+          );
+        })}
+      </ol>
+
+      {problems.length > 0 && (
+        <section className="panel">
+          <div className="mono-label border-b border-line px-5 py-3">Evidence with problems</div>
+          <ul className="divide-y divide-line">
+            {problems.map((d) => (
+              <li key={d.id} className="px-5 py-3">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="truncate font-mono text-[13px] text-ink">{d.filename}</span>
+                  <ProcBadge status={d.status} />
                 </div>
-                {!!s.p?.duration_ms && <span className="fade-in shrink-0 text-[13px] text-ink-3">{fmtMs(s.p.duration_ms)}</span>}
+                {d.status_message && <p className="mt-0.5 text-[13px] text-ink-2">{d.status_message}</p>}
               </li>
-            );
-          })}
-        </ol>
-
-        {problems.length > 0 && (
-          <section>
-            <h2 className="mb-2 text-[17px] font-semibold">Files with problems</h2>
-            <ul className="rounded-lg border border-line bg-panel shadow-sm">
-              {problems.map((d) => (
-                <li key={d.id} className="border-b border-line px-4 py-2.5 last:border-b-0">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="truncate font-medium">{d.filename}</span>
-                    <ProcBadge status={d.status} />
-                  </div>
-                  {d.status_message && <p className="mt-0.5 text-[14px] text-ink-2">{d.status_message}</p>}
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {!running && (
-          <div>
-            <Button variant={status === "complete" ? "secondary" : "primary"} disabled={documents.length === 0 || run.isPending} onClick={() => run.mutate()}>
-              {finished ? "Check again" : "Check these documents"}
-            </Button>
-          </div>
-        )}
-      </div>
+            ))}
+          </ul>
+        </section>
+      )}
+      {status === "complete" && (
+        <div>
+          <Button disabled={documents.length === 0 || run.isPending} onClick={() => run.mutate()}>
+            Run again
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

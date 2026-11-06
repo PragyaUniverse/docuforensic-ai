@@ -12,6 +12,13 @@ import { Button } from "./ui/button";
 import { ConfidenceMeter, ReviewBadge, StatusBadge } from "./StatusBadge";
 import { DataList } from "./DataList";
 import { PageCrop } from "./PageCrop";
+import { ConfidenceBar } from "./Metrics";
+
+const RAIL: Record<Finding["status"], string> = {
+  OBSERVATION: "bg-obs",
+  INCONSISTENCY: "bg-inc",
+  POTENTIAL_MANIPULATION: "bg-man",
+};
 
 export function Provenance({ r }: { r: ReasoningProvenance }) {
   const who = [r.provider, r.model].filter(Boolean).join(" / ");
@@ -195,12 +202,20 @@ export function FindingCard({
 
   const dismissedCls = dismissed && "opacity-60";
   return (
-    <article ref={ref} className={cn("border-b border-line transition-colors duration-150", selected ? "bg-raised" : "bg-panel")}>
+    <article
+      ref={ref}
+      className={cn(
+        "relative border-b border-line transition-[background-color,box-shadow] duration-200",
+        selected ? "bg-raised" : "bg-panel",
+        selected && (finding.status === "POTENTIAL_MANIPULATION" ? "glow-red" : finding.status === "INCONSISTENCY" ? "glow-amber" : "glow-cyan"),
+      )}
+    >
+      <span aria-hidden className={cn("absolute inset-y-0 left-0 w-[3px] transition-opacity", RAIL[finding.status], selected ? "opacity-100" : "opacity-50")} />
       <button
         type="button"
         aria-expanded={selected}
         onClick={onSelect}
-        className={cn("flex w-full cursor-pointer flex-col gap-0.5 px-4 py-3 text-left transition-colors duration-150 hover:bg-hover", dismissedCls)}
+        className={cn("flex w-full cursor-pointer flex-col gap-1 py-3 pl-5 pr-4 text-left transition-colors duration-150 hover:bg-hover", dismissedCls)}
       >
         <span className="flex flex-wrap items-center gap-x-2">
           <StatusBadge status={finding.status} />
@@ -216,6 +231,15 @@ export function FindingCard({
           )}
           {finding.review.decision !== "pending" && <ReviewBadge decision={finding.review.decision} />}
         </span>
+        {finding.status !== "OBSERVATION" && (
+          <span className="mt-1 flex items-center gap-2">
+            <span className="mono-label !text-[10px]">Confidence</span>
+            <span className="flex-1">
+              <ConfidenceBar value={finding.fused_score ?? finding.confidence} tone={RAIL[finding.status]} />
+            </span>
+            <span className="font-mono text-[11px] text-ink-2">{Math.round((finding.fused_score ?? finding.confidence) * 100)}%</span>
+          </span>
+        )}
       </button>
 
       <AnimatePresence initial={false}>
@@ -229,7 +253,7 @@ export function FindingCard({
           >
             <div className="flex flex-col gap-3.5 px-4 pb-4">
               <Explanation text={finding.explanation} />
-              <ConfidenceMeter words value={finding.fused_score ?? finding.confidence} />
+              {finding.status === "OBSERVATION" && <ConfidenceMeter words value={finding.fused_score ?? finding.confidence} />}
 
               {onCompare && (
                 <Button size="sm" onClick={onCompare} className="self-start">
@@ -237,7 +261,7 @@ export function FindingCard({
                 </Button>
               )}
 
-              <section className="rounded-lg border border-line bg-panel shadow-sm p-3" aria-label="Your decision">
+              <section className="panel p-3" aria-label="Your decision">
                 <div className="mb-2 flex items-center justify-between gap-2">
                   <h4 className="eyebrow">Your decision</h4>
                   {saved && (
@@ -274,7 +298,7 @@ export function FindingCard({
                     onChange={(e) => setName(e.target.value)}
                     aria-label="Reviewer name"
                     placeholder="Your name"
-                    className="h-7 min-w-0 flex-1 rounded-lg border border-line bg-panel shadow-sm px-1.5 text-[13px] text-ink placeholder:text-ink-3"
+                    className="h-7 min-w-0 flex-1 panel px-1.5 text-[13px] text-ink placeholder:text-ink-3"
                   />
                 </label>
                 {finding.review.at && (

@@ -210,3 +210,22 @@ def test_plain_lookups_stay_with_the_results_even_when_ai_is_available(world):
 
 def test_are_there_conflicts_is_answered_from_results(world):
     assert "Date of birth differs" in ask("Are there any conflicts?", world).answer
+
+
+def test_the_document_with_most_to_review_is_named_without_a_verdict(world):
+    reply = ask("Which document looks suspicious?", world)
+    assert "salary slip" in reply.answer.lower() and "2 findings" in reply.answer
+    assert "isn't a judgement" in reply.answer and "finding=" in reply.links[0]["to"]
+
+
+def test_strongest_evidence_is_the_highest_scoring_finding(world):
+    reply = ask("Show me the strongest evidence", world)
+    assert "Typography differs" in reply.answer and "84%" in reply.answer and reply.source != "ai"
+
+
+@pytest.mark.parametrize("question", [
+    "What conflicts did you find?", "Which document looks suspicious?", "Show me the strongest evidence", "What should I investigate first?",
+])
+def test_every_suggested_question_is_answered_from_the_results(world, question):
+    reply = ask(question, world)
+    assert reply.source != "ai" and "can't give you a reliable answer" not in reply.answer

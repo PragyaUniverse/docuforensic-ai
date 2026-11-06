@@ -60,7 +60,7 @@ function GroupCard({
   const doc = docs.get(source.docId);
   const conf = source.field?.confidence;
   return (
-    <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-line bg-panel shadow-sm">
+    <div className="flex min-w-0 flex-1 flex-col overflow-hidden panel">
       <div className="flex items-start justify-between gap-2 border-b border-line px-3 py-2">
         <div className="min-w-0">
           <div className="eyebrow">{humanize(doc?.doc_type ?? "document")}</div>
@@ -161,19 +161,37 @@ export function ComparisonPanel({
       ) : groups.length === 2 ? (
         <div className={cn("flex items-stretch gap-2", compact ? "flex-col" : "flex-col md:flex-row")}>
           <GroupCard caseId={caseId} group={groups[0]} docs={docs} parts={diff?.[0] ?? null} stroke={m.stroke} tone={m.text} />
-          <div className="flex shrink-0 flex-col items-center justify-center gap-1 px-1 py-1">
+          <div className={cn("relative flex shrink-0 items-center justify-center", compact ? "h-14" : "h-14 md:h-auto md:w-36")}>
+            {/* The connector: a marching line between the two values, glowing in the finding's colour. */}
+            <svg aria-hidden className={cn("absolute inset-0 size-full overflow-visible", m.text)} preserveAspectRatio="none">
+              <line
+                x1="50%"
+                y1="0"
+                x2="50%"
+                y2="100%"
+                className={cn("edge-wire", compact ? "" : "md:hidden")}
+                stroke="currentColor"
+              />
+              {!compact && (
+                <line x1="0" y1="50%" x2="100%" y2="50%" className="edge-wire hidden md:inline" stroke="currentColor" />
+              )}
+            </svg>
             <span
               role="img"
               aria-label={sameExpected ? "matches" : "does not match"}
-              className={cn("font-mono text-[26px] font-medium leading-none", m.text)}
+              className={cn(
+                "relative z-10 flex flex-col items-center gap-0.5 rounded-md border bg-panel px-2 py-1 font-mono text-[11px] font-semibold tracking-[0.12em]",
+                m.text,
+                finding.status === "POTENTIAL_MANIPULATION" ? "glow-red border-man/60" : "glow-amber border-inc/60",
+              )}
             >
-              {sameExpected ? "=" : "≠"}
+              {sameExpected ? "IDENTICAL" : "CONFLICT"}
+              {delta !== null && delta > 0 && (
+                <span className="text-[11px] font-normal tracking-normal">
+                  Δ {delta.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </span>
+              )}
             </span>
-            {delta !== null && delta > 0 && (
-              <span className={cn("font-mono text-[13px]", m.text)}>
-                {delta.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-              </span>
-            )}
           </div>
           <GroupCard caseId={caseId} group={groups[1]} docs={docs} parts={diff?.[1] ?? null} stroke={m.stroke} tone={m.text} />
         </div>

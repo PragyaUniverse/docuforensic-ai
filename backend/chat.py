@@ -259,7 +259,7 @@ def _from_rules(text: str, raw: str, case: Case | None, docs: list[Document], fi
 
     data_question = re.search(
         r"\b(find|found|result|results|summary|summari[sz]e|overview|wrong|issue|issue|problem|flag|flagged|look at|first|start with|next|why|conflict|"
-        r"mismatch|disagree|differ|match)s?\b", text)
+        r"mismatch|disagree|differ|match|suspicious|strongest)s?\b", text)
     asked_field = _field_asked(text)
     named = _doc_named(text, docs)
     if not (data_question or asked_field or named):
@@ -270,6 +270,28 @@ def _from_rules(text: str, raw: str, case: Case | None, docs: list[Document], fi
     if docs and all(not d.pages for d in docs):
         return Reply("None of these files could be read, so nothing was checked. The Overview tab says why for each one.",
                      [{"label": "Go to the overview", "to": f"/cases/{case_id}"}])
+
+    if re.search(r"\bstrongest\b|\b(best|clearest|most convincing)\b.*\bevidence\b", text):
+        if not look:
+            return Reply("Nothing here needs attention, so there's no strong signal to point at. That doesn't prove the documents are genuine.")
+        f = max(look, key=lambda x: x.fused_score if x.fused_score is not None else x.confidence)
+        score = f.fused_score if f.fused_score is not None else f.confidence
+        return Reply(f"The strongest signal is #{numbered[f.id]}: {f.title}, at {round(score * 100)}% confidence.\n{_lead(f.explanation)}\n"
+                     "Strong only means the check is sure about what it measured. It still needs a person to explain it.",
+                     [_finding_link(case_id, f, numbered[f.id])], ["Could this be innocent?", "How do I check this?"])
+
+    if re.search(r"\bsuspicious\b|\b(which|what) (document|doc|file)\b.*\b(worst|most|problem|concern|attention)\b", text):
+        if not look:
+            return Reply("None of the documents has anything that needs attention. That doesn't prove they're genuine.")
+        def touches(d: Document) -> list[Finding]:
+            return [f for f in look if f.doc_id == d.id or d.id in f.related_doc_ids]
+        ranked = sorted(docs, key=lambda d: (-len(touches(d)), -sum(f.status == FindingStatus.POTENTIAL_MANIPULATION for f in touches(d))))
+        d = ranked[0]
+        own = touches(d)
+        lines = "\n".join(f"- #{numbered[f.id]}: {f.title}" for f in own[:4])
+        return Reply(f"The {_doc_title(d)} has the most to review, with {_plural(len(own), 'finding')}:\n{lines}\n"
+                     "That tells you where to look first. It isn't a judgement that anything on it is wrong.",
+                     [_finding_link(case_id, own[0], numbered[own[0].id])], ["Show me the strongest evidence", "Could this be innocent?"])
 
     if re.search(r"\b(look at|first|start with|most important|next|priority|worst)\b", text):
         if not look:

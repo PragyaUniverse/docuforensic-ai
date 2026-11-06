@@ -17,6 +17,8 @@ your machine, and the whole demo works with no API keys.
 | *Cross-document conflicts show both source regions side by side* | *The evidence graph, with conflicts as red edges* |
 | ![PDF text layer disagrees with visible pixels](docs/screenshots/04_pdf_text_vs_pixels.png) | ![Tamper-evident audit trail](docs/screenshots/08_audit.png) |
 | *A PDF whose text layer says one thing and whose pixels say another* | *A hash-chained audit trail with Verify integrity* |
+| ![Investigation dashboard](docs/screenshots/12_case_dashboard.png) | ![Home page](docs/screenshots/11_home.png) |
+| *The case dashboard: risk level, review progress, Doc's briefing and priority findings* | *Open an investigation or explore a synthetic demo case* |
 
 ## Quick start
 
@@ -49,7 +51,7 @@ local model, install [Ollama](https://ollama.com) and run `ollama pull qwen2.5:7
 free tiers, copy `.env.example` to `.env`, add keys, and run `make keys`. API docs are at
 http://localhost:8000/docs.
 
-**Meet Doc.** The first time you open the home page, a case and its findings, Doc gives a short animated tour, spotlighting each part of the screen. You can replay it with "take a quick tour" or by asking Doc for a tour. Click the animated character to chat. Ask "what did you find?", "explain #2", "what's the net pay?" or "how do I download the report?", and links take you to the exact spot in the document. It answers from the case's own results with no AI needed, and unusual questions can go to an AI model, labelled as such. Doc only reads. It can't change a finding or say whether a document is genuine, and you can drag it around or hide it.
+**Meet Doc.** Doc is the investigation assistant. The first time you open the home page, a case and its findings, Doc gives a short tour, spotlighting each part of the screen. You can replay it with "Take the tour" or by asking Doc for a tour. Open Doc from the "DOC ONLINE" indicator at the top, or the briefing panel on a case. Suggested questions include "What conflicts did you find?", "Which document looks suspicious?", "Show me the strongest evidence" and "What should I investigate first?", and links take you to the exact spot in the document. It answers from the case's own results with no AI needed, and unusual questions can go to an AI model, labelled as such. Doc only reads. It can't change a finding or say whether a document is genuine. "Which document looks suspicious?" names the document with the most findings to review, and says that's a priority, not a judgement.
 
 ## Why this deserves to win
 

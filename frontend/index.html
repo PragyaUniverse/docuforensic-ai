@@ -9,7 +9,7 @@
         try {
           saved = localStorage.getItem("docuforensic.theme");
         } catch (e) {}
-        var dark = saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+        var dark = saved ? saved === "dark" : true;
         document.documentElement.dataset.theme = dark ? "dark" : "light";
       })();
     </script>

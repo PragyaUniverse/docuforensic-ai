@@ -55,7 +55,7 @@ export function ConflictsScreen() {
       ) : (
         <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-4 p-6">
           {crossList.map((x, i) => (
-            <section key={x.id} className="rise rounded-lg border border-line bg-panel shadow-sm p-4" style={{ "--i": i } as React.CSSProperties}>
+            <section key={x.id} className="rise panel p-4" style={{ "--i": i } as React.CSSProperties}>
               <ComparisonPanel caseId={caseId} finding={x} docs={byId} fieldsById={fieldsById} label={labels.get(x.id)} />
             </section>
           ))}
@@ -63,7 +63,7 @@ export function ConflictsScreen() {
             <>
               <h2 className="mt-4 text-[17px] font-semibold">Within a single document</h2>
               {withinList.map((x) => (
-                <section key={x.id} className="rounded-lg border border-line bg-panel shadow-sm p-4">
+                <section key={x.id} className="panel p-4">
                   <ComparisonPanel caseId={caseId} finding={x} docs={byId} fieldsById={fieldsById} label={labels.get(x.id)} />
                 </section>
               ))}

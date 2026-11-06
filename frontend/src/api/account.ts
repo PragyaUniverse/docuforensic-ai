@@ -29,7 +29,7 @@ export interface Analytics {
   by_review: Record<string, number>;
   by_discrepancy: [string, number][];
   by_check: { check: string; count: number; dismissed: number }[];
-  recent: { id: string; name: string; status: string; risk_level: string; created_at: string; documents: number; to_review: number }[];
+  recent: { id: string; name: string; status: string; risk_level: string; created_at: string; documents: number; to_review: number; findings: number; conflicts: number }[];
 }
 
 export interface ChatReply {

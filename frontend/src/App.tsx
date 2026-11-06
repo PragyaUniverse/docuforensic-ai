@@ -1,5 +1,5 @@
 import { Suspense, lazy } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Link, Navigate, Route, Routes } from "react-router-dom";
 import { Shell } from "./components/Shell";
 import { Empty, Loading } from "./components/ui/states";
 import { HomeScreen } from "./screens/Home";
@@ -39,7 +39,23 @@ export function App() {
           <Route path="dossier" element={<DossierScreen />} />
           <Route path="audit" element={<AuditScreen />} />
         </Route>
-        <Route path="*" element={<Empty title="This page does not exist" className="h-full" />} />
+        <Route path="about" element={<Navigate to="/capabilities" replace />} />
+        <Route
+          path="*"
+          element={
+            <Empty
+              title="This page does not exist"
+              className="h-full"
+              action={
+                <Link to="/" className="link">
+                  Back to investigations
+                </Link>
+              }
+            >
+              The link may be old, or the investigation was deleted.
+            </Empty>
+          }
+        />
       </Route>
     </Routes>
   );
