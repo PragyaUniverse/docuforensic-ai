@@ -51,7 +51,6 @@ not vendored into this repository.
 
 | Package | Version | License | Used for |
 |---|---|---|---|
-| @fontsource-variable/bricolage-grotesque | 5.1.1 | OFL-1.1 | runtime |
 | @radix-ui/react-dialog | 1.3.1 | MIT | runtime |
 | @radix-ui/react-slider | 1.6.1 | MIT | runtime |
 | @radix-ui/react-slot | 1.5.0 | MIT | runtime |
@@ -117,5 +116,4 @@ claim formal compliance with any of them.
 |---|---|---|---|
 | Tesseract `tessdata_fast` (`hin`, `eng`), in `data/tessdata` | Hindi OCR | Apache-2.0 | Bundled |
 | Granite 3.2 Vision through Ollama | Optional handwriting reading | Apache-2.0 | Local, downloaded separately |
-| Caveat font | Used once to measure handwriting reading | OFL-1.1 | Not bundled |
-| Bricolage Grotesque font | Headings in the reviewer UI | OFL-1.1 | Bundled through npm |
+| Caveat font (OFL-1.1) | Used once to measure handwriting reading | OFL-1.1 | Not bundled |

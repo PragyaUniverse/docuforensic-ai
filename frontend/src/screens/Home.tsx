@@ -11,12 +11,12 @@ import { RiskPlate } from "@/components/StatusBadge";
 import { openDocChat } from "@/lib/assistant";
 import { fmtTime } from "@/lib/utils";
 
-const EXAMPLES: Record<string, { title: string; text: string; emoji: string; tint: string }> = {
-  case_a_clean: { title: "A clean application", text: "Everything matches. This is what a normal result looks like.", emoji: "✅", tint: "bg-lime" },
-  case_b_visual: { title: "An altered salary slip", text: "A changed figure, a pasted photo and a copied signature.", emoji: "💸", tint: "bg-pink" },
-  case_c_crossdoc: { title: "Documents that disagree", text: "Each looks fine alone, but names, dates and amounts conflict.", emoji: "🧩", tint: "bg-sky" },
-  case_d_pdf: { title: "An edited PDF", text: "The number you see isn't the number stored in the file.", emoji: "📄", tint: "bg-sun" },
-  unsupported_files: { title: "Files it can't read", text: "Corrupt and unsupported files, to show how errors are handled.", emoji: "🚫", tint: "bg-raised" },
+const EXAMPLES: Record<string, { title: string; text: string }> = {
+  case_a_clean: { title: "A clean application", text: "Everything matches. This is what a normal result looks like." },
+  case_b_visual: { title: "An altered salary slip", text: "A changed figure, a pasted photo and a copied signature." },
+  case_c_crossdoc: { title: "Documents that disagree", text: "Each looks fine alone, but names, dates and amounts conflict." },
+  case_d_pdf: { title: "An edited PDF", text: "The number you see isn't the number stored in the file." },
+  unsupported_files: { title: "Files it can't read", text: "Corrupt and unsupported files, to show how errors are handled." },
 };
 
 function CaseRow({ c }: { c: Case }) {
@@ -48,18 +48,14 @@ export function HomeScreen() {
   });
 
   return (
-    <div className="mx-auto flex max-w-[860px] flex-col gap-10 px-6 py-10">
-      <section className="rise overflow-hidden card p-6">
+    <div className="mx-auto flex max-w-[760px] flex-col gap-9 px-6 py-10">
+      <section className="rise overflow-hidden rounded-xl border border-line bg-panel p-6 shadow-sm">
         <div className="flex items-start gap-5">
           <div className="min-w-0 flex-1">
-            <h1 className="text-[34px] leading-[1.05] sm:text-[40px]">
-              check the docs.
-              <br />
-              find the <span className="marker">receipts</span>. 🧾
-            </h1>
-            <p className="mt-3 text-[16px] text-ink-2">
-              Drop in every document from one application. I'm Doc, and I'll read them, compare them, and flag anything
-              that looks off, with the proof. You make the final call ✌️
+            <h1 className="text-[26px] font-semibold leading-tight">Hi, I'm Doc. Let's check some documents.</h1>
+            <p className="mt-2 text-ink-2">
+              Add the documents from one application. I'll help read them, compare them with each other, and point out
+              anything worth a second look. You make the final call.
             </p>
           </div>
           <button type="button" onClick={openDocChat} title="Ask Doc a question" aria-label="Ask Doc a question" className="hidden shrink-0 cursor-pointer sm:block">
@@ -78,10 +74,10 @@ export function HomeScreen() {
             onChange={(e) => setName(e.target.value)}
             placeholder="Name this case, e.g. Loan application 1042"
             aria-label="Case name"
-            className="h-10 min-w-[240px] flex-1 rounded-xl border-2 border-[var(--color-edge)] bg-panel px-3 text-ink transition-shadow duration-150 placeholder:text-ink-3 focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent)_22%,transparent)] focus:outline-none"
+            className="h-10 min-w-[240px] flex-1 rounded-md border border-line-strong bg-panel px-3 text-ink transition-shadow duration-150 placeholder:text-ink-3 focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent)_22%,transparent)] focus:outline-none"
           />
           <Button variant="primary" type="submit" disabled={create.isPending}>
-            Start a case →
+            Start a new case
           </Button>
         </form>
         {create.isError && <ErrorState title="Could not create the case" error={create.error} />}
@@ -94,36 +90,33 @@ export function HomeScreen() {
       </section>
 
       <section aria-labelledby="demo-h">
-        <h2 id="demo-h" className="text-[22px]">
-          or try an example 👇
+        <h2 id="demo-h" className="text-[17px] font-semibold">
+          Or try an example
         </h2>
         <p className="mt-0.5 text-[14px] text-ink-3">All example documents are made up, with fictional people.</p>
         {demos.isLoading && <Loading label="Loading examples" />}
         {demos.isError && <ErrorState title="Examples are unavailable" error={demos.error} onRetry={() => demos.refetch()} />}
-        <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-          {demos.data?.map((d, i) => {
-            const copy = EXAMPLES[d.key] ?? { title: d.name, text: d.description, emoji: "📁", tint: "bg-raised" };
+        <ul className="mt-3 overflow-hidden rounded-lg border border-line bg-panel shadow-sm">
+          {demos.data?.map((d) => {
+            const copy = EXAMPLES[d.key] ?? { title: d.name, text: d.description };
             const busy = load.isPending && load.variables === d.key;
             return (
-              <li key={d.key} className="rise" style={{ "--i": i } as React.CSSProperties}>
+              <li key={d.key} className="border-b border-line last:border-b-0">
                 <button
                   type="button"
                   disabled={load.isPending}
                   onClick={() => load.mutate(d.key)}
-                  className="card group flex h-full w-full cursor-pointer items-start gap-3 p-4 text-left transition-[transform,box-shadow] duration-150 hover:-translate-y-0.5 hover:rotate-[-0.6deg] hover:shadow-[6px_6px_0_var(--color-edge)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:cursor-default"
+                  className="flex w-full cursor-pointer items-center justify-between gap-4 group px-4 py-3 text-left transition-colors duration-150 hover:bg-hover disabled:cursor-default"
                 >
-                  <span aria-hidden className={`flex size-11 shrink-0 items-center justify-center rounded-xl border-2 border-[var(--color-edge)] text-[22px] ${copy.tint}`}>
-                    {copy.emoji}
+                  <span className="min-w-0">
+                    <span className="block font-medium">{copy.title}</span>
+                    <span className="block text-[14px] text-ink-2">{copy.text}</span>
                   </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-[family-name:var(--font-display)] text-[17px] font-bold leading-tight">{copy.title}</span>
-                    <span className="mt-0.5 block text-[14px] text-ink-2">{copy.text}</span>
-                    <span className="mt-2 inline-flex items-center gap-1 text-[14px] font-semibold text-accent">
-                      {busy ? <Loader2 className="size-4 animate-spin" aria-hidden /> : null}
-                      {busy ? "opening" : "open"}
-                      <span className="transition-transform duration-150 group-hover:translate-x-1">→</span>
-                    </span>
-                  </span>
+                  {busy ? (
+                    <Loader2 className="size-4 shrink-0 animate-spin text-ink-3" aria-hidden />
+                  ) : (
+                    <span className="link shrink-0 text-[14px] transition-transform duration-150 group-hover:translate-x-0.5">Open</span>
+                  )}
                 </button>
               </li>
             );
@@ -137,7 +130,7 @@ export function HomeScreen() {
           <h2 id="recent-h" className="text-[17px] font-semibold">
             Recent cases
           </h2>
-          <ul className="mt-3 overflow-hidden card">
+          <ul className="mt-3 overflow-hidden rounded-lg border border-line bg-panel shadow-sm">
             {cases.data.slice(0, 6).map((c) => (
               <CaseRow key={c.id} c={c} />
             ))}

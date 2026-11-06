@@ -15,7 +15,7 @@ const DOT: Record<FindingStatus, string> = {
 export function StatusBadge({ status, className }: { status: FindingStatus; compact?: boolean; className?: string }) {
   const m = STATUS_META[status];
   return (
-    <span title={m.meaning} className={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[12.5px] font-bold", m.text, m.bg, className)}>
+    <span title={m.meaning} className={cn("inline-flex items-center gap-1.5 text-[13px] font-medium", m.text, className)}>
       <Dot className={DOT[status]} />
       {m.label}
     </span>
@@ -23,16 +23,16 @@ export function StatusBadge({ status, className }: { status: FindingStatus; comp
 }
 
 const RISK: Record<RiskLevel, { label: string; dot: string; text: string }> = {
-  high: { label: "High risk", dot: "bg-man", text: "text-man bg-man-dim" },
-  medium: { label: "Medium risk", dot: "bg-inc", text: "text-inc bg-inc-dim" },
-  low: { label: "Low risk", dot: "bg-ok", text: "text-ok bg-ok-dim" },
-  undetermined: { label: "Risk unclear", dot: "bg-ink-3", text: "text-ink-2 bg-raised" },
+  high: { label: "High risk", dot: "bg-man", text: "text-man" },
+  medium: { label: "Medium risk", dot: "bg-inc", text: "text-inc" },
+  low: { label: "Low risk", dot: "bg-ok", text: "text-ok" },
+  undetermined: { label: "Risk unclear", dot: "bg-ink-3", text: "text-ink-2" },
 };
 
 export function RiskPlate({ risk, assessed = true, large }: { risk: RiskLevel; assessed?: boolean; large?: boolean }) {
-  const r = assessed ? RISK[risk] : { label: "Not checked yet", dot: "bg-ink-3", text: "text-ink-3 bg-raised" };
+  const r = assessed ? RISK[risk] : { label: "Not checked yet", dot: "bg-line-strong", text: "text-ink-3" };
   return (
-    <span className={cn("inline-flex items-center gap-1.5 rounded-full font-bold", large ? "px-3.5 py-1 text-[16px]" : "px-2.5 py-0.5 text-[13px]", r.text)}>
+    <span className={cn("inline-flex items-center gap-1.5 font-medium", large ? "text-[17px]" : "text-[14px]", r.text)}>
       <Dot className={r.dot} />
       {r.label}
     </span>
@@ -40,7 +40,7 @@ export function RiskPlate({ risk, assessed = true, large }: { risk: RiskLevel; a
 }
 
 export function HumanReviewPlate() {
-  return <span className="text-[14px] font-medium text-ink-2">👀 Needs human review</span>;
+  return <span className="text-[14px] text-ink-2">Needs human review</span>;
 }
 
 const PROC: Record<ProcessingStatus, { label: string; cls: string }> = {

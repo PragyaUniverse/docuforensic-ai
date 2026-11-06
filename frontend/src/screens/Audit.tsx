@@ -121,7 +121,7 @@ export function AuditScreen() {
   return (
     <div className="flex h-full flex-col">
       <PageHeading
-        title="the receipts 🧾"
+        title="History"
         actions={
           <>
             <Button variant="primary" onClick={() => verify.mutate()} disabled={verify.isPending}>
@@ -155,7 +155,7 @@ export function AuditScreen() {
             Entry #{bad} belongs to another case in the same chain, so it is not listed below. Verification covers the whole chain.
           </p>
         )}
-        <div className="card min-h-[260px] flex-1 overflow-y-auto">
+        <div className="min-h-[260px] flex-1 overflow-y-auto border-x border-t border-line bg-panel">
           {q.isLoading && <Loading label="Loading history" />}
           {q.isError && <ErrorState title="The history could not load" error={q.error} onRetry={() => q.refetch()} />}
           {q.data?.length === 0 && <Empty title="Nothing has happened on this case yet" />}

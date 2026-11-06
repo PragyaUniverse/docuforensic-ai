@@ -4,19 +4,19 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full font-semibold transition-[color,background-color,border-color,transform,box-shadow] duration-150 disabled:pointer-events-none disabled:opacity-45 [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer",
+  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md font-medium transition-[color,background-color,border-color,transform] duration-150 active:translate-y-px disabled:pointer-events-none disabled:opacity-45 cursor-pointer [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        primary: "border-2 border-[var(--color-edge)] bg-accent text-white shadow-[3px_3px_0_var(--color-edge)] hover:-translate-y-px hover:shadow-[4px_4px_0_var(--color-edge)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
-        secondary: "border-2 border-[var(--color-edge)] bg-panel text-ink shadow-[3px_3px_0_var(--color-edge)] hover:-translate-y-px hover:bg-raised hover:shadow-[4px_4px_0_var(--color-edge)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
+        primary: "bg-accent text-white hover:bg-accent-dark",
+        secondary: "border border-line-strong bg-panel text-ink hover:bg-hover",
         ghost: "text-ink-2 hover:bg-hover hover:text-ink",
-        danger: "border-2 border-man bg-man-dim text-man shadow-[3px_3px_0_var(--color-man)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
+        danger: "border border-man text-man hover:bg-man-dim",
       },
       size: {
-        sm: "h-8 px-3.5 text-[14px]",
-        md: "h-11 px-5 text-[15px]",
-        lg: "h-12 px-7 text-[16px]",
+        sm: "h-8 px-2.5 text-[14px]",
+        md: "h-10 px-4 text-[15px]",
+        lg: "h-11 px-5 text-[15px]",
         icon: "size-8",
       },
     },

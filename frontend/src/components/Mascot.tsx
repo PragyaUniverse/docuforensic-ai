@@ -84,8 +84,8 @@ export function Mascot({ mood = "idle", size = 88, className }: { mood?: Mood; s
     <svg ref={svg} viewBox="0 0 120 142" width={size} height={size * (142 / 120)} className={className} aria-hidden style={{ overflow: "visible" }}>
       <defs>
         <linearGradient id={`${id}h`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#a985ff" />
-          <stop offset="1" stopColor="#6d28d9" />
+          <stop offset="0" stopColor="#6aa8ec" />
+          <stop offset="1" stopColor="#2a68b0" />
         </linearGradient>
         <linearGradient id={`${id}s`} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#16283f" />
@@ -116,8 +116,8 @@ export function Mascot({ mood = "idle", size = 88, className }: { mood?: Mood; s
             animate={still ? {} : mood === "hello" || mood === "happy" ? { rotate: [0, 24, -6, 24, 0] } : { rotate: 0 }}
             transition={{ duration: 1.1, repeat: mood === "hello" || mood === "happy" ? Infinity : 0, repeatDelay: 1.7 }}
           >
-            <path d="M31 96 Q16 92 13 76" fill="none" stroke="#6d28d9" strokeWidth="6" strokeLinecap="round" />
-            <circle cx="13" cy="73" r="5.5" fill="#a985ff" />
+            <path d="M31 96 Q16 92 13 76" fill="none" stroke="#2a68b0" strokeWidth="6" strokeLinecap="round" />
+            <circle cx="13" cy="73" r="5.5" fill="#6aa8ec" />
           </motion.g>
 
           {/* Page body */}
@@ -134,7 +134,7 @@ export function Mascot({ mood = "idle", size = 88, className }: { mood?: Mood; s
             animate={still ? {} : mood === "thinking" ? { x: [-30, 0, -30], y: [-4, 6, -4] } : { x: 0, y: 0 }}
             transition={mood === "thinking" ? { duration: 2.2, repeat: Infinity, ease: "easeInOut" } : { duration: 0.4 }}
           >
-            <path d="M89 112 Q100 108 101 99" fill="none" stroke="#6d28d9" strokeWidth="6" strokeLinecap="round" />
+            <path d="M89 112 Q100 108 101 99" fill="none" stroke="#2a68b0" strokeWidth="6" strokeLinecap="round" />
             <line x1="100" y1="100" x2="94" y2="92" stroke="#415a78" strokeWidth="4.5" strokeLinecap="round" />
             <circle cx="88" cy="83" r="11" fill="#dff1ff" fillOpacity="0.55" stroke="#415a78" strokeWidth="4" />
             <path d="M82 79 Q84 75 88 75" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
@@ -147,13 +147,13 @@ export function Mascot({ mood = "idle", size = 88, className }: { mood?: Mood; s
             transition={{ duration: mood === "thinking" ? 2.2 : 5, repeat: Infinity, ease: "easeInOut" }}
           >
             {/* Antenna */}
-            <line x1="60" y1="27" x2="60" y2="13" stroke="#6d28d9" strokeWidth="4" strokeLinecap="round" />
+            <line x1="60" y1="27" x2="60" y2="13" stroke="#2a68b0" strokeWidth="4" strokeLinecap="round" />
             <motion.circle cx="60" cy="9" r="12" fill={`url(#${id}g)`} style={ORIGIN} animate={still ? {} : { scale: [0.75, 1.15, 0.75] }} transition={{ duration: mood === "thinking" ? 0.9 : 2.4, repeat: Infinity, ease: "easeInOut" }} />
             <motion.circle cx="60" cy="9" r="5" animate={{ fill: glow }} transition={{ duration: 0.4 }} />
 
             <rect x="24" y="26" width="72" height="58" rx="20" fill={`url(#${id}h)`} />
-            <rect x="17" y="46" width="9" height="18" rx="4.5" fill="#6d28d9" />
-            <rect x="94" y="46" width="9" height="18" rx="4.5" fill="#6d28d9" />
+            <rect x="17" y="46" width="9" height="18" rx="4.5" fill="#2a68b0" />
+            <rect x="94" y="46" width="9" height="18" rx="4.5" fill="#2a68b0" />
             <rect x="32" y="34" width="56" height="42" rx="14" fill={`url(#${id}s)`} />
             <path d="M38 40 Q50 36 60 37" fill="none" stroke="#fff" strokeOpacity="0.18" strokeWidth="2.5" strokeLinecap="round" />
 

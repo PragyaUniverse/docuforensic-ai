@@ -1,46 +1,36 @@
 @import "tailwindcss";
-@import "@fontsource-variable/bricolage-grotesque";
 
 /* Plain and readable: paper-coloured page, white sheets, one blue accent.
    Red, amber and blue are kept for finding status, and always sit beside a word. */
-/* Loud on purpose: cream paper, ink outlines, hard shadows, and a few sticker colours.
-   Red, amber and blue still mean finding status, and always come with a word. */
 @theme {
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: var(--font-sans);
-  --font-display: "Bricolage Grotesque Variable", var(--font-sans);
 
-  --color-ground: #fff7e8;
+  --color-ground: #f6f5f1;
   --color-panel: #ffffff;
-  --color-raised: #fff0d4;
-  --color-hover: #ffe9bf;
-  --color-line: #ecdcbd;
-  --color-line-strong: #1a1720;
-  --color-ink: #1a1720;
-  --color-ink-2: #4a4452;
-  --color-ink-3: #736b7c;
-  --color-edge: #1a1720;
+  --color-raised: #f3f1ec;
+  --color-hover: #efedE7;
+  --color-line: #e3e0d8;
+  --color-line-strong: #c8c4ba;
+  --color-ink: #20242a;
+  --color-ink-2: #474d55;
+  --color-ink-3: #6b7078;
 
-  --color-accent: #6d28d9;
-  --color-accent-dark: #5b21b6;
-  --color-lime: #c6f75e;
-  --color-pink: #ff6fae;
-  --color-sky: #8fd8ff;
-  --color-sun: #ffd84d;
-  --color-marker: #c6f75e;
+  --color-accent: #1f5a96;
+  --color-accent-dark: #17467a;
 
-  --color-obs: #1d4ed8;
-  --color-obs-dim: #dbe7ff;
-  --color-inc: #a35100;
-  --color-inc-dim: #ffecc2;
-  --color-man: #d1202f;
-  --color-man-dim: #ffe0e3;
-  --color-ok: #137a3f;
-  --color-ok-dim: #d9f8e3;
+  --color-obs: #1f5a96;
+  --color-obs-dim: #e9f0f8;
+  --color-inc: #8f5f06;
+  --color-inc-dim: #faf1dc;
+  --color-man: #b3261e;
+  --color-man-dim: #fbeae8;
+  --color-ok: #1b7350;
+  --color-ok-dim: #e5f3ec;
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
 }
 
 /* Dark mode only changes the colours above. The paper-white documents themselves stay as they are. */
@@ -50,29 +40,26 @@
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --color-canvas: #0c0b0f;
-  --color-ground: #141218;
-  --color-panel: #1d1a23;
-  --color-raised: #26222e;
-  --color-hover: #2f2a39;
-  --color-line: #35303f;
-  --color-line-strong: #efeae2;
-  --color-ink: #f4f0e8;
-  --color-ink-2: #d1cbd8;
-  --color-ink-3: #a39bad;
-  --color-edge: #b794ff;
-  --color-accent: #8b5cf6;
-  --color-accent-dark: #a78bfa;
-  --color-lime: #b6ec4f;
-  --color-marker: #6d28d9;
-  --color-obs: #8ab4ff;
-  --color-obs-dim: #1c2a47;
-  --color-inc: #ffc260;
-  --color-inc-dim: #3b2a0d;
-  --color-man: #ff8a8f;
-  --color-man-dim: #431b20;
-  --color-ok: #67dc99;
-  --color-ok-dim: #15342a;
+  --color-canvas: #101214;
+  --color-ground: #17191c;
+  --color-panel: #1f2226;
+  --color-raised: #272b30;
+  --color-hover: #2c3036;
+  --color-line: #33383e;
+  --color-line-strong: #4b5159;
+  --color-ink: #e8e6e1;
+  --color-ink-2: #bcbfc4;
+  --color-ink-3: #91969e;
+  --color-accent: #4a8fd6;
+  --color-accent-dark: #6aa6e3;
+  --color-obs: #79b3ee;
+  --color-obs-dim: #1b2c3f;
+  --color-inc: #e0ad4b;
+  --color-inc-dim: #372a10;
+  --color-man: #f0827a;
+  --color-man-dim: #3f1e1b;
+  --color-ok: #5cc196;
+  --color-ok-dim: #16332a;
 }
 
 html,
@@ -88,9 +75,7 @@ body {
 }
 
 body {
-  background-color: var(--color-ground);
-  background-image: radial-gradient(color-mix(in srgb, var(--color-ink) 9%, transparent) 1px, transparent 1px);
-  background-size: 22px 22px;
+  background: var(--color-ground);
   color: var(--color-ink);
   font-family: var(--font-sans);
   font-size: 15px;
@@ -99,43 +84,14 @@ body {
   font-feature-settings: "tnum" 1;
 }
 
-.display,
-h1,
-h2 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-/* A sticker card: ink outline and a hard shadow. */
-.card {
-  border: 2px solid var(--color-edge);
-  border-radius: var(--radius-lg);
-  background: var(--color-panel);
-  box-shadow: 4px 4px 0 var(--color-edge);
-}
-
-/* A highlighter swipe behind a word. */
-.marker {
-  background: linear-gradient(transparent 55%, var(--color-marker) 55%, var(--color-marker) 90%, transparent 90%);
-  padding: 0 0.1em;
-}
-
-@keyframes wiggle {
-  0%, 100% { transform: rotate(0); }
-  25% { transform: rotate(-1.2deg); }
-  75% { transform: rotate(1.2deg); }
-}
-.wiggle:hover {
-  animation: wiggle 300ms ease-in-out;
+.display {
+  font-weight: 600;
 }
 
 /* A small plain label above a group of things. */
 .eyebrow {
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--color-ink-2);
 }
 

@@ -237,7 +237,7 @@ export function FindingCard({
                 </Button>
               )}
 
-              <section className="rounded-2xl border-2 border-[var(--color-edge)] bg-panel p-3" aria-label="Your decision">
+              <section className="rounded-lg border border-line bg-panel shadow-sm p-3" aria-label="Your decision">
                 <div className="mb-2 flex items-center justify-between gap-2">
                   <h4 className="eyebrow">Your decision</h4>
                   {saved && (
@@ -253,7 +253,7 @@ export function FindingCard({
                       size="sm"
                       disabled={review.isPending}
                       aria-pressed={finding.review.decision === d}
-                      className={cn(finding.review.decision === d && "bg-lime text-[#1a1720]")}
+                      className={cn(finding.review.decision === d && "border-accent bg-obs-dim text-accent")}
                       onClick={() => review.mutate(d)}
                     >
                       {l}
@@ -265,7 +265,7 @@ export function FindingCard({
                   onChange={(e) => setNote(e.target.value)}
                   aria-label="Optional note"
                   placeholder="Add a note (optional)"
-                  className="mt-2 h-8 w-full rounded-xl border-2 border-[var(--color-edge)] bg-panel px-2 text-[14px] text-ink placeholder:text-ink-3"
+                  className="mt-2 h-8 w-full rounded-md border border-line-strong bg-panel px-2 text-[14px] text-ink placeholder:text-ink-3"
                 />
                 <label className="mt-1.5 flex items-center gap-1.5 text-[13px] text-ink-3">
                   Reviewing as
@@ -274,7 +274,7 @@ export function FindingCard({
                     onChange={(e) => setName(e.target.value)}
                     aria-label="Reviewer name"
                     placeholder="Your name"
-                    className="h-7 min-w-0 flex-1 card px-1.5 text-[13px] text-ink placeholder:text-ink-3"
+                    className="h-7 min-w-0 flex-1 rounded-lg border border-line bg-panel shadow-sm px-1.5 text-[13px] text-ink placeholder:text-ink-3"
                   />
                 </label>
                 {finding.review.at && (

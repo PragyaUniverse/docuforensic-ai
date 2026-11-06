@@ -30,12 +30,12 @@ function lastCase(): string | null {
 }
 
 const TABS = [
-  { to: "", label: "📊 Overview", also: ["pipeline"] },
-  { to: "viewer", label: "🔍 Findings", also: [] },
-  { to: "conflicts", label: "🧩 Compare documents", also: ["graph"] },
-  { to: "data", label: "📋 Extracted data", also: [] },
-  { to: "dossier", label: "📄 Report", also: [] },
-  { to: "audit", label: "🧾 History", also: [] },
+  { to: "", label: "Overview", also: ["pipeline"] },
+  { to: "viewer", label: "Findings", also: [] },
+  { to: "conflicts", label: "Compare documents", also: ["graph"] },
+  { to: "data", label: "Extracted data", also: [] },
+  { to: "dossier", label: "Report", also: [] },
+  { to: "audit", label: "History", also: [] },
 ];
 
 const MODE: Record<CapabilityMode, { label: string; hint: string }> = {
@@ -134,11 +134,10 @@ export function Shell() {
           Mock data: development fixtures, not analysis results
         </div>
       )}
-      <header className="shrink-0 border-b-2 border-[var(--color-edge)] bg-panel">
-        <div className="flex h-14 items-center gap-3 px-5">
-          <NavLink to="/" className="wiggle flex shrink-0 items-center gap-1.5 font-[family-name:var(--font-display)] text-[19px] font-extrabold tracking-tight text-ink">
-            <span aria-hidden className="flex size-7 items-center justify-center rounded-lg border-2 border-[var(--color-edge)] bg-lime text-[15px] text-[#1a1720]">✦</span>
-            docuforensic
+      <header className="shrink-0 border-b border-line bg-panel">
+        <div className="flex h-12 items-center gap-3 px-5">
+          <NavLink to="/" className="shrink-0 font-semibold text-ink">
+            DocuForensic
           </NavLink>
           {caseId && (
             <>
@@ -164,7 +163,7 @@ export function Shell() {
           </div>
         </div>
         {routeCase && (
-          <nav aria-label="This case" className="flex gap-1.5 overflow-x-auto px-4 pb-2.5">
+          <nav aria-label="This case" className="flex gap-1 overflow-x-auto px-3">
             {TABS.map((t) => {
               const active = rest === t.to || t.also.includes(rest);
               return (
@@ -174,12 +173,12 @@ export function Shell() {
                   to={`/cases/${routeCase}${t.to ? `/${t.to}` : ""}`}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "relative shrink-0 rounded-full px-3.5 py-1.5 text-[14px] font-semibold transition-colors duration-150",
-                    active ? "text-[#1a1720]" : "text-ink-2 hover:bg-hover hover:text-ink",
+                    "relative shrink-0 px-3 pb-2.5 pt-1 text-[14px] transition-colors duration-150",
+                    active ? "font-medium text-ink" : "text-ink-2 hover:text-ink",
                   )}
                 >
-                  {active && <motion.span layoutId="case-tab" transition={{ type: "spring", stiffness: 420, damping: 32 }} className="absolute inset-0 rounded-full border-2 border-[var(--color-edge)] bg-lime" />}
-                  <span className="relative">{t.label}</span>
+                  {t.label}
+                  {active && <motion.span layoutId="case-tab" transition={{ duration: 0.2, ease: "easeOut" }} className="absolute inset-x-0 bottom-0 h-0.5 bg-accent" />}
                 </NavLink>
               );
             })}
@@ -210,7 +209,7 @@ export function PageHeading({
   return (
     <div className="flex flex-wrap items-start justify-between gap-3 px-6 pb-2 pt-6">
       <div className="min-w-0">
-        <h1 className="text-[28px] leading-tight text-ink">{title}</h1>
+        <h1 className="text-[22px] font-semibold leading-tight text-ink">{title}</h1>
         {children && <p className="mt-1 max-w-[70ch] text-ink-2">{children}</p>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}

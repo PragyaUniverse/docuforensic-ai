@@ -416,7 +416,7 @@ export default function GraphScreen() {
   return (
     <div className={cn("grid h-full min-h-[560px]", sel ? "grid-rows-[minmax(0,1fr)_minmax(0,50%)] lg:grid-cols-[minmax(0,1fr)_400px] lg:grid-rows-1 xl:grid-cols-[minmax(0,1fr)_460px]" : "grid-cols-1")}>
       <div className="relative min-h-0">
-        <div className="absolute left-3 top-3 z-10 flex flex-col gap-2 card p-2.5">
+        <div className="absolute left-3 top-3 z-10 flex flex-col gap-2 rounded-lg border border-line bg-panel shadow-sm p-2.5">
           <Link className="link text-[14px]" to={`/cases/${caseId}/conflicts`}>
             Back to the list
           </Link>
