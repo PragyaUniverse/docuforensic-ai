@@ -9,6 +9,7 @@ import { ErrorState, Loading } from "@/components/ui/states";
 import { Mascot } from "@/components/Mascot";
 import { RiskPlate } from "@/components/StatusBadge";
 import { openDocChat } from "@/lib/assistant";
+import { startTour } from "@/lib/tour";
 import { fmtTime } from "@/lib/utils";
 
 const EXAMPLES: Record<string, { title: string; text: string }> = {
@@ -49,7 +50,7 @@ export function HomeScreen() {
 
   return (
     <div className="mx-auto flex max-w-[760px] flex-col gap-9 px-6 py-10">
-      <section className="rise overflow-hidden rounded-xl border border-line bg-panel p-6 shadow-sm">
+      <section data-tour="start" className="rise overflow-hidden rounded-xl border border-line bg-panel p-6 shadow-sm">
         <div className="flex items-start gap-5">
           <div className="min-w-0 flex-1">
             <h1 className="text-[26px] font-semibold leading-tight">Hi, I'm Doc. Let's check some documents.</h1>
@@ -58,7 +59,7 @@ export function HomeScreen() {
               anything worth a second look. You make the final call.
             </p>
           </div>
-          <button type="button" onClick={openDocChat} title="Ask Doc a question" aria-label="Ask Doc a question" className="hidden shrink-0 cursor-pointer sm:block">
+          <button type="button" data-tour="doc" onClick={openDocChat} title="Ask Doc a question" aria-label="Ask Doc a question" className="hidden shrink-0 cursor-pointer sm:block">
             <Mascot mood={create.isPending || load.isPending ? "thinking" : "hello"} size={104} />
           </button>
         </div>
@@ -85,11 +86,16 @@ export function HomeScreen() {
           Only use documents you're allowed to process. Not sure where to begin?{" "}
           <button type="button" className="link cursor-pointer" onClick={openDocChat}>
             Ask Doc
+          </button>{" "}
+          or{" "}
+          <button type="button" className="link cursor-pointer" onClick={() => startTour("home")}>
+            take a quick tour
           </button>
+          .
         </p>
       </section>
 
-      <section aria-labelledby="demo-h">
+      <section aria-labelledby="demo-h" data-tour="examples">
         <h2 id="demo-h" className="text-[17px] font-semibold">
           Or try an example
         </h2>

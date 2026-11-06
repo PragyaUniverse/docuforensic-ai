@@ -49,7 +49,7 @@ local model, install [Ollama](https://ollama.com) and run `ollama pull qwen2.5:7
 free tiers, copy `.env.example` to `.env`, add keys, and run `make keys`. API docs are at
 http://localhost:8000/docs.
 
-**Meet Doc.** Click the animated character to chat. Ask "what did you find?", "explain #2", "what's the net pay?" or "how do I download the report?", and links take you to the exact spot in the document. It answers from the case's own results with no AI needed, and unusual questions can go to an AI model, labelled as such. Doc only reads. It can't change a finding or say whether a document is genuine, and you can drag it around or hide it.
+**Meet Doc.** The first time you open the home page, a case and its findings, Doc gives a short animated tour, spotlighting each part of the screen. You can replay it with "take a quick tour" or by asking Doc for a tour. Click the animated character to chat. Ask "what did you find?", "explain #2", "what's the net pay?" or "how do I download the report?", and links take you to the exact spot in the document. It answers from the case's own results with no AI needed, and unusual questions can go to an AI model, labelled as such. Doc only reads. It can't change a finding or say whether a document is genuine, and you can drag it around or hide it.
 
 ## Why this deserves to win
 

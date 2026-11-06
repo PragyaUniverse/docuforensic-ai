@@ -7,6 +7,7 @@ import { api } from "@/api";
 import { accountApi, type ChatReply } from "@/api/account";
 import { useFindings } from "@/api/hooks";
 import { onDocSays, onOpenDocChat } from "@/lib/assistant";
+import { TOUR_REQUEST, startTour, tourForPath, useActiveTour } from "@/lib/tour";
 import { Mascot, type Mood } from "./Mascot";
 
 const HIDDEN_KEY = "docuforensic.docHidden";
@@ -68,11 +69,12 @@ interface ChatLine {
 
 function starters(tab: string, finding: boolean, caseOpen: boolean, done: boolean): string[] {
   if (finding && tab === "viewer") return ["Explain this finding", "Could this be innocent?", "How do I check this?"];
-  if (!caseOpen) return ["How do I start?", "What can you do?", "What do the labels mean?"];
+  if (!caseOpen) return ["Give me a tour", "How do I start?", "What can you do?"];
+  if (tab === "viewer") return ["Give me a tour", "What should I look at first?", "What did you find?"];
   if (!done) return ["How do I add documents?", "What do the labels mean?"];
   if (tab === "audit") return ["What does Verify integrity do?", "What did you find?"];
   if (tab === "dossier") return ["How do I download the report?", "What did you find?"];
-  return ["What did you find?", "What should I look at first?", "Do the documents conflict?"];
+  return ["What did you find?", "What should I look at first?", "Give me a tour"];
 }
 
 function SourceNote({ reply }: { reply: ChatReply }) {
@@ -119,6 +121,12 @@ function ChatPanel({
   const ask = async (text: string) => {
     const question = text.trim();
     if (!question || busy) return;
+    // A tour is shown, not told, so it's handled here instead of going to the server.
+    if (TOUR_REQUEST.test(question)) {
+      onClose();
+      startTour(tourForPath(window.location.pathname));
+      return;
+    }
     setDraft("");
     setLines((l) => [...l, { id: nextId.current++, from: "you", text: question }]);
     setBusy(true);
@@ -247,6 +255,7 @@ export function Assistant({ floating = true }: { floating?: boolean }) {
   const [wander, setWander] = useState(0);
   const [chatOpen, setChatOpen] = useState(false);
   const [chatBusy, setChatBusy] = useState(false);
+  const touring = useActiveTour();
   const dragged = useRef(false);
   const hideTimer = useRef<number>(0);
   const moodTimer = useRef<number>(0);
@@ -338,6 +347,9 @@ export function Assistant({ floating = true }: { floating?: boolean }) {
       )}
     </AnimatePresence>
   );
+
+  // During a tour, Doc is busy giving it.
+  if (touring) return null;
 
   if (hidden) {
     if (!floating) return chat;

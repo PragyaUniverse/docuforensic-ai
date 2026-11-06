@@ -1,6 +1,7 @@
 # Demo Video Script (about 4:45)
 
 **Setup before recording**
+- Doc's tours show once per browser. To film one, use "take a quick tour" on the home page. For the rest of the recording, finish or skip them first so they don't pop up mid-shot.
 - Run `make api` and `make ui`, with Ollama running, and load each demo case once so that AI answers come from the local cache and the recording is fast and repeatable.
 - Browser at 1440x900 or larger, zoom 100%, notifications off, no `.env` contents or keys on screen.
 - Check the note at the top right ("AI notes: on" or "recorded earlier") and say which one applies. Don't describe recorded answers as live.

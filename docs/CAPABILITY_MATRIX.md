@@ -43,6 +43,7 @@ synthetic data, and nothing here has been tested on real documents.
 | Tablet and phone layouts | Implemented | Checked for overflow at tablet and phone sizes. Wide report tables scroll on phones |
 | Investigation analytics | Implemented | Counts by finding type, check and reviewer decision, checked in the browser |
 | Doc, the guide you can chat with | Implemented | Conversation run in a browser. Answers from case results and a built-in guide with no AI. Other questions go to an AI model when one is available, with its answer labelled and checked. Read-only |
+| Guided tours by Doc | Implemented | Home, case and findings tours, each shown once and replayable; checked in a browser, on phone and with reduced motion |
 | Light and dark mode | Implemented | Toggle checked in the browser; the choice persists |
 | Login | Implemented | Optional, off by default. Tested through the API only, not clicked through in a browser. All users share the same cases |
 | Registry checks | Partial | Runs against a **bundled synthetic test registry** only. Live sources need authorized access |

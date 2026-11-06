@@ -26,6 +26,7 @@ interface Props {
   focus?: BBox | null;
   focusKey?: string | number | null;
   className?: string;
+  tourTarget?: string;
 }
 
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
@@ -44,6 +45,7 @@ export function DocCanvas({
   focus,
   focusKey,
   className,
+  tourTarget,
 }: Props) {
   const wrap = useRef<HTMLDivElement>(null);
   const p = doc.pages[page];
@@ -192,7 +194,7 @@ export function DocCanvas({
   }
 
   return (
-    <div className={cn("relative flex min-h-0 flex-col", className)}>
+    <div data-tour={tourTarget} className={cn("relative flex min-h-0 flex-col", className)}>
       <div
         ref={wrap}
         tabIndex={0}

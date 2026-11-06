@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ErrorState, Loading } from "@/components/ui/states";
 import { HumanReviewPlate, ProcBadge, RiskPlate } from "@/components/StatusBadge";
 import { PageHeading } from "@/components/Shell";
+import { startTour } from "@/lib/tour";
 import { cn, humanize } from "@/lib/utils";
 
 function plural(n: number, one: string, many = `${one}s`) {
@@ -134,7 +135,7 @@ export function CaseScreen() {
 
       <div className="flex flex-col gap-6 px-6">
         {done && (
-          <section className="rise rounded-lg border border-line bg-panel shadow-sm p-5">
+          <section data-tour="summary" className="rise rounded-lg border border-line bg-panel shadow-sm p-5">
             <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
               <RiskPlate risk={cs.risk_level} large />
               <HumanReviewPlate />
@@ -169,6 +170,9 @@ export function CaseScreen() {
               <Button asChild>
                 <Link to={`/cases/${caseId}/dossier`}>Open the report</Link>
               </Button>
+              <button type="button" className="link cursor-pointer text-[14px]" onClick={() => startTour("case")}>
+                Take a tour
+              </button>
             </div>
             <p className={cn("mt-3 text-[13px] text-ink-3", nothingRead && "hidden")}>
               The risk level helps you decide what to look at first. It isn't a decision about the applicant.

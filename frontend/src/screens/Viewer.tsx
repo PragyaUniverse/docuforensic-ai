@@ -181,7 +181,7 @@ export function ViewerScreen() {
   return (
     <div className="grid h-full min-h-[560px] grid-rows-[minmax(0,55fr)_minmax(0,45fr)] lg:grid-cols-[minmax(0,1fr)_400px] lg:grid-rows-1 xl:grid-cols-[minmax(0,1fr)_420px]">
       <div className="flex min-h-0 min-w-0 flex-col border-b border-line lg:border-b-0 lg:border-r">
-        <div role="tablist" aria-label="Documents" className="flex shrink-0 gap-1 overflow-x-auto border-b border-line bg-panel px-2">
+        <div role="tablist" aria-label="Documents" data-tour="doc-tabs" className="flex shrink-0 gap-1 overflow-x-auto border-b border-line bg-panel px-2">
           {summaries.map((s) => {
             const active = s.id === docId;
             const n = docCounts(s.id);
@@ -222,7 +222,7 @@ export function ViewerScreen() {
               </div>
             )}
             {!!overlays.data?.length && (
-              <label className="flex items-center gap-1.5 text-ink-2">
+              <label data-tour="show" className="flex items-center gap-1.5 text-ink-2">
                 Show
                 <select
                   value={heatKind ?? ""}
@@ -250,6 +250,7 @@ export function ViewerScreen() {
 
         {doc && doc.pages.length > 0 ? (
           <DocCanvas
+            tourTarget="canvas"
             caseId={caseId}
             doc={doc}
             page={Math.min(page, doc.pages.length - 1)}
@@ -277,7 +278,7 @@ export function ViewerScreen() {
         )}
       </div>
 
-      <aside aria-label="Findings" className="flex min-h-0 flex-col bg-panel">
+      <aside aria-label="Findings" data-tour="findings" className="flex min-h-0 flex-col bg-panel">
         <div className="flex shrink-0 items-center justify-between gap-2 border-b border-line px-4 py-2.5">
           <h1 className="text-[17px] font-semibold">
             Findings{findingsQ.data ? <span className="ml-1.5 font-normal text-ink-3">{important.length}</span> : null}

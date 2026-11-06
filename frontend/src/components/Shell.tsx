@@ -7,6 +7,7 @@ import { MOCK_MODE } from "@/api";
 import { accountApi } from "@/api/account";
 import { LoginScreen } from "@/screens/Login";
 import { Assistant } from "./Assistant";
+import { TourHost } from "./Tour";
 import { useCapabilities, useCase } from "@/api/hooks";
 import type { CapabilityMode } from "@/api/types";
 import { cn } from "@/lib/utils";
@@ -149,6 +150,7 @@ export function Shell() {
           )}
           <div className="ml-auto flex shrink-0 items-center gap-4 pl-4">
             <ModeNote />
+            <span data-tour="header-links" className="flex items-center gap-4">
             <NavLink to="/" end className="text-[14px] text-ink-2 hover:text-ink hover:underline">
               All cases
             </NavLink>
@@ -158,8 +160,11 @@ export function Shell() {
             <NavLink to="/capabilities" className="text-[14px] text-ink-2 hover:text-ink hover:underline">
               About
             </NavLink>
+            </span>
             <Account />
-            <ThemeToggle />
+            <span data-tour="theme">
+              <ThemeToggle />
+            </span>
           </div>
         </div>
         {routeCase && (
@@ -171,6 +176,7 @@ export function Shell() {
                   key={t.label}
                   end={!t.to}
                   to={`/cases/${routeCase}${t.to ? `/${t.to}` : ""}`}
+                  data-tour={`tab-${t.to || "overview"}`}
                   aria-current={active ? "page" : undefined}
                   className={cn(
                     "relative shrink-0 px-3 pb-2.5 pt-1 text-[14px] transition-colors duration-150",
@@ -191,6 +197,7 @@ export function Shell() {
         </div>
       </main>
       {/* Home and the progress screen show a larger Doc of their own, which opens the same chat. */}
+      {!MOCK_MODE && <TourHost />}
       {!MOCK_MODE && <Assistant floating={location.pathname !== "/" && !location.pathname.endsWith("/pipeline")} />}
     </div>
   );
