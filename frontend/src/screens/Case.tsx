@@ -279,8 +279,12 @@ export function CaseScreen() {
       <div className="mx-auto flex max-w-[900px] flex-col gap-6 px-6 pb-16 pt-8">
         <div>
           <div className="mono-label text-accent">{caseCode(caseId)} · {state.label}</div>
-          <h2 className="mt-2 text-[28px] font-semibold tracking-tight">{documents.length ? "Evidence ready for analysis" : "Add evidence to begin"}</h2>
-          <p className="mt-1.5 text-ink-2">Submit every document from one application together. The relationships between them are where most problems show.</p>
+          <h2 className="mt-2 text-[28px] font-semibold tracking-tight">{running ? "Analysis in progress" : documents.length ? "Evidence ready for analysis" : "Add evidence to begin"}</h2>
+          <p className="mt-1.5 text-ink-2">
+            {running
+              ? "Doc is reading the evidence and running every check. Follow it step by step, or come back when it's done."
+              : "Submit every document from one application together. The relationships between them are where most problems show."}
+          </p>
         </div>
         {run.isError && <ErrorState title="The analysis didn't start" error={run.error} />}
         {!running && <Upload caseId={caseId} large={documents.length === 0} />}

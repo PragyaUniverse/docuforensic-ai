@@ -47,7 +47,7 @@ export function HomeScreen() {
 
   return (
     <div className="mx-auto flex max-w-[1180px] flex-col gap-16 px-6 pb-20">
-      <section className="relative grid items-center gap-8 pt-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:pt-20">
+      <section className="relative grid items-center gap-8 pt-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,600px)] lg:pt-20">
         <div className="relative z-10">
           <div className="mono-label flex items-center gap-2 text-accent">
             <span className="status-dot" /> AI document forensics
@@ -76,18 +76,18 @@ export function HomeScreen() {
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden />
             </button>
           </div>
-          <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-4">
+          <dl className="mt-10 grid max-w-[520px] grid-cols-3 gap-x-6 gap-y-4 border-t border-line pt-5">
             {FACTS.map(([value, label]) => (
-              <div key={label}>
-                <dt className="mono-label">{label}</dt>
-                <dd className="mt-1 font-mono text-[22px] font-semibold text-ink">{value}</dd>
+              <div key={label} className="flex flex-col-reverse justify-end">
+                <dt className="mono-label mt-1.5">{label}</dt>
+                <dd className="font-mono text-[24px] font-semibold leading-none text-ink">{value}</dd>
               </div>
             ))}
           </dl>
         </div>
         <div className="pointer-events-none absolute inset-0 -z-0 opacity-35 lg:relative lg:opacity-100">
           <div aria-hidden className="absolute inset-[10%] rounded-full bg-[radial-gradient(circle,rgba(var(--color-glow),0.14),transparent_65%)] blur-2xl" />
-          <EvidenceNetwork className="relative h-full w-full" />
+          <EvidenceNetwork className="relative h-full w-full lg:scale-[1.12]" />
         </div>
       </section>
 

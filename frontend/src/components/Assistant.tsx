@@ -18,9 +18,10 @@ interface ChatLine {
   reply?: ChatReply;
 }
 
-function starters(tab: string, finding: boolean, caseOpen: boolean, done: boolean): string[] {
+function starters(tab: string, finding: boolean, caseOpen: boolean, done: boolean, running = false): string[] {
   if (finding && tab === "viewer") return ["Explain this finding", "Could this be innocent?", "How do I check this?"];
   if (!caseOpen) return ["Give me a tour", "How do I start?", "What can you do?"];
+  if (running) return ["What do the labels mean?", "What can you do?"];
   if (!done) return ["How do I add documents?", "What do the labels mean?"];
   return ["What conflicts did you find?", "Which document looks suspicious?", "Show me the strongest evidence", "What should I investigate first?"];
 }
@@ -243,7 +244,7 @@ export function Assistant() {
           <Drawer
             caseId={caseId}
             findingId={findingId}
-            suggestions={starters(tab, !!findingId, !!caseId, c.data?.case.status === "complete")}
+            suggestions={starters(tab, !!findingId, !!caseId, c.data?.case.status === "complete", c.data?.case.status === "running")}
             onClose={() => setOpen(false)}
           />
         )}
