@@ -43,7 +43,7 @@ export function CapabilitiesScreen() {
           <div className="text-[18px] font-semibold">{mode.label}</div>
           <p className="mt-1 max-w-[80ch] text-ink-2">{mode.text}</p>
           <p className="mt-1 max-w-[80ch] text-[14px] text-ink-3">
-            Doc, the investigation assistant, only explains what the checks found. It can't change a finding, and it doesn't decide anything.
+            Doc, the animated guide you can chat with, only explains what the checks found. It can't change a finding, and it doesn't decide anything.
           </p>
           <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 font-mono text-[13px] text-ink-3">
             <span>AI calls {c.llm_usage?.calls ?? 0}</span>

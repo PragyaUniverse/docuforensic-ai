@@ -7,7 +7,7 @@ import { useCase } from "@/api/hooks";
 import type { Case, PipelineStage, ProgressEvent, StageProgress } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { ErrorState, Loading } from "@/components/ui/states";
-import { DocOrb } from "@/components/DocOrb";
+import { Mascot } from "@/components/Mascot";
 import { CountUp, Ring } from "@/components/Metrics";
 import { ProcBadge } from "@/components/StatusBadge";
 import { caseCode } from "@/lib/case";
@@ -129,7 +129,7 @@ export function PipelineScreen() {
           </div>
           <div>
             <div className="flex items-center gap-3">
-              <DocOrb state={running ? "thinking" : status === "complete" ? "done" : status === "failed" ? "alert" : "idle"} size={34} />
+              <Mascot mood={running ? "thinking" : status === "complete" ? "happy" : status === "failed" ? "oops" : "idle"} size={64} />
               <div className="mono-label text-accent">{running ? "Doc is analyzing" : status === "complete" ? "Analysis complete" : status === "failed" ? "Analysis stopped" : "Ready"}</div>
             </div>
             <h1 className="mt-3 text-[30px] font-semibold uppercase tracking-tight text-ink">

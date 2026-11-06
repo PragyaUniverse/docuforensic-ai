@@ -18,7 +18,7 @@ import type { AuditEntry, Document, DocumentSummary, Field, Finding } from "@/ap
 import { Button } from "@/components/ui/button";
 import { ErrorState, Loading } from "@/components/ui/states";
 import { ProcBadge, RiskPlate, StatusBadge } from "@/components/StatusBadge";
-import { DocOrb } from "@/components/DocOrb";
+import { Mascot } from "@/components/Mascot";
 import { ConfidenceBar, CountUp, Ring } from "@/components/Metrics";
 import { openDocChat } from "@/lib/assistant";
 import { caseCode, caseState } from "@/lib/case";
@@ -353,7 +353,7 @@ export function CaseScreen() {
         <section data-tour="doc-panel" className="panel glow-cyan relative flex flex-col overflow-hidden p-5">
           <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-[radial-gradient(ellipse_at_top,rgba(var(--color-glow),0.16),transparent_70%)]" />
           <div className="relative flex items-center gap-3">
-            <DocOrb state={attention.length ? "alert" : "done"} size={36} />
+            <Mascot mood={attention.length ? "concerned" : "happy"} size={52} />
             <div>
               <div className="flex items-center gap-2 font-mono text-[12px] font-semibold tracking-[0.2em] text-ink">
                 DOC <span className="status-dot" />

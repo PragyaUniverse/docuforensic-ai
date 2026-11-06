@@ -13,7 +13,6 @@ import type { CapabilityMode } from "@/api/types";
 import { cn } from "@/lib/utils";
 import { setTheme, useTheme } from "@/lib/theme";
 import { RiskPlate } from "./StatusBadge";
-import { DocOrb } from "./DocOrb";
 import { openDocChat } from "@/lib/assistant";
 import { caseCode, caseState } from "@/lib/case";
 import { useFindings } from "@/api/hooks";
@@ -224,7 +223,7 @@ export function Shell() {
         </div>
       </main>
       {!MOCK_MODE && <TourHost />}
-      {!MOCK_MODE && <Assistant />}
+      {!MOCK_MODE && <Assistant floating={location.pathname !== "/" && !location.pathname.endsWith("/pipeline")} />}
     </div>
   );
 }
@@ -252,4 +251,3 @@ export function PageHeading({
   );
 }
 
-export { DocOrb };

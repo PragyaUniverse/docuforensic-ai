@@ -4,13 +4,13 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useCase } from "@/api/hooks";
 import { endTour, startTour, tourForPath, tourSeen, useActiveTour, type TourId } from "@/lib/tour";
 import { Button } from "./ui/button";
-import { DocOrb, type OrbState } from "./DocOrb";
+import { Mascot, type Mood } from "./Mascot";
 
 interface Step {
   target?: string; // a data-tour value; none means Doc speaks from the middle of the screen
   title: string;
   text: string;
-  mood?: OrbState;
+  mood?: Mood;
 }
 
 const TOURS: Record<TourId, Step[]> = {
@@ -19,7 +19,7 @@ const TOURS: Record<TourId, Step[]> = {
     { target: "start", title: "Open an investigation", text: "Give the case an identifier, then add every document from the same application as evidence." },
     { target: "examples", title: "Demo evidence sets", text: "Synthetic cases with made-up people. \"Altered salary slip\" is the best first look." },
     { target: "header-links", title: "Navigation", text: "Investigations, analytics across cases, and About, which lists exactly what I can and can't do." },
-    { target: "doc", title: "Ask Doc anytime", text: "Open me from here to ask about any investigation. I explain the evidence. Decisions stay with you.", mood: "done" },
+    { target: "doc", title: "Ask Doc anytime", text: "Open me from here to ask about any investigation. I explain the evidence. Decisions stay with you.", mood: "happy" },
   ],
   case: [
     { target: "status", title: "Case status", text: "Risk level, how much evidence was analyzed, and how far the review has got. The risk level only sets priority." },
@@ -27,18 +27,18 @@ const TOURS: Record<TourId, Step[]> = {
     { target: "doc-panel", title: "Doc's briefing", text: "My summary of where to look. Ask me follow-up questions from here." },
     { target: "tab-viewer", title: "Findings", text: "Every finding, highlighted on the document itself." },
     { target: "tab-conflicts", title: "Compare", text: "Values that disagree between documents, side by side, and the evidence graph." },
-    { target: "tab-audit", title: "Timeline", text: "Every step and decision, chained together so you can prove nothing changed afterwards.", mood: "done" },
+    { target: "tab-audit", title: "Timeline", text: "Every step and decision, chained together so you can prove nothing changed afterwards.", mood: "happy" },
   ],
   findings: [
     { target: "doc-tabs", title: "Evidence files", text: "Switch between documents. The count shows what needs review on each." },
     { target: "canvas", title: "Document inspection", text: "Findings are outlined on the page. Scroll to zoom, drag to pan." },
     { target: "show", title: "Forensic views", text: "Switch to error level analysis or noise to see what the checks measured. Treat them as hints." },
     { target: "findings", title: "Doc's findings", text: "Strongest first. Open one for the reasoning, innocent explanations and how to verify." },
-    { title: "Your call", text: "Confirm, dismiss or escalate each finding. Every decision is written to the timeline.", mood: "done" },
+    { title: "Your call", text: "Confirm, dismiss or escalate each finding. Every decision is written to the timeline.", mood: "happy" },
   ],
 };
 
-const CARD_W = 330;
+const CARD_W = 320;
 const PAD = 8;
 
 function placement(rect: DOMRect | null, vw: number, vh: number, w: number, h: number) {
@@ -122,14 +122,14 @@ function TourOverlay({ id }: { id: TourId }) {
       {spot ? (
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute rounded-xl ring-1 ring-accent shadow-[0_0_30px_rgba(var(--color-glow),0.5)]"
+          className="pointer-events-none absolute rounded-xl ring-2 ring-accent"
           initial={false}
           animate={{ left: spot.left - PAD, top: spot.top - PAD, width: spot.width + PAD * 2, height: spot.height + PAD * 2 }}
           transition={glide}
-          style={{ boxShadow: "0 0 0 9999px rgba(3, 5, 8, 0.7), 0 0 30px rgba(var(--color-glow), 0.45)" }}
+          style={{ boxShadow: "0 0 0 9999px rgba(12, 14, 20, 0.58)" }}
         />
       ) : (
-        <motion.div aria-hidden className="absolute inset-0 bg-[rgba(3,5,8,0.7)]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} />
+        <motion.div aria-hidden className="absolute inset-0 bg-[rgba(12,14,20,0.58)]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} />
       )}
 
       <motion.div
@@ -139,8 +139,8 @@ function TourOverlay({ id }: { id: TourId }) {
         animate={{ left: pos.left, top: pos.top, opacity: 1 }}
         transition={glide}
       >
-        <div className="hidden shrink-0 pb-2 sm:block">
-          <DocOrb state={step.mood ?? "idle"} size={44} />
+        <div className="hidden shrink-0 sm:block">
+          <Mascot mood={step.mood ?? "idle"} size={66} />
         </div>
         <AnimatePresence mode="wait">
           <motion.div
@@ -150,10 +150,10 @@ function TourOverlay({ id }: { id: TourId }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={still ? undefined : { opacity: 0, y: -4 }}
             transition={{ duration: 0.16 }}
-            className="panel glow-cyan min-w-0 flex-1 p-4"
+            className="min-w-0 flex-1 rounded-xl rounded-bl-sm border border-line bg-panel p-4 shadow-2xl"
           >
-            <div className="mono-label mb-1 flex items-center gap-2 !text-[10.5px] text-accent">
-              <span className="status-dot" /> DOC · {index + 1}/{steps.length}
+            <div className="flex items-center gap-2 sm:hidden">
+              <Mascot mood={step.mood ?? "idle"} size={36} />
             </div>
             <h2 className="text-[17px] font-semibold leading-snug">{step.title}</h2>
             <p className="mt-1 text-[14px] leading-relaxed text-ink-2">{step.text}</p>
@@ -172,7 +172,7 @@ function TourOverlay({ id }: { id: TourId }) {
                 </Button>
               )}
               <Button ref={next} size="sm" variant="primary" onClick={() => (last ? endTour() : setIndex((i) => i + 1))}>
-                {last ? "Got it" : "Next"}
+                {last ? "Got it" : index === 0 ? "Show me" : "Next"}
               </Button>
             </div>
           </motion.div>

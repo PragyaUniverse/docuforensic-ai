@@ -9,6 +9,7 @@ import type { RiskLevel } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { ErrorState } from "@/components/ui/states";
 import { RiskPlate } from "@/components/StatusBadge";
+import { Mascot } from "@/components/Mascot";
 import { EvidenceNetwork } from "@/components/EvidenceNetwork";
 import { openDocChat } from "@/lib/assistant";
 import { caseCode, caseState, timeAgo } from "@/lib/case";
@@ -93,7 +94,10 @@ export function HomeScreen() {
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
         <div ref={card} data-tour="start" className="panel scanline glow-cyan p-6">
-          <div className="mono-label text-accent">New investigation</div>
+          <div className="flex items-start justify-between gap-3">
+            <div className="mono-label text-accent">New investigation</div>
+            <Mascot mood={create.isPending || load.isPending ? "thinking" : "hello"} size={72} />
+          </div>
           <h2 className="mt-2 text-[22px] font-semibold">Open a case</h2>
           <form
             className="mt-6"
