@@ -51,7 +51,7 @@ export function EvidenceNetwork({ className }: { className?: string }) {
               <line
                 x1={a.x} y1={a.y} x2={b.x} y2={b.y}
                 stroke={e.conflict ? "var(--color-inc)" : "var(--color-accent)"}
-                strokeOpacity={e.conflict ? 0.85 : 0.32}
+                strokeOpacity={e.conflict ? 0.75 : 0.22}
                 strokeWidth={e.conflict ? 1.4 : 1}
                 strokeDasharray={e.conflict ? "6 5" : undefined}
                 className={e.conflict && !still ? "net-march" : undefined}
@@ -76,7 +76,7 @@ export function EvidenceNetwork({ className }: { className?: string }) {
           >
             {n.kind === "doc" ? (
               <>
-                <rect x={n.x - 15} y={n.y - 19} width="30" height="38" rx="4" fill="var(--color-panel)" stroke="var(--color-accent)" strokeOpacity="0.7" style={{ filter: "drop-shadow(0 0 6px rgba(var(--color-glow),0.35))" }} />
+                <rect x={n.x - 15} y={n.y - 19} width="30" height="38" rx="4" fill="var(--color-panel)" stroke="var(--color-accent)" strokeOpacity="0.55" />
                 <path d={`M${n.x - 8} ${n.y - 8} h16 M${n.x - 8} ${n.y - 1} h16 M${n.x - 8} ${n.y + 6} h10`} stroke="var(--color-accent)" strokeOpacity="0.45" strokeWidth="1.4" strokeLinecap="round" />
                 <text x={n.x} y={n.y + 36} textAnchor="middle" className="fill-[var(--color-ink-3)] font-mono" fontSize="9.5" letterSpacing="1.4">
                   {n.label}
