@@ -1,32 +1,21 @@
-# Not yet run, because the Docker daemon was off during development. See docs/LIMITATIONS.md.
+# One container: the API also serves the website. Open http://localhost:7860
+# Deploying to a free host is described in docs/DEPLOY.md.
 services:
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile.api
+  app:
+    build: .
     ports:
-      - "8000:8000"
+      - "7860:7860"
     env_file:
       - path: .env
         required: false
     environment:
-      DATA_DIR: /app/var
       # Reach a local Ollama running on the host, if there is one.
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
-      CORS_ORIGINS: http://localhost:5173
+      LLM_CHAIN: ${LLM_CHAIN:-groq,gemini,openrouter,ollama}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - api-data:/app/var
-
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
-    ports:
-      - "5173:80"
-    depends_on:
-      - api
+      - app-data:/app/var
 
 volumes:
-  api-data:
+  app-data:

@@ -38,7 +38,7 @@ synthetic data, and nothing here has been tested on real documents.
 | PII redaction before external calls | Implemented | Unit tests. Not exercised against a real provider |
 | Hosted LLMs: Gemini, Groq, OpenRouter | Partial | **No real call made**, as no keys were available. Simulated network only |
 | Degraded scans | Partial | Measured: 40% manipulation recall, 85.7% precision |
-| Docker deployment | Partial | Files written, **never run**: Docker isn't installed on the build machine |
+| Docker deployment | Partial | One image, built and run locally (Colima, arm64): demo analysis, report and deep links checked. **Not yet deployed to a host**, and not built on amd64 |
 | CI | Partial | Workflow written, **not yet run**. Its lint and test steps pass locally |
 | Tablet and phone layouts | Implemented | Checked for overflow at tablet and phone sizes. Wide report tables scroll on phones |
 | Investigation analytics | Implemented | Counts by finding type, check and reviewer decision, checked in the browser |

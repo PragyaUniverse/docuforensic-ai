@@ -133,8 +133,11 @@ error in a rare case. We fixed the one we found. Others are likely to exist.
 
 ## Deployment limits
 
-- `docker-compose.yml` and the Dockerfiles **have not been run**, because the Docker daemon wasn't
-  running, and Docker Desktop isn't installed on the build machine. The documented path is the local setup in the README, which was tested from a clean clone.
+- The `Dockerfile` was built and run locally on Apple Silicon (arm64), where a demo analysis, the PDF
+  report and deep links worked, using about 420 MB of memory. It **hasn't been deployed to a host yet**,
+  or built for amd64, which is what Hugging Face Spaces uses. See [DEPLOY.md](DEPLOY.md).
+- On a hosted site, files don't persist across restarts on free tiers, and the local Ollama model isn't
+  available. Live AI there needs a hosted provider key.
 - `requirements.txt` sets minimum versions. `requirements.lock` records the exact versions tested.
 - Tested on Apple Silicon macOS with Python 3.12 only. CI for Linux is configured but hasn't run yet,
   because the repository isn't on GitHub yet.

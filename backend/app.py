@@ -22,6 +22,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from pydantic import Field as PField
 from starlette.datastructures import UploadFile
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from audit import chain
 from backend import analytics, auth, capabilities, chat, db, orchestrator
@@ -594,9 +595,33 @@ def favicon() -> Response:
     return Response(status_code=204)
 
 
-# Serves a built frontend, when there is one, so the demo can run on one port.
+# Top-level pages of the website (frontend/src/App.tsx). Only these fall back to index.html.
+_APP_PAGES = {"cases", "capabilities", "analytics", "about"}
+
+
+class _SinglePageApp(StaticFiles):
+    """Static files, falling back to index.html so deep links like /cases/<id> load the app.
+
+    Anything else, including unknown /api paths, stays a 404.
+    """
+
+    async def get_response(self, path: str, scope):  # type: ignore[override]
+        try:
+            response = await super().get_response(path, scope)
+        except StarletteHTTPException as exc:
+            if exc.status_code != 404:
+                raise
+            response = None
+        if response is not None and response.status_code != 404:
+            return response
+        if path.split("/", 1)[0] not in _APP_PAGES:
+            return JSONResponse({"detail": "Not Found"}, status_code=404)
+        return await super().get_response("index.html", scope)
+
+
+# Serves a built frontend, when there is one, so the whole app runs on one port.
 _dist = REPO_ROOT / "frontend" / "dist"
 if _dist.is_dir():
-    app.mount("/", StaticFiles(directory=_dist, html=True), name="frontend")
+    app.mount("/", _SinglePageApp(directory=_dist, html=True), name="frontend")
 
 __all__ = ["app", "shutil"]

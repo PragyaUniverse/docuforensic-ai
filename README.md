@@ -51,6 +51,11 @@ local model, install [Ollama](https://ollama.com) and run `ollama pull qwen2.5:7
 free tiers, copy `.env.example` to `.env`, add keys, and run `make keys`. API docs are at
 http://localhost:8000/docs.
 
+**Deploy it.** The app is one Docker image that serves the website and the API on one port. To put it
+online for free on Hugging Face Spaces, run `.venv/bin/python -m scripts.deploy_hf <hf-user>/docuforensic`
+after logging in. Step-by-step instructions, including how to add a free AI key, are in
+[docs/DEPLOY.md](docs/DEPLOY.md).
+
 **Meet Doc.** The first time you open the home page, a case and its findings, Doc gives a short animated tour, spotlighting each part of the screen. You can replay it with "take a quick tour" or by asking Doc for a tour. Click the animated character to chat. Ask "what did you find?", "explain #2", "what's the net pay?" or "how do I download the report?", and links take you to the exact spot in the document. It answers from the case's own results with no AI needed, and unusual questions can go to an AI model, labelled as such. Doc only reads. It can't change a finding or say whether a document is genuine, and you can drag it around or hide it.
 
 ## Why this deserves to win
@@ -147,7 +152,7 @@ Summary below, full version in [docs/CAPABILITY_MATRIX.md](docs/CAPABILITY_MATRI
 | Status | Capabilities |
 |---|---|
 | **Implemented** | Ingestion of PNG, JPG, scanned and digital PDF; classification; printed OCR; field and table extraction; structure; visual and PDF forensics; signature reuse and placement; contextual and cross-document checks; evidence mapping; dossier; audit trail; reviewer UI with light and dark modes; Doc, a guide you can chat with; safe failure handling; local LLM reasoning; offline mode; analytics; optional login |
-| **Partial** | **Handwriting** (61/80 exact on distorted handwriting-style text, never tested on real handwriting, and every value is marked for checking); **Hindi** (printed, common labels, one test document); **registry checks** (bundled synthetic test registry only); **degraded scans** (40% recall); **hosted LLMs** (simulated network only, until keys are added); **Docker** (written, never run: not installed here); **CI** (written, runs once on GitHub) |
+| **Partial** | **Handwriting** (61/80 exact on distorted handwriting-style text, never tested on real handwriting, and every value is marked for checking); **Hindi** (printed, common labels, one test document); **registry checks** (bundled synthetic test registry only); **degraded scans** (40% recall); **hosted LLMs** (simulated network only, until keys are added); **Docker** (image built and run locally; not yet deployed to a host); **CI** (written, runs once on GitHub) |
 | **Unsupported** | Signature identity, meaning who signed (we tried a shape comparison, and it couldn't separate people); languages other than English and Hindi; live government or bank registries (needs authorized access); per-user permissions |
 
 ## Ethics and safety
@@ -188,5 +193,4 @@ before distributing or hosting the combined application.
 
 [Problem statement digest](docs/PROBLEM_STATEMENT.md) · [Contracts and API](docs/CONTRACTS.md) ·
 [Traceability demo](docs/TRACEABILITY_DEMO.md) · [Sample dossier](docs/sample_dossier.pdf) ·
-[Environment](docs/ENVIRONMENT.md) · Docker: `docker compose up --build` (written, but **not yet
-tested**)
+[Environment](docs/ENVIRONMENT.md) · [Deploying](docs/DEPLOY.md)
