@@ -55,3 +55,37 @@ def test_login_is_off_by_default(monkeypatch, tmp_path):
     assert c.get("/api/cases").status_code == 200
     assert c.get("/api/auth/me").json() == {"auth_enabled": False, "user": None}
     assert c.get("/api/analytics").json()["cases"] == 0
+
+
+def test_false_alarm_tracker_counts_reviewer_decisions_per_check(monkeypatch, tmp_path):
+    from backend import analytics
+    from models.schemas import (
+        Case,
+        Finding,
+        FindingCategory,
+        FindingStatus,
+        ReviewDecision,
+        ReviewRecord,
+        Severity,
+    )
+
+    monkeypatch.setattr(settings, "data_dir", tmp_path)
+    case = db.save_case(Case(name="T"))
+
+    def flag(detector, decision, status=FindingStatus.INCONSISTENCY):
+        db.save_finding(Finding(case_id=case.id, status=status, category=FindingCategory.visual, severity=Severity.medium,
+                                confidence=0.7, title="t", explanation="e", detector=detector,
+                                review=ReviewRecord(decision=decision)))
+
+    for d in (ReviewDecision.dismissed, ReviewDecision.dismissed, ReviewDecision.confirmed, ReviewDecision.pending):
+        flag("visual.noise", d)
+    flag("cross.dob_mismatch", ReviewDecision.confirmed)
+    flag("visual.noise", ReviewDecision.dismissed, FindingStatus.OBSERVATION)  # observations aren't flags
+
+    rows = {r["check"]: r for r in analytics.track_record()}
+    noise = rows["visual.noise"]
+    assert (noise["flagged"], noise["decided"], noise["dismissed"], noise["confirmed"]) == (4, 3, 2, 1)
+    assert noise["dismissal_rate"] == round(2 / 3, 3)
+    assert rows["cross.dob_mismatch"]["dismissal_rate"] is None  # one decision says too little
+    body = TestClient(app).get("/api/analytics/track-record").json()
+    assert body["min_decisions"] == analytics.MIN_DECISIONS and len(body["checks"]) == 2

@@ -1,0 +1,1349 @@
+{
+  "case": "case_e_repeat",
+  "synthetic": true,
+  "applicant": {
+    "person_name": "Kavya Anand Rao",
+    "date_of_birth": "1990-09-22"
+  },
+  "documents": [
+    {
+      "filename": "application_form.png",
+      "doc_type": "application_form",
+      "format": "png",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "application_id": {
+          "value": "MF-2026-118733",
+          "raw": "MF-2026-118733",
+          "page": 0,
+          "bbox": [
+            470,
+            220,
+            700,
+            240
+          ],
+          "label": "Application ID"
+        },
+        "person_name": {
+          "value": "Kavya Anand Rao",
+          "raw": "Kavya Anand Rao",
+          "page": 0,
+          "bbox": [
+            470,
+            369,
+            707,
+            396
+          ],
+          "label": "Applicant Name"
+        },
+        "date_of_birth": {
+          "value": "1990-09-22",
+          "raw": "22/09/1990",
+          "page": 0,
+          "bbox": [
+            470,
+            422,
+            626,
+            444
+          ],
+          "label": "Date of Birth"
+        },
+        "gender": {
+          "value": "Female",
+          "raw": "Female",
+          "page": 0,
+          "bbox": [
+            470,
+            473,
+            568,
+            494
+          ],
+          "label": "Gender"
+        },
+        "id_number": {
+          "value": "999958022562",
+          "raw": "9999 5802 2562",
+          "page": 0,
+          "bbox": [
+            470,
+            526,
+            693,
+            546
+          ],
+          "label": "Aadhaar No."
+        },
+        "pan_number": {
+          "value": "ZZEPR6247Q",
+          "raw": "ZZEPR6247Q",
+          "page": 0,
+          "bbox": [
+            470,
+            588,
+            649,
+            611
+          ],
+          "label": "PAN"
+        },
+        "address": {
+          "value": "Plot 9, Green Glen Layout,, Bellandur,, Bengaluru, Karnataka 560103",
+          "raw": "Plot 9, Green Glen Layout,, Bellandur,, Bengaluru, Karnataka 560103",
+          "page": 0,
+          "bbox": [
+            540,
+            713,
+            944,
+            820
+          ],
+          "label": "Residential Address"
+        },
+        "phone": {
+          "value": "+91 90000 01234",
+          "raw": "+91 90000 01234",
+          "page": 0,
+          "bbox": [
+            540,
+            846,
+            786,
+            866
+          ],
+          "label": "Mobile"
+        },
+        "email": {
+          "value": "kavya.rao@example.com",
+          "raw": "kavya.rao@example.com",
+          "page": 0,
+          "bbox": [
+            540,
+            897,
+            882,
+            924
+          ],
+          "label": "Email"
+        },
+        "employer_name": {
+          "value": "Northwind Retail Pvt. Ltd.",
+          "raw": "Northwind Retail Pvt. Ltd.",
+          "page": 0,
+          "bbox": [
+            540,
+            1023,
+            884,
+            1044
+          ],
+          "label": "Employer Name"
+        },
+        "designation": {
+          "value": "Store Operations Lead",
+          "raw": "Store Operations Lead",
+          "page": 0,
+          "bbox": [
+            540,
+            1075,
+            842,
+            1102
+          ],
+          "label": "Designation"
+        },
+        "date_of_joining": {
+          "value": "2020-04-06",
+          "raw": "06/04/2020",
+          "page": 0,
+          "bbox": [
+            540,
+            1128,
+            696,
+            1150
+          ],
+          "label": "Date of Joining"
+        },
+        "declared_monthly_income": {
+          "value": "58000.00",
+          "raw": "58,000.00",
+          "page": 0,
+          "bbox": [
+            540,
+            1180,
+            677,
+            1203
+          ],
+          "label": "Monthly Income (Rs.)"
+        },
+        "loan_amount": {
+          "value": "1200000.00",
+          "raw": "12,00,000.00",
+          "page": 0,
+          "bbox": [
+            540,
+            1306,
+            720,
+            1329
+          ],
+          "label": "Loan Amount (Rs.)"
+        },
+        "bank_account_number": {
+          "value": "50100234567812",
+          "raw": "50100234567812",
+          "page": 0,
+          "bbox": [
+            540,
+            1410,
+            780,
+            1430
+          ],
+          "label": "Bank A/c No."
+        },
+        "application_date": {
+          "value": "2026-11-02",
+          "raw": "02/11/2026",
+          "page": 0,
+          "bbox": [
+            420,
+            1690,
+            576,
+            1712
+          ],
+          "label": "Application Date"
+        }
+      },
+      "tables": {},
+      "regions": {
+        "photo": {
+          "page": 0,
+          "bbox": [
+            1274,
+            216,
+            1544,
+            546
+          ]
+        },
+        "signature": {
+          "page": 0,
+          "bbox": [
+            1000,
+            1644,
+            1420,
+            1774
+          ]
+        }
+      }
+    },
+    {
+      "filename": "id_proof.jpg",
+      "doc_type": "id_proof",
+      "format": "jpg",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "id_type": {
+          "value": "AADHAAR-STYLE",
+          "raw": "AADHAAR-STYLE",
+          "page": 0,
+          "bbox": [
+            394.7,
+            285,
+            648.7,
+            305
+          ],
+          "label": "Card title"
+        },
+        "person_name": {
+          "value": "Kavya Anand Rao",
+          "raw": "Kavya Anand Rao",
+          "page": 0,
+          "bbox": [
+            704,
+            389,
+            970,
+            416
+          ],
+          "label": "Name"
+        },
+        "date_of_birth": {
+          "value": "1990-09-22",
+          "raw": "22/09/1990",
+          "page": 0,
+          "bbox": [
+            704,
+            456,
+            860,
+            478
+          ],
+          "label": "DOB"
+        },
+        "gender": {
+          "value": "Female",
+          "raw": "Female",
+          "page": 0,
+          "bbox": [
+            704,
+            521,
+            802,
+            542
+          ],
+          "label": "Gender"
+        },
+        "address": {
+          "value": "Plot 9, Green Glen Layout,, Bellandur,, Bengaluru, Karnataka 560103",
+          "raw": "Plot 9, Green Glen Layout,, Bellandur,, Bengaluru, Karnataka 560103",
+          "page": 0,
+          "bbox": [
+            704,
+            589,
+            1079,
+            689
+          ],
+          "label": "Address"
+        },
+        "id_number": {
+          "value": "999958022562",
+          "raw": "9999 5802 2562",
+          "page": 0,
+          "bbox": [
+            627.0,
+            865,
+            1043.0,
+            900
+          ],
+          "label": "ID No"
+        },
+        "pan_number": {
+          "value": "ZZEPR6247Q",
+          "raw": "ZZEPR6247Q",
+          "page": 0,
+          "bbox": [
+            630,
+            1358,
+            870,
+            1387
+          ],
+          "label": "Permanent Account No"
+        }
+      },
+      "tables": {},
+      "regions": {
+        "photo": {
+          "page": 0,
+          "bbox": [
+            214,
+            370,
+            484,
+            700
+          ]
+        },
+        "signature": {
+          "page": 0,
+          "bbox": [
+            590,
+            1438,
+            1010,
+            1568
+          ]
+        }
+      }
+    },
+    {
+      "filename": "salary_slip.pdf",
+      "doc_type": "salary_slip",
+      "format": "digital_pdf",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "person_name": {
+          "value": "Kavya Anand Rao",
+          "raw": "Kavya Anand Rao",
+          "page": 0,
+          "bbox": [
+            400,
+            251,
+            637,
+            278
+          ],
+          "label": "Employee Name"
+        },
+        "employee_id": {
+          "value": "NRP-51276",
+          "raw": "NRP-51276",
+          "page": 0,
+          "bbox": [
+            1150,
+            252,
+            1300,
+            272
+          ],
+          "label": "Employee ID"
+        },
+        "designation": {
+          "value": "Store Operations Lead",
+          "raw": "Store Operations Lead",
+          "page": 0,
+          "bbox": [
+            400,
+            303,
+            702,
+            330
+          ],
+          "label": "Designation"
+        },
+        "pay_period": {
+          "value": "2026-10",
+          "raw": "October 2026",
+          "page": 0,
+          "bbox": [
+            1150,
+            303,
+            1335,
+            324
+          ],
+          "label": "Pay Period"
+        },
+        "date_of_joining": {
+          "value": "2020-04-06",
+          "raw": "06-Apr-2020",
+          "page": 0,
+          "bbox": [
+            400,
+            356,
+            567,
+            382
+          ],
+          "label": "Date of Joining"
+        },
+        "pan_number": {
+          "value": "ZZEPR6247Q",
+          "raw": "ZZEPR6247Q",
+          "page": 0,
+          "bbox": [
+            1150,
+            356,
+            1329,
+            379
+          ],
+          "label": "PAN"
+        },
+        "employer_name": {
+          "value": "Northwind Retail Pvt. Ltd.",
+          "raw": "Northwind Retail Pvt. Ltd.",
+          "page": 0,
+          "bbox": [
+            400,
+            407,
+            744,
+            428
+          ],
+          "label": "Employer"
+        },
+        "bank_account_number": {
+          "value": "50100234567812",
+          "raw": "50100234567812",
+          "page": 0,
+          "bbox": [
+            400,
+            460,
+            640,
+            480
+          ],
+          "label": "Salary A/c No."
+        },
+        "basic_pay": {
+          "value": "34000.00",
+          "raw": "34,000.00",
+          "page": 0,
+          "bbox": [
+            678.6,
+            599,
+            810.6,
+            621
+          ],
+          "label": "Basic Pay"
+        },
+        "hra": {
+          "value": "13600.00",
+          "raw": "13,600.00",
+          "page": 0,
+          "bbox": [
+            678.6,
+            655,
+            810.6,
+            677
+          ],
+          "label": "HRA"
+        },
+        "other_allowances": {
+          "value": "10400.00",
+          "raw": "10,400.00",
+          "page": 0,
+          "bbox": [
+            678.6,
+            711,
+            810.6,
+            733
+          ],
+          "label": "Other Allowances"
+        },
+        "gross_pay": {
+          "value": "58000.00",
+          "raw": "58,000.00",
+          "page": 0,
+          "bbox": [
+            664.6,
+            783,
+            810.6,
+            806
+          ],
+          "label": "Gross Pay"
+        },
+        "total_deductions": {
+          "value": "5200.00",
+          "raw": "5,200.00",
+          "page": 0,
+          "bbox": [
+            1399.7,
+            783,
+            1527.7,
+            806
+          ],
+          "label": "Total Deductions"
+        },
+        "net_pay": {
+          "value": "52800.00",
+          "raw": "52,800.00",
+          "page": 0,
+          "bbox": [
+            470,
+            879,
+            661,
+            909
+          ],
+          "label": "Net Pay (Rs.)"
+        }
+      },
+      "tables": {
+        "earnings": {
+          "page": 0,
+          "headers": [
+            "component",
+            "amount"
+          ],
+          "rows": [
+            [
+              "Basic Pay",
+              "34,000.00"
+            ],
+            [
+              "HRA",
+              "13,600.00"
+            ],
+            [
+              "Other Allowances",
+              "10,400.00"
+            ]
+          ]
+        },
+        "deductions": {
+          "page": 0,
+          "headers": [
+            "component",
+            "amount"
+          ],
+          "rows": [
+            [
+              "Provident Fund",
+              "4,080.00"
+            ],
+            [
+              "Professional Tax",
+              "200.00"
+            ],
+            [
+              "Income Tax (TDS)",
+              "920.00"
+            ]
+          ]
+        }
+      },
+      "regions": {
+        "authorised_signature": {
+          "page": 0,
+          "bbox": [
+            110,
+            1070,
+            530,
+            1200
+          ]
+        }
+      }
+    },
+    {
+      "filename": "bank_statement.pdf",
+      "doc_type": "bank_statement",
+      "format": "digital_pdf",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "person_name": {
+          "value": "Kavya Anand Rao",
+          "raw": "Kavya Anand Rao",
+          "page": 0,
+          "bbox": [
+            480,
+            205,
+            717,
+            232
+          ],
+          "label": "Account Holder"
+        },
+        "address": {
+          "value": "Plot 9, Green Glen Layout,, Bellandur,, Bengaluru, Karnataka 560103",
+          "raw": "Plot 9, Green Glen Layout,, Bellandur,, Bengaluru, Karnataka 560103",
+          "page": 0,
+          "bbox": [
+            480,
+            255,
+            884,
+            358
+          ],
+          "label": "Address"
+        },
+        "bank_name": {
+          "value": "Aravali National Bank",
+          "raw": "Aravali National Bank",
+          "page": 0,
+          "bbox": [
+            480,
+            381,
+            771,
+            402
+          ],
+          "label": "Bank"
+        },
+        "ifsc": {
+          "value": "ARVL0001108",
+          "raw": "ARVL0001108",
+          "page": 0,
+          "bbox": [
+            1140,
+            382,
+            1329,
+            402
+          ],
+          "label": "IFSC"
+        },
+        "bank_account_number": {
+          "value": "50100234567812",
+          "raw": "50100234567812",
+          "page": 0,
+          "bbox": [
+            480,
+            432,
+            720,
+            452
+          ],
+          "label": "Account No."
+        },
+        "statement_period": {
+          "value": "2026-05-01/2026-10-31",
+          "raw": "01-May-2026 to 31-Oct-2026",
+          "page": 0,
+          "bbox": [
+            480,
+            482,
+            872,
+            508
+          ],
+          "label": "Statement Period"
+        },
+        "opening_balance": {
+          "value": "96420.60",
+          "raw": "96,420.60",
+          "page": 0,
+          "bbox": [
+            480,
+            532,
+            617,
+            555
+          ],
+          "label": "Opening Balance (Rs.)"
+        },
+        "closing_balance": {
+          "value": "266675.48",
+          "raw": "2,66,675.48",
+          "page": 0,
+          "bbox": [
+            480,
+            582,
+            643,
+            605
+          ],
+          "label": "Closing Balance (Rs.)"
+        }
+      },
+      "tables": {
+        "transactions": {
+          "page": 0,
+          "headers": [
+            "date",
+            "description",
+            "debit",
+            "credit",
+            "balance"
+          ],
+          "rows": [
+            {
+              "cells": [
+                "03-May-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "23,000.00",
+                "",
+                "73,420.60"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                712,
+                1529.7,
+                734
+              ]
+            },
+            {
+              "cells": [
+                "07-May-2026",
+                "ELECTRICITY BILL PAY",
+                "2,161.26",
+                "",
+                "71,259.34"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                758,
+                1529.7,
+                780
+              ]
+            },
+            {
+              "cells": [
+                "17-May-2026",
+                "UPI-GROCERY STORE",
+                "3,839.69",
+                "",
+                "67,419.65"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                804,
+                1529.7,
+                826
+              ]
+            },
+            {
+              "cells": [
+                "29-May-2026",
+                "NEFT CR-NORTHWIND-SALARY",
+                "",
+                "52,800.00",
+                "1,20,219.65"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                850,
+                1530.5,
+                872
+              ]
+            },
+            {
+              "cells": [
+                "03-Jun-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "16,000.00",
+                "",
+                "1,04,219.65"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                896,
+                1530.5,
+                917
+              ]
+            },
+            {
+              "cells": [
+                "09-Jun-2026",
+                "ELECTRICITY BILL PAY",
+                "2,165.67",
+                "",
+                "1,02,053.98"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                942,
+                1530.5,
+                963
+              ]
+            },
+            {
+              "cells": [
+                "14-Jun-2026",
+                "UPI-GROCERY STORE",
+                "2,788.18",
+                "",
+                "99,265.80"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                988,
+                1529.7,
+                1009
+              ]
+            },
+            {
+              "cells": [
+                "30-Jun-2026",
+                "NEFT CR-NORTHWIND-SALARY",
+                "",
+                "52,800.00",
+                "1,52,065.80"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1034,
+                1530.5,
+                1055
+              ]
+            },
+            {
+              "cells": [
+                "03-Jul-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "22,000.00",
+                "",
+                "1,30,065.80"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1080,
+                1530.5,
+                1101
+              ]
+            },
+            {
+              "cells": [
+                "07-Jul-2026",
+                "ELECTRICITY BILL PAY",
+                "1,672.44",
+                "",
+                "1,28,393.36"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1126,
+                1530.5,
+                1147
+              ]
+            },
+            {
+              "cells": [
+                "15-Jul-2026",
+                "UPI-GROCERY STORE",
+                "2,601.64",
+                "",
+                "1,25,791.72"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1172,
+                1530.5,
+                1193
+              ]
+            },
+            {
+              "cells": [
+                "31-Jul-2026",
+                "NEFT CR-NORTHWIND-SALARY",
+                "",
+                "52,800.00",
+                "1,78,591.72"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1218,
+                1530.5,
+                1239
+              ]
+            },
+            {
+              "cells": [
+                "03-Aug-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "19,000.00",
+                "",
+                "1,59,591.72"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1264,
+                1530.5,
+                1286
+              ]
+            },
+            {
+              "cells": [
+                "06-Aug-2026",
+                "ELECTRICITY BILL PAY",
+                "1,501.33",
+                "",
+                "1,58,090.39"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1310,
+                1530.5,
+                1332
+              ]
+            },
+            {
+              "cells": [
+                "16-Aug-2026",
+                "UPI-GROCERY STORE",
+                "4,950.69",
+                "",
+                "1,53,139.70"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1356,
+                1530.5,
+                1378
+              ]
+            },
+            {
+              "cells": [
+                "31-Aug-2026",
+                "NEFT CR-NORTHWIND-SALARY",
+                "",
+                "52,800.00",
+                "2,05,939.70"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1402,
+                1530.5,
+                1424
+              ]
+            },
+            {
+              "cells": [
+                "03-Sep-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "19,000.00",
+                "",
+                "1,86,939.70"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1448,
+                1530.5,
+                1470
+              ]
+            },
+            {
+              "cells": [
+                "09-Sep-2026",
+                "ELECTRICITY BILL PAY",
+                "1,501.43",
+                "",
+                "1,85,438.27"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1494,
+                1530.5,
+                1516
+              ]
+            },
+            {
+              "cells": [
+                "15-Sep-2026",
+                "UPI-GROCERY STORE",
+                "3,795.77",
+                "",
+                "1,81,642.50"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1540,
+                1530.5,
+                1562
+              ]
+            },
+            {
+              "cells": [
+                "30-Sep-2026",
+                "NEFT CR-NORTHWIND-SALARY",
+                "",
+                "52,800.00",
+                "2,34,442.50"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1586,
+                1530.5,
+                1608
+              ]
+            },
+            {
+              "cells": [
+                "03-Oct-2026",
+                "UPI-RENT-HOUSE OWNER",
+                "17,000.00",
+                "",
+                "2,17,442.50"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1632,
+                1530.5,
+                1653
+              ]
+            },
+            {
+              "cells": [
+                "07-Oct-2026",
+                "ELECTRICITY BILL PAY",
+                "1,508.63",
+                "",
+                "2,15,933.87"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1678,
+                1530.5,
+                1699
+              ]
+            },
+            {
+              "cells": [
+                "18-Oct-2026",
+                "UPI-GROCERY STORE",
+                "2,058.39",
+                "",
+                "2,13,875.48"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1724,
+                1530.5,
+                1745
+              ]
+            },
+            {
+              "cells": [
+                "30-Oct-2026",
+                "NEFT CR-NORTHWIND-SALARY",
+                "",
+                "52,800.00",
+                "2,66,675.48"
+              ],
+              "page": 0,
+              "bbox": [
+                124,
+                1770,
+                1530.5,
+                1791
+              ]
+            }
+          ]
+        }
+      },
+      "regions": {}
+    },
+    {
+      "filename": "address_proof.jpg",
+      "doc_type": "address_proof",
+      "format": "jpg",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "issuer_name": {
+          "value": "Cauvery Urban Power Distribution",
+          "raw": "Cauvery Urban Power Distribution",
+          "page": 0,
+          "bbox": [
+            110,
+            110,
+            882,
+            149
+          ],
+          "label": null
+        },
+        "person_name": {
+          "value": "Kavya Anand Rao",
+          "raw": "Kavya Anand Rao",
+          "page": 0,
+          "bbox": [
+            540,
+            301,
+            777,
+            328
+          ],
+          "label": "Consumer Name"
+        },
+        "address": {
+          "value": "Plot 9, Green Glen Layout,, Bellandur,, Bengaluru, Karnataka 560103",
+          "raw": "Plot 9, Green Glen Layout,, Bellandur,, Bengaluru, Karnataka 560103",
+          "page": 0,
+          "bbox": [
+            540,
+            353,
+            944,
+            460
+          ],
+          "label": "Service Address"
+        },
+        "consumer_number": {
+          "value": "BPD-78450931",
+          "raw": "BPD-78450931",
+          "page": 0,
+          "bbox": [
+            540,
+            486,
+            743,
+            506
+          ],
+          "label": "Consumer No."
+        },
+        "bill_date": {
+          "value": "2026-10-12",
+          "raw": "12-Oct-2026",
+          "page": 0,
+          "bbox": [
+            540,
+            664,
+            710,
+            684
+          ],
+          "label": "Bill Date"
+        },
+        "amount_due": {
+          "value": "1496.00",
+          "raw": "1,496.00",
+          "page": 0,
+          "bbox": [
+            540,
+            820,
+            673,
+            844
+          ],
+          "label": "Amount Due (Rs.)"
+        }
+      },
+      "tables": {
+        "charges": {
+          "page": 0,
+          "headers": [
+            "item",
+            "value"
+          ],
+          "rows": [
+            [
+              "Previous Reading",
+              "18,204"
+            ],
+            [
+              "Current Reading",
+              "18,396"
+            ],
+            [
+              "Units Consumed",
+              "192"
+            ],
+            [
+              "Energy Charges (Rs.)",
+              "1,152.00"
+            ],
+            [
+              "Fixed Charges (Rs.)",
+              "210.00"
+            ],
+            [
+              "Taxes and Duty (Rs.)",
+              "134.00"
+            ]
+          ]
+        }
+      },
+      "regions": {}
+    },
+    {
+      "filename": "declaration.png",
+      "doc_type": "declaration",
+      "format": "png",
+      "pages": 1,
+      "page_size": [
+        1654,
+        2339
+      ],
+      "fields": {
+        "person_name": {
+          "value": "Kavya Anand Rao",
+          "raw": "Kavya Anand Rao",
+          "page": 0,
+          "bbox": [
+            560,
+            309,
+            804,
+            340
+          ],
+          "label": "Name"
+        },
+        "date_of_birth": {
+          "value": "1990-09-22",
+          "raw": "22-09-1990",
+          "page": 0,
+          "bbox": [
+            560,
+            367,
+            714,
+            391
+          ],
+          "label": "Date of Birth"
+        },
+        "address": {
+          "value": "Plot 9, Green Glen Layout,, Bellandur,, Bengaluru, Karnataka 560103",
+          "raw": "Plot 9, Green Glen Layout,, Bellandur,, Bengaluru, Karnataka 560103",
+          "page": 0,
+          "bbox": [
+            560,
+            425,
+            957,
+            544
+          ],
+          "label": "Residential Address"
+        },
+        "employer_name": {
+          "value": "Northwind Retail Pvt. Ltd.",
+          "raw": "Northwind Retail Pvt. Ltd.",
+          "page": 0,
+          "bbox": [
+            560,
+            571,
+            913,
+            595
+          ],
+          "label": "Employer"
+        },
+        "declared_monthly_income": {
+          "value": "58000.00",
+          "raw": "58,000.00",
+          "page": 0,
+          "bbox": [
+            560,
+            629,
+            692,
+            657
+          ],
+          "label": "Monthly Income (Rs.)"
+        },
+        "declaration_date": {
+          "value": "2026-11-02",
+          "raw": "02-11-2026",
+          "page": 0,
+          "bbox": [
+            330,
+            1131,
+            484,
+            1155
+          ],
+          "label": "Date"
+        },
+        "place": {
+          "value": "Bengaluru",
+          "raw": "Bengaluru",
+          "page": 0,
+          "bbox": [
+            330,
+            1189,
+            467,
+            1220
+          ],
+          "label": "Place"
+        }
+      },
+      "tables": {},
+      "regions": {
+        "signature": {
+          "page": 0,
+          "bbox": [
+            1010,
+            1084,
+            1430,
+            1214
+          ]
+        }
+      }
+    }
+  ],
+  "manipulations": [],
+  "discrepancies": [],
+  "within_document": [],
+  "benign_variations": [],
+  "cross_case": [
+    {
+      "element": "photo",
+      "documents": [
+        "application_form.png",
+        "id_proof.jpg"
+      ],
+      "shared_with": "case_b_visual",
+      "description": "The applicant photo is Case B's application photo."
+    },
+    {
+      "element": "bank_account_number",
+      "value": "50100234567812",
+      "shared_with": "case_c_crossdoc",
+      "description": "The salary account is the account on Case C's bank statement and application."
+    },
+    {
+      "element": "phone",
+      "value": "+91 90000 01234",
+      "shared_with": "case_a_clean",
+      "description": "The mobile number is Case A's."
+    }
+  ]
+}

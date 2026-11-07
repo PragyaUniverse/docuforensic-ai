@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { ArrowRight, FileWarning, FileX, Files, GitCompare, Loader2, Plus, ScanSearch, ShieldCheck } from "lucide-react";
+import { ArrowRight, FileWarning, FileX, Files, GitCompare, Loader2, Plus, ScanSearch, ShieldCheck, Fingerprint } from "lucide-react";
 import { api } from "@/api";
 import { accountApi } from "@/api/account";
 import type { RiskLevel } from "@/api/types";
@@ -21,6 +21,7 @@ const DEMOS: Record<string, { title: string; text: string; icon: typeof Files; t
   case_b_visual: { title: "Altered salary slip", text: "A changed figure, a pasted photo, a copied signature.", icon: ScanSearch, tone: "text-man" },
   case_c_crossdoc: { title: "Conflicting documents", text: "Each looks clean. Together, names, dates and amounts disagree.", icon: GitCompare, tone: "text-inc" },
   case_d_pdf: { title: "Edited PDF", text: "The visible figure isn't the one stored in the file.", icon: FileWarning, tone: "text-inc" },
+  case_e_repeat: { title: "Seen before", text: "A new applicant, but the photo, account and phone appeared on other applications.", icon: Fingerprint, tone: "text-man" },
   unsupported_files: { title: "Unreadable files", text: "Corrupt and unsupported files, handled without a crash.", icon: FileX, tone: "text-ink-3" },
 };
 
@@ -163,7 +164,10 @@ export function HomeScreen() {
                         <ArrowRight className="size-4 shrink-0 text-ink-3 transition-transform group-hover:translate-x-1 group-hover:text-accent" aria-hidden />
                       </span>
                       <span className="mt-0.5 block text-[13px] leading-snug text-ink-3">{meta.text}</span>
-                      <span className="mt-2 block font-mono text-[10.5px] tracking-[0.12em] text-ink-3">{d.documents.length} EVIDENCE FILES</span>
+                      <span className="mt-2 block font-mono text-[10.5px] tracking-[0.12em] text-ink-3">
+                        {d.documents.length} EVIDENCE FILES
+                        {d.needs?.length ? ` · ALSO LOADS ${d.needs.length} TO COMPARE` : ""}
+                      </span>
                     </span>
                   </button>
                 </motion.li>

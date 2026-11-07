@@ -29,6 +29,8 @@ export interface Analytics {
   by_review: Record<string, number>;
   by_discrepancy: [string, number][];
   by_check: { check: string; count: number; dismissed: number }[];
+  track_record: import("./features").TrackRow[];
+  min_decisions: number;
   recent: { id: string; name: string; status: string; risk_level: string; created_at: string; documents: number; to_review: number; findings: number; conflicts: number }[];
 }
 
@@ -42,11 +44,11 @@ export interface ChatReply {
 }
 
 export const accountApi = {
-  chat: (message: string, caseId?: string, findingId?: string | null) =>
+  chat: (message: string, caseId?: string, findingId?: string | null, lang: "en" | "hi" = "en") =>
     send<ChatReply>("/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message, case_id: caseId ?? null, finding_id: findingId ?? null }),
+      body: JSON.stringify({ message, case_id: caseId ?? null, finding_id: findingId ?? null, lang }),
     }),
   me: () => send<Me>("/auth/me"),
   login: (username: string, password: string) =>

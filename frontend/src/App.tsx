@@ -12,6 +12,7 @@ import { DossierScreen } from "./screens/Dossier";
 import { AuditScreen } from "./screens/Audit";
 import { CapabilitiesScreen } from "./screens/Capabilities";
 import { AnalyticsScreen } from "./screens/Analytics";
+import { VerifyScreen } from "./screens/Verify";
 
 const GraphScreen = lazy(() => import("./screens/Graph"));
 
@@ -22,6 +23,7 @@ export function App() {
         <Route index element={<HomeScreen />} />
         <Route path="capabilities" element={<CapabilitiesScreen />} />
         <Route path="analytics" element={<AnalyticsScreen />} />
+        <Route path="verify" element={<VerifyScreen />} />
         <Route path="cases/:caseId">
           <Route index element={<CaseScreen />} />
           <Route path="pipeline" element={<PipelineScreen />} />

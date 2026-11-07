@@ -3,6 +3,9 @@ from __future__ import annotations
 
 import io
 import logging
+import re
+from collections import defaultdict
+from contextvars import ContextVar
 from datetime import UTC
 from pathlib import Path
 from typing import Any
@@ -49,6 +52,54 @@ from models.schemas import (
 )
 
 log = logging.getLogger("docuforensic.dossier")
+
+# ---- redacted copies: personal details blacked out in text and images, findings and amounts kept
+REDACTED = "[redacted]"
+_PII_FIELDS = {"person_name", "date_of_birth", "address", "phone", "email", "pan_number", "id_number", "bank_account_number",
+               "employee_id", "consumer_number", "application_id", "ifsc"}
+_HEXLESS = r"(?<![0-9A-Za-z])"
+_PII_PATTERNS = [
+    re.compile(r"\b[\w.+-]+@[\w-]+\.[\w.-]+\b"),
+    re.compile(r"\b[A-Z]{5}[0-9]{4}[A-Z]\b"),
+    re.compile(_HEXLESS + r"\d{4}[ -]\d{4}[ -]\d{4}(?![0-9A-Za-z])"),
+    re.compile(_HEXLESS + r"(?:\+91[ -]?)?[6-9]\d{4}[ -]?\d{5}(?![0-9A-Za-z])"),
+    re.compile(_HEXLESS + r"\d{9,18}(?![0-9A-Za-z])"),
+]
+
+
+class _Redactor:
+    """What to black out in one case: every personal field value, and its box, photo and signature on each page."""
+
+    def __init__(self, docs: list[Document]) -> None:
+        values: set[str] = set()
+        self.boxes: dict[tuple[str, int], list[BBox]] = defaultdict(list)
+        for d in docs:
+            for f in d.fields:
+                if f.name in _PII_FIELDS or f.value_type.value in ("name", "address", "id_number", "account_number"):
+                    for part in [f.value_raw, *re.split(r"[\n,]", f.value_raw)]:
+                        if len(part.strip()) >= 4:
+                            values.add(part.strip())
+                    self.boxes[(d.id, f.page)].append(f.bbox)
+            for page, regions in (d.metadata.get("photo_regions") or {}).items():
+                self.boxes[(d.id, int(page))] += [BBox(**b) for b in regions]
+            for sig in d.metadata.get("signatures") or []:
+                self.boxes[(d.id, int(sig["page"]))].append(BBox(**sig["bbox"]))
+        self.values = [re.compile(re.escape(v), re.IGNORECASE) for v in sorted(values, key=len, reverse=True)]
+
+    def text(self, text: str) -> str:
+        for pattern in self.values:
+            text = pattern.sub(REDACTED, text)
+        for pattern in _PII_PATTERNS:
+            text = pattern.sub(REDACTED, text)
+        return text
+
+    def paint(self, im: Any, doc_id: str, page: int) -> None:
+        draw = ImageDraw.Draw(im)
+        for b in self.boxes.get((doc_id, page), []):
+            draw.rectangle((b.x0 - 4, b.y0 - 4, b.x1 + 4, b.y1 + 4), fill=(20, 20, 24))
+
+
+_REDACT: ContextVar[_Redactor | None] = ContextVar("dossier_redact", default=None)
 
 DISCLAIMER = (
     "This dossier records automated observations for a human reviewer. It is not a determination "
@@ -222,6 +273,9 @@ S = {
 def _t(value: Any) -> str:
     """Escapes for ReportLab markup and maps characters the base-14 fonts can't draw."""
     text = "" if value is None else str(value)
+    redactor = _REDACT.get()
+    if redactor is not None:
+        text = redactor.text(text)
     for old, new in (("₹", "Rs. "), ("→", "->"), ("≥", ">="), ("≤", "<="), ("≠", "!="), ("✓", "yes")):
         text = text.replace(old, new)
     text = text.encode("cp1252", "replace").decode("cp1252")
@@ -295,6 +349,8 @@ def _crop_image(doc: Document, page: int, bbox: BBox, status: str, max_w: float,
     try:
         with PILImage.open(source) as im:
             im = im.convert("RGB")
+            if (redactor := _REDACT.get()) is not None:
+                redactor.paint(im, doc.id, page)
             pad_x, pad_y = 90, 45
             x0, y0 = max(0, int(bbox.x0) - pad_x), max(0, int(bbox.y0) - pad_y)
             x1, y1 = min(im.width, int(bbox.x1) + pad_x), min(im.height, int(bbox.y1) + pad_y)
@@ -434,6 +490,8 @@ def _page_thumbnails(findings: list[Finding], docs: dict[str, Document]) -> list
             continue
         with PILImage.open(source) as im:
             im = im.convert("RGB")
+            if (redactor := _REDACT.get()) is not None:
+                redactor.paint(im, doc_id, page)
             draw = ImageDraw.Draw(im)
             for bbox, status in boxes:
                 draw.rectangle((bbox.x0 - 3, bbox.y0 - 3, bbox.x1 + 3, bbox.y1 + 3), outline=BOX_RGB[status], width=5)
@@ -507,13 +565,26 @@ def _cover(dossier: Dossier, docs: list[Document], findings: list[Finding]) -> l
     ]
 
 
-def render_pdf(dossier: Dossier, out: Path) -> Path:
-    out = Path(out)
+def render_pdf(dossier: Dossier, out: Path, redacted: bool = False) -> Path:
+    """The dossier PDF. redacted=True blacks out personal details for sharing; findings and amounts stay."""
+    token = _REDACT.set(_Redactor(db.list_documents(dossier.case_id)) if redacted else None)
+    try:
+        return _render_pdf(dossier, Path(out), redacted)
+    finally:
+        _REDACT.reset(token)
+
+
+def _render_pdf(dossier: Dossier, out: Path, redacted: bool) -> Path:
     out.parent.mkdir(parents=True, exist_ok=True)
     docs_list = db.list_documents(dossier.case_id)
     docs = {d.id: d for d in docs_list}
     findings = dossier.contextual_findings + dossier.cross_document_findings + dossier.visual_findings
     story: list[Any] = _cover(dossier, docs_list, findings)
+    if redacted:
+        story[5:5] = [Spacer(1, 4), _p(
+            "REDACTED COPY. Names, dates of birth, addresses, ID and account numbers, phone numbers, email addresses, photos "
+            "and signatures are blacked out wherever the checks located them. Findings, amounts and statuses are unchanged. "
+            "Redaction is automatic, so check this copy before sharing it.", "note")]
 
     # 7.1
     story.append(_p("7.1 Document Overview", "h1"))
@@ -663,12 +734,16 @@ def render_pdf(dossier: Dossier, out: Path) -> Path:
         canvas.line(MARGIN, 14 * mm, PAGE_W - MARGIN, 14 * mm)
         canvas.setFont("Helvetica", 7)
         canvas.setFillColor(MUTED)
-        canvas.drawString(MARGIN, 10 * mm, f"DocuForensic AI | {dossier.case_id} | For human review only")
+        tail = " | REDACTED COPY" if redacted else ""
+        canvas.drawString(MARGIN, 10 * mm, f"DocuForensic AI | {dossier.case_id} | For human review only{tail}")
         canvas.restoreState()
 
     template = BaseDocTemplate(
         str(out), pagesize=A4, leftMargin=MARGIN, rightMargin=MARGIN, topMargin=16 * mm, bottomMargin=18 * mm,
-        title=f"Investigation Dossier: {dossier.case_name}", author="DocuForensic AI",
+        title=f"Investigation Dossier{' (redacted)' if redacted else ''}: {dossier.case_name}", author="DocuForensic AI",
+        # Lets "Verify this report" name the case even after the file has been changed.
+        subject=f"DocuForensic case {dossier.case_id}",
+        keywords=f"docuforensic, case:{dossier.case_id}, variant:{'redacted' if redacted else 'full'}",
     )
     frame = Frame(MARGIN, 18 * mm, CONTENT_W, PAGE_H - 34 * mm, leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
     template.addPageTemplates([PageTemplate(id="main", frames=[frame], onPage=decorate)])

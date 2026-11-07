@@ -341,6 +341,8 @@ export interface DemoCase {
   name: string;
   description: string;
   documents: string[];
+  /** Other demo cases this one is compared with. Loading it loads them too. */
+  needs?: string[] | null;
 }
 
 export interface Overlay {

@@ -203,6 +203,9 @@ export function Shell() {
             <NavLink to="/analytics" className={NAV_LINK}>
               Analytics
             </NavLink>
+            <NavLink to="/verify" className={NAV_LINK}>
+              Verify report
+            </NavLink>
             <NavLink to="/capabilities" className={NAV_LINK}>
               About
             </NavLink>

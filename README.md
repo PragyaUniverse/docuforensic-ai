@@ -56,7 +56,7 @@ online for free on Hugging Face Spaces, run `.venv/bin/python -m scripts.deploy_
 after logging in. Step-by-step instructions, including how to add a free AI key, are in
 [docs/DEPLOY.md](docs/DEPLOY.md).
 
-**Meet Doc.** The first time you open the home page, a case and its findings, Doc gives a short animated tour, spotlighting each part of the screen. You can replay it with "take a quick tour" or by asking Doc for a tour. Click the animated character to chat. Ask "what did you find?", "explain #2", "what's the net pay?" or "how do I download the report?", and links take you to the exact spot in the document. It answers from the case's own results with no AI needed, and unusual questions can go to an AI model, labelled as such. Doc only reads. It can't change a finding or say whether a document is genuine, and you can drag it around or hide it.
+**Meet Doc.** The first time you open the home page, a case and its findings, Doc gives a short animated tour, spotlighting each part of the screen. You can replay it with "take a quick tour" or by asking Doc for a tour. Click the animated character to chat. Ask "what did you find?", "explain #2", "what's the net pay?" or "how do I download the report?", and links take you to the exact spot in the document. It answers from the case's own results with no AI needed, and unusual questions can go to an AI model, labelled as such. Press हिं at the top of the chat and Doc answers in Hindi, and you can ask in Hindi too. Doc only reads. It can't change a finding or say whether a document is genuine, and you can drag it around or hide it.
 
 ## Why this deserves to win
 
@@ -75,6 +75,11 @@ show its working for every answer.
 - **It keeps humans in charge, verifiably.** Every finding carries benign explanations and verification
   steps. The AI can explain findings but can't create them or change them. Every decision enters a
   tamper-evident audit chain that you can break and detect live.
+- **It notices what one application can't show.** "Seen before" compares the phone, account, PAN, ID number, photo and
+  signature on a new application with every earlier one, so a reused photo under a new name stands out.
+- **It turns findings into next steps.** For any finding, Doc drafts a letter to the issuer asking to confirm exactly the
+  doubtful values, in English or Hindi. "Verify a report" proves a dossier hasn't been edited since it was issued, a redacted
+  copy can be shared safely, and a false-alarm tracker shows which checks reviewers dismiss most.
 - **It is honest about itself.** We publish a held-out evaluation, every false positive, and a weak
   result on degraded scans that we could easily have left out.
 
@@ -89,7 +94,11 @@ show its working for every answer.
 4. **Click-through.** Pick any finding and jump to its exact region in the original document, then find
    the same finding in the dossier.
 5. **Break the history.** On the History tab, edit a log entry, press Verify integrity, and see it caught at the exact entry.
-6. **The clean example and the bad files.** The clean case stays quiet, and a corrupt PDF gets a clear message
+6. **"Seen before".** Open the Case E example. Each document agrees with the others, but its photo, bank account and phone
+   number came from Cases A, B and C, and the case page shows each one side by side.
+7. **Next steps.** On any finding, press Draft verification request (switch it to Hindi), then How Doc reached this. On the
+   Report tab, download the PDF and check it on the Verify report page.
+8. **The clean example and the bad files.** The clean case stays quiet, and a corrupt PDF gets a clear message
    instead of a crash.
 
 ## Architecture

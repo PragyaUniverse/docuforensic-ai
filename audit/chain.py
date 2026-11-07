@@ -107,6 +107,19 @@ def entries(case_id: str | None = None, limit: int | None = None) -> list[AuditE
         conn.close()
 
 
+def find_entries(text: str, actions: tuple[str, ...]) -> list[AuditEntry]:
+    """Entries of the given actions whose payload contains text, such as a file's SHA-256."""
+    conn = _connect()
+    try:
+        marks = ",".join("?" * len(actions))
+        rows = conn.execute(
+            f"SELECT * FROM audit_log WHERE action IN ({marks}) AND instr(payload, ?) > 0 ORDER BY seq",
+            (*actions, text)).fetchall()
+        return [_row_to_entry(r) for r in rows]
+    finally:
+        conn.close()
+
+
 def verify(case_id: str | None = None) -> AuditVerification:
     """Walks the whole chain. It is global, so case_id only exists for interface symmetry."""
     conn = _connect()

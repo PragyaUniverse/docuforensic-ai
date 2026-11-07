@@ -490,6 +490,8 @@ class Profile:
     opening: float = 142380.25
     extra_rows: int = 0
     over: dict = field(default_factory=dict)
+    # Draw another applicant's photo, for the cross-application demo. None: this applicant's own.
+    photo_key: str | None = None
 
     def get(self, doc: str, attr: str):
         return self.over.get(doc, {}).get(attr, getattr(self, attr))
@@ -568,7 +570,7 @@ def draw_application_form(c, p: Profile, rec: Rec):
     y = banner(c, "Meridian Finserv Ltd.", "PERSONAL LOAN APPLICATION", color,
                "Registered lender (fictional) - Application Processing Centre")
     photo_box = [W - 110 - 270, y + 6, W - 110, y + 6 + 330]
-    c.image(avatar(p.key), photo_box[0], photo_box[1])
+    c.image(avatar(p.photo_key or p.key), photo_box[0], photo_box[1])
     c.rect(*photo_box, outline=(60, 60, 70), width=2)
     rec.regions["photo"] = {"page": 0, "bbox": photo_box}
 
@@ -655,7 +657,7 @@ def draw_id_proof(c, p: Profile, rec: Rec):
                          "AADHAAR-STYLE IDENTITY CARD (SYNTHETIC SPECIMEN)") / 2, y0 + 55),
             0, "Card title")
     fx, fy = x0 + 44, y0 + 120
-    c.image(avatar(p.key), fx, fy)
+    c.image(avatar(p.photo_key or p.key), fx, fy)
     c.rect(fx, fy, fx + 270, fy + 330, outline=(60, 60, 70), width=2)
     rec.regions["photo"] = {"page": 0, "bbox": [fx, fy, fx + 270, fy + 330]}
     lx, vx = fx + 310, fx + 490
@@ -1152,6 +1154,20 @@ PD = Profile(
     place="Navi Mumbai", app_id="MF-2026-118640", salary_credit=62400.0, opening=88215.10,
 )
 
+# Case E: a new applicant whose documents agree with each other, but who reuses Case B's photo, Case C's
+# bank account and Case A's phone number. Only a comparison across applications can notice.
+PE = Profile(
+    key="kavy", name="Kavya Anand Rao", dob="1990-09-22", gender="Female",
+    address=["Plot 9, Green Glen Layout,", "Bellandur,", "Bengaluru, Karnataka 560103"],
+    phone=PA.phone, email="kavya.rao@example.com", aadhaar=fake_aadhaar("kavy"),
+    pan="ZZEPR6247Q", employer="Northwind Retail Pvt. Ltd.", employer_short="NORTHWIND",
+    designation="Store Operations Lead", employee_id="NRP-51276", doj="2020-04-06", basic=34000.0,
+    hra=13600.0, other=10400.0, pf=4080.0, ptax=200.0, tds=920.0, declared_income=58000.0,
+    loan=1200000.0, bank=PC.bank, ifsc=PC.ifsc, branch=PC.branch, account=PC.account,
+    consumer_no="BPD-78450931", utility="Cauvery Urban Power Distribution", place="Bengaluru",
+    app_id="MF-2026-118733", salary_credit=52800.0, opening=96420.60, photo_key=PB.key,
+)
+
 ORDER = ["application_form", "id_proof", "salary_slip", "bank_statement", "address_proof",
          "declaration"]
 FORMATS = {
@@ -1167,6 +1183,8 @@ FORMATS = {
     "case_d_pdf": {"application_form": "digital_pdf", "id_proof": "jpg",
                    "salary_slip": "digital_pdf", "bank_statement": "digital_pdf",
                    "address_proof": "scanned_pdf", "declaration": "png"},
+    "case_e_repeat": {"application_form": "png", "id_proof": "jpg", "salary_slip": "digital_pdf",
+                      "bank_statement": "digital_pdf", "address_proof": "jpg", "declaration": "png"},
 }
 EXT = {"png": "png", "jpg": "jpg", "scanned_pdf": "pdf", "digital_pdf": "pdf"}
 MANIFEST = [
@@ -1178,7 +1196,11 @@ MANIFEST = [
      "Visually ordinary documents compared with each other."),
     ("case_d_pdf", "Case D: PDF structure investigation",
      "Digital PDFs examined at the file-structure level."),
+    ("case_e_repeat", "Case E: Seen before",
+     "A new applicant whose documents agree, but who reuses a photo, a bank account and a phone number from Cases A, B and C."),
 ]
+# Demo cases compared against when loaded: loading Case E also loads these if they aren't there yet.
+NEEDS = {"case_e_repeat": ["case_a_clean", "case_b_visual", "case_c_crossdoc"]}
 
 
 @dataclass
@@ -1399,6 +1421,23 @@ def gen_case_c():
     return write_gt(case, p, built, discrepancies=discrepancies), built
 
 
+def gen_case_e():
+    case = "case_e_repeat"
+    built = build_case(case, PE)
+    gt = write_gt(case, PE, built)
+    # Not used by the benchmark: what a comparison across applications should report.
+    gt["cross_case"] = [
+        {"element": "photo", "documents": ["application_form.png", "id_proof.jpg"], "shared_with": "case_b_visual",
+         "description": "The applicant photo is Case B's application photo."},
+        {"element": "bank_account_number", "value": PC.account, "shared_with": "case_c_crossdoc",
+         "description": "The salary account is the account on Case C's bank statement and application."},
+        {"element": "phone", "value": PA.phone, "shared_with": "case_a_clean",
+         "description": "The mobile number is Case A's."},
+    ]
+    (OUT / case / "ground_truth.json").write_text(json.dumps(gt, indent=2) + "\n")
+    return gt, built
+
+
 def gen_case_d():
     case = "case_d_pdf"
     p = PD
@@ -1604,11 +1643,14 @@ def write_manifest():
     data = []
     for key, name, desc in MANIFEST:
         docs = [f"{d}.{EXT[FORMATS[key][d]]}" for d in ORDER]
-        data.append({"key": key, "name": name, "description": desc, "dir": key, "documents": docs})
+        entry = {"key": key, "name": name, "description": desc, "dir": key, "documents": docs}
+        if key in NEEDS:
+            entry["needs"] = NEEDS[key]
+        data.append(entry)
     (OUT / "manifest.json").write_text(json.dumps(data, indent=2) + "\n")
     # A stand-in for an issuer's records, so registry checks can be exercised. Entirely made up.
     records = {}
-    for p in (PA, PB, PC, PD):
+    for p in (PA, PB, PC, PD, PE):
         for number in (p.pan, p.aadhaar):
             records[number.replace(" ", "")] = {"person_name": p.name, "date_of_birth": p.dob}
     (OUT / "registry.json").write_text(json.dumps(
@@ -1624,13 +1666,13 @@ def generate():
         shutil.rmtree(OUT)
     OUT.mkdir(parents=True)
     gts = {}
-    for gen in (gen_case_a, gen_case_b, gen_case_c, gen_case_d):
+    for gen in (gen_case_a, gen_case_b, gen_case_c, gen_case_d, gen_case_e):
         gt, _ = gen()
         gts[gt["case"]] = gt
     gen_noise_variants(gts)
     gen_unsupported()
     write_manifest()
-    assert all(verhoeff_valid(p.aadhaar) for p in (PA, PB, PC, PD))
+    assert all(verhoeff_valid(p.aadhaar) for p in (PA, PB, PC, PD, PE))
     if final.exists():
         shutil.rmtree(final)
     OUT.rename(final)
@@ -1711,13 +1753,19 @@ def main() -> int:
     ap.add_argument("--overlays", type=Path)
     ap.add_argument("--seed", type=int, help="Other randomness, for held-out evaluation sets")
     ap.add_argument("--out", type=Path, help="Write here instead of data/synthetic_cases")
+    ap.add_argument("--only", choices=["case_e_repeat"],
+                    help="Add or rebuild just this case in place, leaving the other cases' files untouched")
     args = ap.parse_args()
     global SEED, OUT
     if args.seed is not None:
         SEED = args.seed
     if args.out is not None:
         OUT = args.out.resolve()
-    if not args.no_generate:
+    if args.only:
+        {"case_e_repeat": gen_case_e}[args.only]()
+        write_manifest()
+        print(f"Built {args.only} and rewrote the manifest.")
+    elif not args.no_generate:
         generate()
         total = sum(f.stat().st_size for f in OUT.rglob("*") if f.is_file())
         print(f"Generated {sum(1 for f in OUT.rglob('*') if f.is_file())} files, "

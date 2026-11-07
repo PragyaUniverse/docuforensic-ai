@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Check } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Check, Clapperboard, History, Mail } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api";
+import { featuresApi } from "@/api/features";
 import type { Document, EvidenceItem, Finding, ReasoningProvenance, ReviewDecision } from "@/api/types";
 import { CATEGORY_LABEL, STATUS_META, splitExplanation } from "@/lib/findings";
 import { docSays } from "@/lib/assistant";
@@ -13,6 +14,25 @@ import { ConfidenceMeter, ReviewBadge, StatusBadge } from "./StatusBadge";
 import { DataList } from "./DataList";
 import { PageCrop } from "./PageCrop";
 import { ConfidenceBar } from "./Metrics";
+import { Replay } from "./Replay";
+import { VerificationLetter } from "./VerificationLetter";
+
+/** Reviewers' own record with this check, on this system. Shown only once there's a decision to report. */
+function TrackRecord({ detector }: { detector: string }) {
+  const q = useQuery({ queryKey: ["track-record"], queryFn: featuresApi.trackRecord, staleTime: 30_000 });
+  const row = q.data?.checks.find((r) => r.check === detector);
+  if (!row || row.decided === 0) return null;
+  const often = row.dismissal_rate !== null && row.dismissal_rate >= 0.5;
+  return (
+    <p className={cn("flex items-start gap-1.5 text-[13px]", often ? "text-inc" : "text-ink-3")}>
+      <History className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+      <span>
+        Reviewers here confirmed {row.confirmed} and dismissed {row.dismissed} of {row.decided} earlier flag{row.decided === 1 ? "" : "s"} from this check.
+        {often && " It's often a false alarm here, so look closely."}
+      </span>
+    </p>
+  );
+}
 
 const RAIL: Record<Finding["status"], string> = {
   OBSERVATION: "bg-obs",
@@ -169,6 +189,8 @@ export function FindingCard({
   const [note, setNote] = useState("");
   const [reviewer, setName] = useState(getReviewer);
   const [saved, setSaved] = useState(false);
+  const [letterOpen, setLetterOpen] = useState(false);
+  const [replayOpen, setReplayOpen] = useState(false);
 
   useEffect(() => {
     if (!saved) return;
@@ -194,6 +216,7 @@ export function FindingCard({
       qc.invalidateQueries({ queryKey: ["findings", caseId] });
       qc.invalidateQueries({ queryKey: ["audit", caseId] });
       qc.invalidateQueries({ queryKey: ["dossier", caseId] });
+      qc.invalidateQueries({ queryKey: ["track-record"] });
     },
   });
 
@@ -255,11 +278,25 @@ export function FindingCard({
               <Explanation text={finding.explanation} />
               {finding.status === "OBSERVATION" && <ConfidenceMeter words value={finding.fused_score ?? finding.confidence} />}
 
-              {onCompare && (
-                <Button size="sm" onClick={onCompare} className="self-start">
-                  Compare side by side
+              {finding.status !== "OBSERVATION" && <TrackRecord detector={finding.detector} />}
+
+              <div className="flex flex-wrap gap-1.5">
+                {onCompare && (
+                  <Button size="sm" onClick={onCompare}>
+                    Compare side by side
+                  </Button>
+                )}
+                <Button size="sm" onClick={() => setReplayOpen(true)}>
+                  <Clapperboard className="size-3.5" aria-hidden /> How Doc reached this
                 </Button>
-              )}
+                {finding.status !== "OBSERVATION" && (
+                  <Button size="sm" onClick={() => setLetterOpen(true)}>
+                    <Mail className="size-3.5" aria-hidden /> Draft verification request
+                  </Button>
+                )}
+              </div>
+              {replayOpen && <Replay finding={finding} docs={docs} caseId={caseId} open={replayOpen} onOpenChange={setReplayOpen} />}
+              {letterOpen && <VerificationLetter findingId={finding.id} open={letterOpen} onOpenChange={setLetterOpen} />}
 
               <section className="panel p-3" aria-label="Your decision">
                 <div className="mb-2 flex items-center justify-between gap-2">

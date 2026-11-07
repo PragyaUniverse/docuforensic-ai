@@ -136,7 +136,7 @@ export function PipelineScreen() {
               {running ? "Analyzing investigation" : status === "complete" ? "Investigation ready" : status === "failed" ? "Analysis stopped" : "Not analyzed yet"}
             </h1>
             <p className="mt-1.5 text-[14.5px] text-ink-2" aria-live="polite">
-              {running ? `${current?.label ?? "Starting"}…` : status === "complete" ? "Every step finished. Review the findings next." : status === "failed" ? "The step messages below say why. Nothing was made up for steps that didn't run." : "Add evidence, then run the analysis."}
+              {running ? (current ? `${current.label}…` : stepsDone === 0 ? "Waiting for earlier investigations in the queue to finish…" : "Starting…") : status === "complete" ? "Every step finished. Review the findings next." : status === "failed" ? "The step messages below say why. Nothing was made up for steps that didn't run." : "Add evidence, then run the analysis."}
             </p>
             <div className="mt-6 flex items-center gap-6">
               <Ring fraction={stepsDone / stages.length} size={104} tone={status === "complete" ? "var(--color-ok)" : "var(--color-accent)"}>

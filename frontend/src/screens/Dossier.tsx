@@ -122,9 +122,17 @@ export function DossierScreen() {
                 Download PDF
               </a>
             </Button>
+            <Button asChild title="Names, dates of birth, addresses, ID and account numbers, phones, emails, photos and signatures blacked out">
+              <a href={`${api.dossierPdfUrl(caseId)}?redacted=true`} download>
+                Download redacted PDF
+              </a>
+            </Button>
             <Button onClick={() => downloadJson(d)}>
               Download JSON
             </Button>
+            <Link to="/verify" className="link text-[13px]">
+              Verify a report
+            </Link>
           </>
         }
       >

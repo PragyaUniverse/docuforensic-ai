@@ -16,7 +16,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 from audit import chain
-from backend import contextual, crossdoc, db, registry
+from backend import contextual, crosscase, crossdoc, db, registry
 from backend import dossier as dossier_mod
 from config.settings import settings
 from llm import investigator
@@ -422,6 +422,12 @@ def _run(case: Case) -> None:
         entities = crossdoc.build_entities(active, case.id)
         items = crossdoc.correlate(active, entities, case.id)
         items += registry.check(active, case.id)
+        try:
+            ctx.payload["fingerprints"] = crosscase.record(case, active)
+            items += crosscase.findings_for(case, active, workdir)
+        except Exception as exc:
+            log.warning("cross-application comparison failed: %s", type(exc).__name__)
+            ctx.degrade("Comparison with other applications failed. The rest of this stage completed.")
         findings += items
         db.replace_entities(case.id, entities)
         ctx.payload.update({"entities": len(entities), "findings": len(items),

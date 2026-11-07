@@ -22,6 +22,10 @@ CREATE TABLE IF NOT EXISTS entities (id TEXT PRIMARY KEY, case_id TEXT NOT NULL,
 CREATE INDEX IF NOT EXISTS entities_case ON entities(case_id);
 CREATE TABLE IF NOT EXISTS graphs (case_id TEXT PRIMARY KEY, json TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS dossiers (case_id TEXT PRIMARY KEY, json TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS fingerprints (case_id TEXT NOT NULL, doc_id TEXT NOT NULL, kind TEXT NOT NULL, json TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS fingerprints_case ON fingerprints(case_id);
+CREATE INDEX IF NOT EXISTS fingerprints_kind ON fingerprints(kind);
+CREATE TABLE IF NOT EXISTS fingerprint_cases (case_id TEXT PRIMARY KEY, applicant TEXT);
 """
 
 
@@ -172,3 +176,37 @@ def save_dossier(dossier: Dossier) -> None:
 def get_dossier(case_id: str) -> Dossier | None:
     rows = _read("SELECT json FROM dossiers WHERE case_id = ?", (case_id,))
     return Dossier.model_validate_json(rows[0]["json"]) if rows else None
+
+
+# ---- cross-application fingerprints (backend/crosscase.py)
+def replace_fingerprints(case_id: str, prints: list[dict], applicant: str | None) -> None:
+    import json
+
+    with _lock:
+        conn = connect()
+        try:
+            conn.execute("DELETE FROM fingerprints WHERE case_id = ?", (case_id,))
+            conn.executemany("INSERT INTO fingerprints VALUES (?,?,?,?)",
+                             [(case_id, p["doc_id"], p["kind"], json.dumps(p, separators=(",", ":"))) for p in prints])
+            conn.execute("INSERT OR REPLACE INTO fingerprint_cases VALUES (?,?)", (case_id, applicant))
+            conn.commit()
+        finally:
+            conn.close()
+
+
+def _prints(rows: list[sqlite3.Row]) -> list[dict]:
+    import json
+
+    return [{**json.loads(r["json"]), "case_id": r["case_id"]} for r in rows]
+
+
+def list_fingerprints(case_id: str) -> list[dict]:
+    return _prints(_read("SELECT case_id, json FROM fingerprints WHERE case_id = ?", (case_id,)))
+
+
+def list_fingerprints_except(case_id: str) -> list[dict]:
+    return _prints(_read("SELECT case_id, json FROM fingerprints WHERE case_id != ?", (case_id,)))
+
+
+def fingerprint_applicants() -> dict[str, str | None]:
+    return {r["case_id"]: r["applicant"] for r in _read("SELECT case_id, applicant FROM fingerprint_cases")}

@@ -18,6 +18,7 @@ import type { AuditEntry, Document, DocumentSummary, Field, Finding } from "@/ap
 import { Button } from "@/components/ui/button";
 import { ErrorState, Loading } from "@/components/ui/states";
 import { ProcBadge, RiskPlate, StatusBadge } from "@/components/StatusBadge";
+import { SeenBefore } from "@/components/SeenBefore";
 import { Mascot } from "@/components/Mascot";
 import { ConfidenceBar, CountUp, Ring } from "@/components/Metrics";
 import { openDocChat } from "@/lib/assistant";
@@ -409,6 +410,8 @@ export function CaseScreen() {
           </ul>
         </section>
       )}
+
+      <SeenBefore caseId={caseId} />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
         <div className="flex flex-col gap-6">

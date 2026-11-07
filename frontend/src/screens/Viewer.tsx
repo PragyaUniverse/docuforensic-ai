@@ -172,7 +172,7 @@ export function ViewerScreen() {
         const r = findings.find((x) => x.id === id);
         if (r) selectFinding(r, true);
       }}
-      onCompare={comparisonSources(f, fieldsById).length >= 2 ? () => setCompare(f) : undefined}
+      onCompare={f.detector !== "crosscase.repeated_element" && comparisonSources(f, fieldsById).length >= 2 ? () => setCompare(f) : undefined}
     />
   );
   const notRun = caseQ.data?.case.status !== "complete";

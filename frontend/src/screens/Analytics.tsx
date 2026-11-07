@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { accountApi } from "@/api/account";
+import { accountApi, type Analytics } from "@/api/account";
+import { checkName } from "@/api/features";
 import { PageHeading } from "@/components/Shell";
 import { RiskPlate } from "@/components/StatusBadge";
 import { Empty, ErrorState, Loading } from "@/components/ui/states";
@@ -50,6 +51,74 @@ function CountTable({ title, rows, note, bar = "bg-accent" }: { title: string; r
   );
 }
 
+/** Per check: what reviewers decided about its flags. Their own record on this system, not an accuracy figure. */
+function FalseAlarms({ a }: { a: Analytics }) {
+  const rows = (a.track_record ?? []).filter((r) => r.flagged > 0);
+  const decided = rows.reduce((n, r) => n + r.decided, 0);
+  return (
+    <section className="panel overflow-hidden" aria-label="False-alarm tracker">
+      <div className="flex flex-wrap items-end justify-between gap-2 border-b border-line px-4 py-3">
+        <div>
+          <h2 className="mono-label !text-ink-2">False-alarm tracker</h2>
+          <p className="mt-1 text-[13px] text-ink-3">
+            How often reviewers confirmed or dismissed each check's flags. Each finding also shows its check's record here.
+          </p>
+        </div>
+        <span className="font-mono text-[11px] text-ink-3">{decided} decision{decided === 1 ? "" : "s"} so far</span>
+      </div>
+      {rows.length === 0 ? (
+        <p className="px-4 py-3 text-[14px] text-ink-3">No flags yet.</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[560px] text-[14px]">
+            <thead>
+              <tr className="text-left text-[12px] text-ink-3">
+                <th className="px-4 py-2 font-normal">Check</th>
+                <th className="px-2 py-2 text-right font-normal">Flags</th>
+                <th className="px-2 py-2 text-right font-normal">Confirmed</th>
+                <th className="px-2 py-2 text-right font-normal">Dismissed</th>
+                <th className="w-[34%] px-4 py-2 font-normal">Dismissal rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.slice(0, 12).map((r) => (
+                <tr key={r.check} className="border-t border-line">
+                  <td className="px-4 py-2 text-ink-2">{checkName(r.check)}</td>
+                  <td className="px-2 py-2 text-right font-mono text-[13px] text-ink">{r.flagged}</td>
+                  <td className="px-2 py-2 text-right font-mono text-[13px] text-ok">{r.confirmed}</td>
+                  <td className="px-2 py-2 text-right font-mono text-[13px] text-ink-3">{r.dismissed}</td>
+                  <td className="px-4 py-2">
+                    {r.dismissal_rate === null ? (
+                      <span className="text-[12.5px] text-ink-3">
+                        {r.decided === 0 ? "No decisions yet" : `Needs ${a.min_decisions} decisions (${r.decided} so far)`}
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-line" aria-hidden>
+                          <span
+                            className={cn("grow-in block h-full rounded-full", r.dismissal_rate >= 0.5 ? "bg-inc" : "bg-ok")}
+                            style={{ width: `${Math.round(r.dismissal_rate * 100)}%` }}
+                          />
+                        </span>
+                        <span className={cn("w-10 text-right font-mono text-[12px]", r.dismissal_rate >= 0.5 ? "text-inc" : "text-ink-2")}>
+                          {Math.round(r.dismissal_rate * 100)}%
+                        </span>
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <p className="border-t border-line px-4 py-2.5 text-[13px] text-ink-3">
+        A rate appears from {a.min_decisions} decisions up. A check reviewers often dismiss may need tuning, or more care when it fires.
+      </p>
+    </section>
+  );
+}
+
 export function AnalyticsScreen() {
   const q = useQuery({ queryKey: ["analytics"], queryFn: () => accountApi.analytics() });
   if (q.isLoading) return <Loading label="Loading" className="h-full" />;
@@ -84,10 +153,11 @@ export function AnalyticsScreen() {
           <CountTable title="Conflicts between documents" rows={a.by_discrepancy.map(([t, n]) => [humanize(t), n])} bar="bg-man" />
           <CountTable
             title="Which checks raise the most"
-            rows={a.by_check.slice(0, 10).map((c) => [humanize(c.check), c.count, c.dismissed])}
+            rows={a.by_check.slice(0, 10).map((c) => [checkName(c.check), c.count, c.dismissed])}
             note="A check that reviewers often dismiss may be raising too many false alarms."
           />
         </div>
+        <FalseAlarms a={a} />
         <section className="panel">
           <h2 className="mono-label border-b border-line px-4 py-3 !text-ink-2">Recent investigations</h2>
           <ul>

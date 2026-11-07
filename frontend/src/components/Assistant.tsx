@@ -11,6 +11,35 @@ import { TOUR_REQUEST, startTour, tourForPath, useActiveTour } from "@/lib/tour"
 import { Mascot, type Mood } from "./Mascot";
 
 const HIDDEN_KEY = "docuforensic.docHidden";
+const LANG_KEY = "docuforensic.docLang";
+type Lang = "en" | "hi";
+
+function readLang(): Lang {
+  try {
+    return localStorage.getItem(LANG_KEY) === "hi" ? "hi" : "en";
+  } catch {
+    return "en";
+  }
+}
+
+function saveLang(v: Lang) {
+  try {
+    localStorage.setItem(LANG_KEY, v);
+  } catch {
+    // Without storage, the choice lasts until the page reloads.
+  }
+}
+
+/** Doc's own words in the chat window, in each language. Answers come translated from the server. */
+const HI_STARTERS: Record<string, string> = {
+  "Explain this finding": "यह निष्कर्ष समझाइए", "Could this be innocent?": "क्या यह निर्दोष हो सकता है?",
+  "How do I check this?": "मैं इसकी जाँच कैसे करूँ?", "Give me a tour": "टूर दिखाइए", "How do I start?": "शुरू कैसे करूँ?",
+  "What can you do?": "आप क्या कर सकते हैं?", "What should I look at first?": "मुझे पहले क्या देखना चाहिए?",
+  "What did you find?": "आपको क्या मिला?", "How do I add documents?": "शुरू कैसे करूँ?", "What do the labels mean?": "लेबल का क्या अर्थ है?",
+  "What does Verify integrity do?": "Verify integrity क्या करता है?", "How do I download the report?": "रिपोर्ट कैसे डाउनलोड करूँ?",
+  "Has this been seen before?": "क्या ये विवरण पहले देखे गए हैं?",
+};
+const HI_TOUR = /टूर/;
 
 function readHidden(): boolean {
   try {
@@ -74,18 +103,21 @@ function starters(tab: string, finding: boolean, caseOpen: boolean, done: boolea
   if (!done) return ["How do I add documents?", "What do the labels mean?"];
   if (tab === "audit") return ["What does Verify integrity do?", "What did you find?"];
   if (tab === "dossier") return ["How do I download the report?", "What did you find?"];
-  return ["What did you find?", "What should I look at first?", "Give me a tour"];
+  return ["What did you find?", "What should I look at first?", "Has this been seen before?"];
 }
 
-function SourceNote({ reply }: { reply: ChatReply }) {
+function SourceNote({ reply, lang }: { reply: ChatReply; lang: Lang }) {
   if (reply.source === "live_llm") {
     return (
       <p className="mt-1 text-[12px] text-ink-3">
-        Written by an AI model from these results{reply.model ? ` (${reply.model})` : ""}, so please check it.
+        {lang === "hi" ? "इन परिणामों से एक AI मॉडल ने लिखा है" : "Written by an AI model from these results"}
+        {reply.model ? ` (${reply.model})` : ""}
+        {lang === "hi" ? ", कृपया इसे जाँच लें।" : ", so please check it."}
       </p>
     );
   }
-  if (reply.source === "results") return <p className="mt-1 text-[12px] text-ink-3">From this case's results.</p>;
+  if (reply.source === "results")
+    return <p className="mt-1 text-[12px] text-ink-3">{lang === "hi" ? "इस केस के परिणामों से।" : "From this case's results."}</p>;
   return null;
 }
 
@@ -106,6 +138,11 @@ function ChatPanel({
 }) {
   const [lines, setLines] = useState<ChatLine[]>([]);
   const [draft, setDraft] = useState("");
+  const [lang, setLangState] = useState<Lang>(readLang);
+  const setLang = (v: Lang) => {
+    setLangState(v);
+    saveLang(v);
+  };
   const [busy, setBusy] = useState(false);
   const nextId = useRef(1);
   const list = useRef<HTMLDivElement>(null);
@@ -122,7 +159,7 @@ function ChatPanel({
     const question = text.trim();
     if (!question || busy) return;
     // A tour is shown, not told, so it's handled here instead of going to the server.
-    if (TOUR_REQUEST.test(question)) {
+    if (TOUR_REQUEST.test(question) || HI_TOUR.test(question)) {
       onClose();
       startTour(tourForPath(window.location.pathname));
       return;
@@ -132,10 +169,11 @@ function ChatPanel({
     setBusy(true);
     onThinking(true);
     try {
-      const reply = await accountApi.chat(question, caseId, findingId);
+      const reply = await accountApi.chat(question, caseId, findingId, lang);
       setLines((l) => [...l, { id: nextId.current++, from: "doc", text: reply.answer, reply }]);
     } catch {
-      setLines((l) => [...l, { id: nextId.current++, from: "doc", text: "I can't reach the service right now. Please check it's running, then try again." }]);
+      const text = lang === "hi" ? "अभी सेवा से संपर्क नहीं हो पा रहा। कृपया जाँचें कि वह चल रही है, फिर दोबारा कोशिश करें।" : "I can't reach the service right now. Please check it's running, then try again.";
+      setLines((l) => [...l, { id: nextId.current++, from: "doc", text }]);
     } finally {
       setBusy(false);
       onThinking(false);
@@ -144,7 +182,8 @@ function ChatPanel({
   };
 
   const latest = [...lines].reverse().find((l) => l.reply)?.reply;
-  const chips = latest?.suggestions.length ? latest.suggestions : lines.length === 0 ? suggestions : [];
+  const starterChips = lang === "hi" ? [...new Set(suggestions.map((s) => HI_STARTERS[s] ?? s))] : suggestions;
+  const chips = latest?.suggestions.length ? latest.suggestions : lines.length === 0 ? starterChips : [];
 
   return (
     <motion.section
@@ -160,7 +199,23 @@ function ChatPanel({
         <Mascot mood={busy ? "thinking" : "idle"} size={30} />
         <div className="min-w-0 flex-1 pl-1">
           <div className="font-semibold leading-tight">Doc</div>
-          <div className="truncate text-[12px] text-ink-3">{caseId ? "Ask about this case or the app" : "Ask me about this app"}</div>
+          <div className="truncate text-[12px] text-ink-3">
+            {lang === "hi" ? (caseId ? "इस केस या ऐप के बारे में पूछें" : "इस ऐप के बारे में पूछें") : caseId ? "Ask about this case or the app" : "Ask me about this app"}
+          </div>
+        </div>
+        <div role="group" aria-label="Doc's language" className="flex shrink-0 overflow-hidden rounded-md border border-line-strong text-[12px]">
+          {(["en", "hi"] as const).map((v) => (
+            <button
+              key={v}
+              type="button"
+              aria-pressed={lang === v}
+              title={v === "hi" ? "Doc answers in Hindi" : "Doc answers in English"}
+              onClick={() => setLang(v)}
+              className={`cursor-pointer px-1.5 py-0.5 transition-colors ${lang === v ? "bg-accent text-white" : "text-ink-3 hover:bg-hover hover:text-ink"}`}
+            >
+              {v === "hi" ? "हिं" : "EN"}
+            </button>
+          ))}
         </div>
         <button type="button" onClick={onHide} className="cursor-pointer rounded px-1.5 py-0.5 text-[13px] text-ink-3 hover:bg-hover hover:text-ink">
           Hide
@@ -172,7 +227,9 @@ function ChatPanel({
 
       <div ref={list} role="log" aria-live="polite" className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto p-3">
         <div className="max-w-[90%] self-start rounded-xl rounded-bl-sm bg-raised px-3 py-2 text-[14px] leading-snug">
-          Hi! I can explain what the checks found, look up a value, or show you around. I can't decide anything for you, though.
+          {lang === "hi"
+            ? "नमस्ते! मैं बता सकता हूँ कि जाँचों में क्या मिला, कोई मान ढूँढ सकता हूँ, या ऐप दिखा सकता हूँ। पर निर्णय मैं आपके लिए नहीं ले सकता।"
+            : "Hi! I can explain what the checks found, look up a value, or show you around. I can't decide anything for you, though."}
         </div>
         {lines.map((l) =>
           l.from === "you" ? (
@@ -182,7 +239,7 @@ function ChatPanel({
           ) : (
             <motion.div key={l.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="max-w-[92%] self-start">
               <div className="whitespace-pre-line rounded-xl rounded-bl-sm bg-raised px-3 py-2 text-[14px] leading-snug">{l.text}</div>
-              {l.reply && <SourceNote reply={l.reply} />}
+              {l.reply && <SourceNote reply={l.reply} lang={lang} />}
               {!!l.reply?.links.length && (
                 <div className="mt-1 flex flex-wrap gap-x-3">
                   {l.reply.links.map((a) => (
@@ -230,7 +287,7 @@ function ChatPanel({
           value={draft}
           maxLength={500}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder="Ask Doc a question"
+          placeholder={lang === "hi" ? "Doc से सवाल पूछें" : "Ask Doc a question"}
           aria-label="Ask Doc a question"
           className="h-9 min-w-0 flex-1 rounded-md border border-line-strong bg-panel px-2.5 text-[14px] text-ink placeholder:text-ink-3"
         />

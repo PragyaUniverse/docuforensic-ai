@@ -25,7 +25,17 @@ from starlette.datastructures import UploadFile
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from audit import chain
-from backend import analytics, auth, capabilities, chat, db, orchestrator
+from backend import (
+    analytics,
+    auth,
+    capabilities,
+    chat,
+    crosscase,
+    db,
+    orchestrator,
+    verification_letter,
+    verify_report,
+)
 from backend import dossier as dossier_mod
 from backend.logging_conf import configure_logging
 from config.settings import REPO_ROOT, settings
@@ -242,6 +252,7 @@ class ChatBody(BaseModel):
     message: str = PField(max_length=2000)
     case_id: str | None = None
     finding_id: str | None = None
+    lang: Literal["en", "hi"] = "en"
 
 
 @app.post("/api/chat")
@@ -254,12 +265,18 @@ def doc_chat(body: ChatBody) -> dict:
             raise HTTPException(404, "Case not found.")
     docs = db.list_documents(case.id) if case else []
     findings = db.list_findings(case.id) if case else []
-    return chat.respond(body.message, case, docs, findings, body.finding_id).as_dict()
+    return chat.respond(body.message, case, docs, findings, body.finding_id, lang=body.lang).as_dict()
 
 
 @app.get("/api/analytics")
 def analytics_report() -> dict:
     return analytics.report()
+
+
+@app.get("/api/analytics/track-record")
+def analytics_track_record() -> dict:
+    """Reviewers' decisions per check, for the note on each finding."""
+    return {"min_decisions": analytics.MIN_DECISIONS, "checks": analytics.track_record()}
 
 
 @app.get("/api/capabilities")
@@ -270,7 +287,30 @@ def get_capabilities() -> dict:
 # ---- demo cases
 @app.get("/api/demo-cases")
 def demo_cases() -> list[dict]:
-    return [{k: e.get(k) for k in ("key", "name", "description", "documents")} for e in _manifest()]
+    return [{k: e.get(k) for k in ("key", "name", "description", "documents", "needs")} for e in _manifest()]
+
+
+def _load_demo_entry(entry: dict) -> Case:
+    key = entry["key"]
+    case = db.save_case(Case(name=entry.get("name") or key, is_demo=True, demo_key=key))
+    chain.append("case.created", "system", case.id, {"name": case.name, "demo_key": key})
+    root = (Path(settings.demo_cases_dir) / entry.get("dir", key)).resolve()
+    for filename in entry.get("documents", []):
+        _ingest(root / filename, case.id, filename)
+    return case
+
+
+def _ensure_demo_ran(key: str) -> None:
+    """Some demos compare against others. Load and queue those first, unless they're already here."""
+    entry = next((e for e in _manifest() if e.get("key") == key), None)
+    if entry is None:
+        return
+    existing = [c for c in db.list_cases() if c.demo_key == key and c.status != CaseStatus.failed]
+    if any(c.status in (CaseStatus.complete, CaseStatus.running) for c in existing):
+        return
+    case = existing[0] if existing else _load_demo_entry(entry)
+    orchestrator.start_case(case)
+    _executor.submit(orchestrator.run_case, case.id)
 
 
 @app.post("/api/demo-cases/{key}/load", response_model=Case)
@@ -278,12 +318,10 @@ def load_demo(key: str) -> Case:
     entry = next((e for e in _manifest() if e.get("key") == key), None)
     if entry is None:
         raise HTTPException(404, "Unknown demo case.")
-    case = db.save_case(Case(name=entry.get("name") or key, is_demo=True, demo_key=key))
-    chain.append("case.created", "system", case.id, {"name": case.name, "demo_key": key})
-    root = (Path(settings.demo_cases_dir) / entry.get("dir", key)).resolve()
-    for filename in entry.get("documents", []):
-        _ingest(root / filename, case.id, filename)
-    return case
+    # Queued before this case runs, so its comparison sees them. The run queue has one worker.
+    for need in entry.get("needs", []):
+        _ensure_demo_ran(need)
+    return _load_demo_entry(entry)
 
 
 # ---- cases
@@ -518,6 +556,27 @@ def entities(case_id: str) -> list[Entity]:
     return db.list_entities(case_id)
 
 
+@app.get("/api/findings/{finding_id}/verification-request")
+def verification_request(finding_id: str, lang: Literal["en", "hi"] = "en") -> dict:
+    """A draft letter asking the issuer to confirm the doubtful values. Nothing is sent."""
+    finding = db.get_finding(finding_id)
+    if finding is None:
+        raise HTTPException(404, "Finding not found.")
+    case = _case(finding.case_id)
+    letter = verification_letter.draft(case, db.list_documents(case.id), finding, lang)
+    if letter.get("available"):
+        chain.append("verification_request.drafted", "reviewer", case.id,
+                     {"finding_id": finding.id, "lang": lang, "to": letter["to"], "questions": letter["questions"]})
+    return letter
+
+
+@app.get("/api/cases/{case_id}/seen-before")
+def seen_before(case_id: str) -> dict:
+    """Details from this application that also appear in other applications on this system."""
+    _case(case_id)
+    return crosscase.matches(case_id)
+
+
 @app.get("/api/cases/{case_id}/graph", response_model=EvidenceGraph)
 def graph(case_id: str) -> EvidenceGraph:
     _case(case_id)
@@ -540,10 +599,33 @@ def get_dossier(case_id: str) -> Dossier:
 
 
 @app.get("/api/cases/{case_id}/dossier.pdf")
-def get_dossier_pdf(case_id: str) -> FileResponse:
+def get_dossier_pdf(case_id: str, redacted: bool = False) -> FileResponse:
     built = _dossier_or_409(case_id)
-    out = dossier_mod.render_pdf(built, orchestrator.case_workdir(case_id) / "dossier.pdf")
-    return FileResponse(out, media_type="application/pdf", filename=f"dossier_{case_id}.pdf")
+    name = "dossier_redacted.pdf" if redacted else "dossier.pdf"
+    out = dossier_mod.render_pdf(built, orchestrator.case_workdir(case_id) / name, redacted=redacted)
+    verify_report.record_issued(case_id, out, "redacted" if redacted else "full")
+    filename = f"dossier_{case_id}{'_redacted' if redacted else ''}.pdf"
+    return FileResponse(out, media_type="application/pdf", filename=filename)
+
+
+@app.post("/api/verify-report")
+async def verify_uploaded_report(request: Request) -> dict:
+    """Checks an uploaded dossier PDF against the reports recorded in the history."""
+    limit = settings.max_upload_mb * 1024 * 1024
+    try:
+        form = await request.form()
+    except Exception as exc:
+        raise HTTPException(400, "Send the PDF as multipart form data in the field 'file'.") from exc
+    item = form.get("file")
+    if not isinstance(item, UploadFile):
+        raise HTTPException(400, "No file received. Send it in the multipart field 'file'.")
+    data = await item.read(limit + 1)
+    if len(data) > limit:
+        raise HTTPException(413, f"The file is larger than the {settings.max_upload_mb} MB limit.")
+    result = await asyncio.to_thread(verify_report.verify, data, safe_filename(item.filename or "report.pdf"))
+    chain.append("report.verified", "reviewer", result.get("case_id"),
+                 {"sha256": result["sha256"], "result": result["result"]})
+    return result
 
 
 # ---- audit
@@ -596,7 +678,7 @@ def favicon() -> Response:
 
 
 # Top-level pages of the website (frontend/src/App.tsx). Only these fall back to index.html.
-_APP_PAGES = {"cases", "capabilities", "analytics", "about"}
+_APP_PAGES = {"cases", "capabilities", "analytics", "about", "verify"}
 
 
 class _SinglePageApp(StaticFiles):

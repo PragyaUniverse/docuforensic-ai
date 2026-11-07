@@ -44,6 +44,13 @@ synthetic data, and nothing here has been tested on real documents.
 | Investigation analytics | Implemented | Counts by finding type, check and reviewer decision, checked in the browser |
 | Doc, the guide you can chat with | Implemented | Conversation run in a browser. Answers from case results and a built-in guide with no AI. Other questions go to an AI model when one is available, with its answer labelled and checked. Read-only |
 | Guided tours by Doc | Implemented | Home, case and findings tours, each shown once and replayable; checked in a browser, on phone and with reduced motion |
+| Seen before: details repeated across applications | Implemented | Case E reuses Case B's photo, Case C's bank account and Case A's phone: all three found, both ways, with no other cross-case matches among Cases A to E. Unit tests for normalisation, same-name reapplications and duplicate demo loads. Photo thresholds were set on synthetic placeholder portraits only |
+| Verify this report | Implemented | Original and edited dossier PDFs uploaded in a browser: original recognised, a one-byte change caught. Unit tests include a broken history |
+| Draft verification requests | Implemented | Letters drafted for every kind of finding on Cases B, C and E, in English and Hindi, and checked in a browser. Nothing is sent |
+| Doc in Hindi | Partial | Every fixed answer pattern has a Hindi form, with numbers checked unchanged by tests; Hindi questions are mapped by keywords. The checks' own explanation text stays in English, with a note. Not reviewed by a native speaker |
+| Redacted dossier | Implemented | Case C rendered both ways: none of its 13 personal values remain in the redacted text, and photos, signatures and personal fields are painted over in page images. Automatic, so a person should check before sharing |
+| "How Doc reached this" replay | Implemented | Replayed in a browser on a three-signal finding. Shows only what's already on the finding |
+| False-alarm tracker | Implemented | Reviewer decisions counted per check in unit tests and in a browser. A rate appears only from 3 decisions up |
 | Light and dark mode | Implemented | Toggle checked in the browser; the choice persists |
 | Login | Implemented | Optional, off by default. Tested through the API only, not clicked through in a browser. All users share the same cases |
 | Registry checks | Partial | Runs against a **bundled synthetic test registry** only. Live sources need authorized access |

@@ -54,5 +54,24 @@
       "address_proof.pdf",
       "declaration.png"
     ]
+  },
+  {
+    "key": "case_e_repeat",
+    "name": "Case E: Seen before",
+    "description": "A new applicant whose documents agree, but who reuses a photo, a bank account and a phone number from Cases A, B and C.",
+    "dir": "case_e_repeat",
+    "documents": [
+      "application_form.png",
+      "id_proof.jpg",
+      "salary_slip.pdf",
+      "bank_statement.pdf",
+      "address_proof.jpg",
+      "declaration.png"
+    ],
+    "needs": [
+      "case_a_clean",
+      "case_b_visual",
+      "case_c_crossdoc"
+    ]
   }
 ]

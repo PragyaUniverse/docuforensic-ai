@@ -111,7 +111,7 @@ _GUIDE: list[tuple[str, str, list[str]]] = [
     (r"\b(hide|move|drag|turn off|close)\b.*\b(you|doc|yourself|robot|character)\b",
      "Drag me anywhere you like. To hide me, press the Hide button at the top of this chat, and press Show Doc to bring me back.", []),
     (r"\b(can'?t|cannot|can not|limit|limitation|unsupported|not support|handwrit|hindi|language)s?\b",
-     "I can read printed English and Hindi. Handwriting is read unreliably, so please check those values by eye. I can't tell who signed "
+     "I can read printed English and Hindi, and answer in Hindi too: press हिं at the top of this chat. Handwriting is read unreliably, so please check those values by eye. I can't tell who signed "
      "something, and I don't check real government or bank records. Nothing has been tested on real documents yet. The About page has "
      "the full list.",
      []),
@@ -253,11 +253,21 @@ def _from_rules(text: str, raw: str, case: Case | None, docs: list[Document], fi
         angle = "innocent" if re.search(r"\b(innocent|benign|harmless|normal)\b", text) else "check" if re.search(r"\b(check|verify|confirm it)\b", text) else ""
         return _explain(case_id, target, numbered[target.id], angle)
 
+    if re.search(r"\b(draft|write|prepare)\b.*\b(letter|request|e-?mail|mail)\b|\bverification (letter|request)\b", text):
+        first = look[0] if look and case else None
+        return Reply(
+            "Open a finding and press Draft verification request. I'll write a letter to whoever issued the document, asking them to "
+            "confirm exactly the doubtful values. You review it and send it yourself: this app never sends anything.",
+            [_finding_link(case_id, first, numbered[first.id])] if first else [], ["What should I look at first?"], source="guide",
+        )
+
     for pattern, answer, suggestions in _GUIDE:
         if re.search(pattern, text):
             return Reply(answer, suggestions=suggestions, source="guide")
 
-    data_question = re.search(
+    seen_before = re.search(r"\b(seen (it |this |these |them )?before|other (application|case)s?|another (application|case)|repeat(ed)?|"
+                            r"applied before|elsewhere|reused?)\b", text)
+    data_question = seen_before or re.search(
         r"\b(find|found|result|results|summary|summari[sz]e|overview|wrong|issue|issue|problem|flag|flagged|look at|first|start with|next|why|conflict|"
         r"mismatch|disagree|differ|match|suspicious|strongest)s?\b", text)
     asked_field = _field_asked(text)
@@ -270,6 +280,9 @@ def _from_rules(text: str, raw: str, case: Case | None, docs: list[Document], fi
     if docs and all(not d.pages for d in docs):
         return Reply("None of these files could be read, so nothing was checked. The Overview tab says why for each one.",
                      [{"label": "Go to the overview", "to": f"/cases/{case_id}"}])
+
+    if seen_before:
+        return _seen_before(case, ordered, numbered)
 
     if re.search(r"\bstrongest\b|\b(best|clearest|most convincing)\b.*\bevidence\b", text):
         if not look:
@@ -346,6 +359,29 @@ def _from_rules(text: str, raw: str, case: Case | None, docs: list[Document], fi
                  [{"label": "Review findings", "to": f"/cases/{case_id}/viewer"}], ["What should I look at first?", "Do the documents conflict?"])
 
 
+def _seen_before(case: Case, ordered: list[Finding], numbered: dict[str, int]) -> Reply:
+    from backend import crosscase
+
+    try:
+        result = crosscase.matches(case.id)
+    except Exception:
+        result = {"checked_cases": 0, "groups": []}
+    if not result["groups"]:
+        if not result["checked_cases"]:
+            return Reply("There are no other applications on this system to compare with yet.")
+        return Reply(f"Nothing from this application appears in the {_plural(result['checked_cases'], 'other application')} on this system.")
+    lines = []
+    for g in result["groups"][:5]:
+        labels = ", ".join(dict.fromkeys(e["label"] if e["kind"] in ("pan_number", "id_number") else e["label"].lower() for e in g["elements"]))
+        lines.append(f"- '{g['case_name']}'{' (same applicant name)' if g['same_applicant'] else ''}: {labels}")
+    shown = [f for f in ordered if f.detector == crosscase.DETECTOR]
+    links = [_finding_link(case.id, shown[0], numbered[shown[0].id])] if shown else [
+        {"label": "Open the other application", "to": f"/cases/{result['groups'][0]['case_id']}"}]
+    return Reply(f"Details from this application also appear in {_plural(len(result['groups']), 'other application')}:\n" + "\n".join(lines)
+                 + "\nRepeated details can be innocent, such as a family sharing a phone, so they're for you to check.",
+                 links, ["Draft a verification letter", "What should I look at first?"])
+
+
 # ---- anything else: an AI model, on a short leash
 class _Answer(BaseModel):
     answer: str
@@ -402,7 +438,18 @@ def _from_ai(question: str, case: Case, docs: list[Document], findings: list[Fin
 
 
 def respond(question: str, case: Case | None, docs: list[Document], findings: list[Finding], finding_id: str | None = None,
-            client: LLMClient | None = None) -> Reply:
+            client: LLMClient | None = None, lang: str = "en") -> Reply:
+    if lang == "hi":
+        from backend import hindi
+
+        english = hindi.to_english(question.strip()[:MAX_QUESTION])
+        reply = _respond(english, case, docs, findings, finding_id, client)
+        return hindi.translate(reply)
+    return _respond(question, case, docs, findings, finding_id, client)
+
+
+def _respond(question: str, case: Case | None, docs: list[Document], findings: list[Finding], finding_id: str | None = None,
+             client: LLMClient | None = None) -> Reply:
     raw = question.strip()[:MAX_QUESTION]
     text = raw.casefold()
     if not raw:
