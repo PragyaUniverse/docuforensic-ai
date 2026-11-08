@@ -87,7 +87,7 @@ export function HomeScreen() {
             ))}
           </dl>
         </div>
-        <div className="pointer-events-none absolute inset-0 -z-0 opacity-35 lg:relative lg:opacity-100">
+        <div className="pointer-events-none relative -mx-2 h-[280px] sm:mx-0 sm:h-[380px] lg:h-full">
           <div aria-hidden className="absolute inset-[10%] rounded-full bg-[radial-gradient(circle,rgba(var(--color-glow),0.14),transparent_65%)] blur-2xl" />
           <EvidenceNetwork className="relative h-full w-full" />
         </div>
