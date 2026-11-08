@@ -32,6 +32,7 @@ from backend import (
     chat,
     crosscase,
     db,
+    fast,
     orchestrator,
     verification_letter,
     verify_report,
@@ -99,6 +100,8 @@ app = FastAPI(title="DocuForensic AI", version=VERSION, lifespan=lifespan,
               description="Evidence-driven document forensics. Findings need human review.")
 app.add_middleware(CORSMiddleware, allow_origins=settings.cors_list(), allow_methods=["*"],
                    allow_headers=["*"])
+app.add_middleware(fast.CompressText)
+app.add_middleware(fast.CacheAssets)
 
 _hits: dict[str, deque[float]] = defaultdict(deque)
 _hits_lock = threading.Lock()
@@ -469,9 +472,12 @@ def _page(doc: Document, n: int):
 
 
 @app.get("/api/cases/{case_id}/documents/{doc_id}/pages/{n}/image")
-def page_image(case_id: str, doc_id: str, n: int) -> FileResponse:
+def page_image(case_id: str, doc_id: str, n: int, original: bool = False) -> FileResponse:
+    """A WebP copy of the page at the same pixel size, or the lossless original with ?original=true."""
     page = _page(_doc(case_id, doc_id), n)
-    return FileResponse(_data_file(page.image_path))
+    source = _data_file(page.image_path)
+    path = source if original else fast.display_copy(source)
+    return FileResponse(path, headers={"Cache-Control": fast.IMAGE_CACHE})
 
 
 def _overlay_files(case_id: str, doc_id: str, n: int) -> dict[str, Path]:
@@ -497,7 +503,9 @@ def overlay(case_id: str, doc_id: str, n: int, kind: str) -> FileResponse:
     path = _overlay_files(case_id, doc_id, n).get(kind)
     if path is None:
         raise HTTPException(404, "Overlay not found.")
-    return FileResponse(path, media_type="image/png")
+    # Heatmaps are smooth, so half size looks the same once stretched over the page.
+    view = fast.display_copy(path, scale=0.5, quality=75)
+    return FileResponse(view, headers={"Cache-Control": fast.IMAGE_CACHE})
 
 
 # ---- findings and review

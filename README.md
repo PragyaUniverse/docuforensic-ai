@@ -43,7 +43,9 @@ In a second terminal:
 make ui
 ```
 
-Then open http://localhost:5173 and pick one of the examples.
+Then open http://localhost:5173 and pick one of the examples. That's development mode. For the fast version, the one a
+deployment serves, run `make serve` instead of `make api` and `make ui`, and open http://localhost:8000: one server, the built
+site, small cached images and compressed data.
 
 **API keys are optional.** With none, all forensics and cross-document checks run locally, and AI
 explanations are replayed from answers recorded in real runs, clearly labelled as replays. To use a

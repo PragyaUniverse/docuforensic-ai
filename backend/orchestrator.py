@@ -472,6 +472,13 @@ def _run(case: Case) -> None:
                             "requires_human_review": case.requires_human_review})
         db.save_case(case)
 
+    try:  # page copies for the screens, so the first look at a page is quick
+        from backend import fast
+
+        fast.warm([Path(settings.data_dir) / p.image_path for d in docs for p in d.pages])
+    except Exception as exc:
+        log.warning("page warm-up failed: %s", type(exc).__name__)
+
     with run.stage(PipelineStage.dossier) as ctx:
         built = dossier_mod.build_dossier(case.id, fresh_summary=True)
         pdf_path = dossier_mod.render_pdf(built, workdir / "dossier.pdf")

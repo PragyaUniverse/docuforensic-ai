@@ -127,7 +127,7 @@ function Group({ g, caseId, index }: { g: SeenGroup; caseId: string; index: numb
 
 /** Details from this application that also appear in another application on this system. */
 export function SeenBefore({ caseId }: { caseId: string }) {
-  const q = useQuery({ queryKey: ["seen-before", caseId], queryFn: () => featuresApi.seenBefore(caseId), refetchInterval: 15_000 });
+  const q = useQuery({ queryKey: ["seen-before", caseId], queryFn: () => featuresApi.seenBefore(caseId), staleTime: 30_000 });
   const data = q.data;
   const groups = data?.groups ?? [];
   return (
