@@ -26,7 +26,7 @@ Requires Python 3.12, Node 20 and Tesseract (`brew install tesseract`, or
 `apt-get install tesseract-ocr`).
 
 ```bash
-git clone <repo-url> docuforensic && cd docuforensic
+git clone https://github.com/PragyaUniverse/docuforensic-ai.git docuforensic && cd docuforensic
 ```
 
 ```bash
@@ -123,7 +123,7 @@ what is partial, planned or unsupported.
 | Contextual Intelligence | 20 | Entity matching, salary and balance arithmetic, figures vs words, 9 cross-document discrepancy types | Discrepancies 13/13 across 9/9 types |
 | Evidence & Traceability | 10 | Finding to document, page and region in both directions, evidence graph, audit chain | Automated test walks every finding on all 4 cases |
 | AI Reasoning & Explainability | 10 | Benign alternatives and what would confirm or refute each, with the source of every explanation labelled | Run live on a local LLM: 28 calls, 0 errors |
-| Technical Implementation | 10 | Typed contracts, 378 tests, CI config, safe failure handling, tested clean clone | See below |
+| Technical Implementation | 10 | Typed contracts, 469 tests, CI passing on GitHub, safe failure handling, tested clean clone | See below |
 | Innovation | 5 | Text layer vs pixels, second-engine confirmation, counter-hypotheses, verifiable audit tamper demo | Live in the app |
 
 ## Benchmark
@@ -163,7 +163,7 @@ Summary below, full version in [docs/CAPABILITY_MATRIX.md](docs/CAPABILITY_MATRI
 | Status | Capabilities |
 |---|---|
 | **Implemented** | Ingestion of PNG, JPG, scanned and digital PDF; classification; printed OCR; field and table extraction; structure; visual and PDF forensics; signature reuse and placement; contextual and cross-document checks; evidence mapping; dossier; audit trail; reviewer UI with light and dark modes; Doc, a guide you can chat with; safe failure handling; local LLM reasoning; offline mode; analytics; optional login |
-| **Partial** | **Handwriting** (61/80 exact on distorted handwriting-style text, never tested on real handwriting, and every value is marked for checking); **Hindi** (printed, common labels, one test document); **registry checks** (bundled synthetic test registry only); **degraded scans** (40% recall); **hosted LLMs** (simulated network only, until keys are added); **Docker** (image built and run locally; not yet deployed to a host); **CI** (written, runs once on GitHub) |
+| **Partial** | **Handwriting** (61/80 exact on distorted handwriting-style text, never tested on real handwriting, and every value is marked for checking); **Hindi** (printed, common labels, one test document); **registry checks** (bundled synthetic test registry only); **degraded scans** (40% recall); **hosted LLMs** (simulated network only, until keys are added); **Docker** (image built and run locally; not yet deployed to a host) |
 | **Unsupported** | Signature identity, meaning who signed (we tried a shape comparison, and it couldn't separate people); languages other than English and Hindi; live government or bank registries (needs authorized access); per-user permissions |
 
 ## Ethics and safety

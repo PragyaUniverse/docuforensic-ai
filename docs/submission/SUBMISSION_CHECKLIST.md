@@ -3,13 +3,13 @@
 Deadline: **Sat 7 Nov 2026, 11:59 PM IST**. Target: submit by **noon**.
 
 ## Repository
-- [ ] Created on GitHub and pushed
-- [ ] `scripts/secret_scan.sh` run immediately before the final push: clean
-- [ ] Repository set to **public**
+- [x] Created on GitHub and pushed
+- [x] `scripts/secret_scan.sh` run immediately before the final push: clean
+- [x] Repository set to **public**
 - [ ] Opened in an incognito window: README renders, with images and diagram
-- [ ] CI ran on GitHub. Fix it, or state in the README that it failed
-- [ ] `<repo-url>` in the README quick start replaced with the real URL
-- [ ] Update the "CI hasn't run" lines in `docs/LIMITATIONS.md` and `docs/CAPABILITY_MATRIX.md`
+- [x] CI ran on GitHub. Fix it, or state in the README that it failed
+- [x] `<repo-url>` in the README quick start replaced with the real URL
+- [x] Update the "CI hasn't run" lines in `docs/LIMITATIONS.md` and `docs/CAPABILITY_MATRIX.md`
 
 ## Deliverables required by the problem statement
 - [x] Working prototype

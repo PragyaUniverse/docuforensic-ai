@@ -158,7 +158,7 @@ error in a rare case. We fixed the one we found. Others are likely to exist.
 - On a hosted site, files don't persist across restarts on free tiers, and the local Ollama model isn't
   available. Live AI there needs a hosted provider key.
 - `requirements.txt` sets minimum versions. `requirements.lock` records the exact versions tested.
-- Tested on Apple Silicon macOS with Python 3.12 only. CI for Linux is configured but hasn't run yet,
-  because the repository isn't on GitHub yet.
+- Developed on Apple Silicon macOS with Python 3.12. CI runs the tests on Linux on GitHub, and passed on its first run;
+  other operating systems haven't been tried.
 - The UI was checked on desktop, tablet and phone sizes, in light and dark mode. On phones, wide report tables scroll sideways.
 - **PyMuPDF is AGPL-3.0.** See `THIRD_PARTY.md` before distributing or hosting a combined application.
