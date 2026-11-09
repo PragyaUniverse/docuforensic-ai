@@ -1,6 +1,6 @@
 # Demo Video Script (about 5:30)
 
-If the hackathon sets a shorter limit, cut the rows marked *(optional)*. Without them the video runs about 5:00.
+A silent recording of every shot, with a timed voice-over sheet, can be made locally into `video/` (not committed). If the hackathon sets a shorter limit, cut the rows marked *(optional)*. Without them the video runs about 5:00.
 
 **Setup before recording**
 - Start the app with `make serve` (builds the site, then serves everything at http://localhost:8000), with Ollama running. `make api` plus `make ui` also works.
@@ -15,8 +15,8 @@ If the hackathon sets a shorter limit, cut the rows marked *(optional)*. Without
 |---|---|---|---|
 | 0:00 | Salary slip, zoomed on net pay | "OCR reads a forged salary slip perfectly. We catch the forgery. Here's how." | OCR reads. We investigate. |
 | 0:15 | Home page | "DocuForensic AI investigates a whole application: six documents for one applicant, all synthetic. Everything you'll see runs locally, on this laptop." | All data is synthetic |
-| 0:30 | Open "Altered salary slip", press Check these documents, progress running | "You can watch each step as it happens. Every step is written to a permanent history." | Upload → Classify → OCR → Structure → Forensics → Context → Correlate → Investigate → Evidence → Dossier |
-| 0:45 | Extracted data tab. Click a row | "Every value is a measurement, not a fact. It keeps its confidence and its exact location. Click a value, and there it is on the page." | OCR is never ground truth |
+| 0:30 | Open "Altered salary slip", press Run forensic analysis, progress running | "You can watch each step as it happens. Every step is written to a permanent history." | Upload → Classify → OCR → Structure → Forensics → Context → Correlate → Investigate → Evidence → Dossier |
+| 0:45 | Evidence tab. Click a row | "Every value is a measurement, not a fact. It keeps its confidence and its exact location. Click a value, and there it is on the page." | OCR is never ground truth |
 | 1:05 | Findings tab, salary slip, finding #2. Set Show to Error level analysis | "Here's the altered figure. Three independent signals agree: different ink, a smoother background patch, a different compression response." | 3 independent signals |
 | 1:30 | Open the finding "Net pay in figures differs from net pay in words" | "And look at the document's own logic. Gross minus deductions gives 48,320. The words say 48,320. The figure says 84,320." | Figures vs words |
 | 1:45 | Same finding: status, Could be innocent if, How to check, then the reviewer line under it | "The system does not call this forgery. It says potential manipulation, requires human review, lists innocent explanations, and says what would confirm or refute it. It even tells you how often reviewers here agreed with this check before." | Hypothesis, not verdict |
@@ -29,10 +29,10 @@ If the hackathon sets a shorter limit, cut the rows marked *(optional)*. Without
 | 3:55 | Open "Edited PDF", Findings tab. Set Show to Revision diff | "Here, a person sees 86,400, but the PDF's text layer says 62,400. A system that only reads text gets a different answer from the page. The file's own revision history shows the edit." | Beneath the page |
 | 4:15 | Press Confirm on a finding, open the Report tab, Download PDF, then point at Download redacted PDF | "The reviewer decides, and each decision is logged. The report has every required section, and a redacted copy hides personal details for sharing." | Human oversight |
 | 4:30 | Verify report page. Drop the downloaded report: Original report. Drop the changed copy: Changed since it was issued | "Anyone who receives a report can check it. This one is exactly as issued. This copy was changed afterwards, and the system knows." | Reports can't be quietly edited |
-| 4:45 | History tab: Verify integrity passes, Try editing an entry, Verify integrity fails at that entry, Undo the edit | "Now watch me edit the log directly. Verify integrity fails, at the exact entry." | Tamper-evident |
+| 4:45 | Timeline tab: Verify integrity passes, Try editing an entry, Verify integrity fails at that entry, Undo the edit | "Now watch me edit the log directly. Verify integrity fails, at the exact entry." | Tamper-evident |
 | 5:00 | Open Doc, switch to हिं, tap a suggestion *(optional)* | "Doc, the guide, explains findings in plain language, in English or Hindi. It's a guide, not the detector." | Help in Hindi too |
 | 5:10 | "Consistent application" (quiet), then "Unreadable files" | "A clean case stays quiet. A corrupt file gets a clear message, not a crash." | Safe failure |
-| 5:20 | README benchmark table, degraded row highlighted | "On synthetic held-out data: every manipulation found, no false flags. On degraded scans, about a quarter. That's a real limitation, and it's published alongside the rest. It hasn't been tested on real documents." | Honest numbers |
+| 5:20 | README benchmark table, degraded row highlighted | "On synthetic held-out data: every manipulation found, no false flags. On degraded scans, recall falls to 40 percent. That's a real limitation, and it's published alongside the rest. It hasn't been tested on real documents." | Honest numbers |
 
 **Rules for the recording**
 - Doc, the animated character, is a guide you can chat with, not the detection system. Describe it that way on camera. A good moment: ask "Is this fake?" and show it refuse, then ask "explain #2" and follow the link. Drag it clear of anything you're showing, or hide it.

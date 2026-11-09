@@ -31,3 +31,6 @@ var/
 .DS_Store
 .idea/
 .vscode/
+
+# Recorded demo video (large, not committed)
+/video/
