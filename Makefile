@@ -2,7 +2,7 @@
 # path contains spaces. Recipes quote nothing relative, so a spaced checkout path is safe.
 PY := .venv/bin/python
 
-.PHONY: help setup dataset api ui serve test lint benchmark demo keys audit-verify secrets licenses
+.PHONY: help setup dataset api ui serve present test lint benchmark demo keys audit-verify secrets licenses
 
 help:
 	@echo "setup      Create .venv and install Python and frontend dependencies"
@@ -10,6 +10,7 @@ help:
 	@echo "api        Run the API on http://localhost:8000"
 	@echo "ui         Run the UI on http://localhost:5173 (development mode, slower)"
 	@echo "serve      Build the UI and serve the fast version on http://localhost:8000"
+	@echo "present    Same as serve, but with a clean data folder holding only the demo cases"
 	@echo "test       Lint and run the test suite"
 	@echo "benchmark  Score the pipeline against ground truth (writes docs/benchmark_results.*)"
 	@echo "demo       Run the API and UI together"
@@ -35,6 +36,11 @@ ui:
 serve:
 	cd frontend && npm run build
 	$(PY) -m uvicorn backend.app:app --host 127.0.0.1 --port 8000
+
+# A separate data folder holding only the demo cases, for presenting. Your usual data in var/ is untouched.
+present:
+	cd frontend && npm run build
+	DATA_DIR=var_present $(PY) -m uvicorn backend.app:app --host 127.0.0.1 --port 8000
 
 lint:
 	$(PY) -m ruff check .

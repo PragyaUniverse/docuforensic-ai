@@ -21,6 +21,7 @@ frontend/dist/
 
 # runtime state
 var/
+var_present/
 *.sqlite
 *.sqlite3
 *.db
