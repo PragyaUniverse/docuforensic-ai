@@ -24,7 +24,7 @@ each package declares. This is a best-effort inventory, not legal advice.
 ## AI-assisted development
 
 Significant parts of this project's code, tests and documentation were written with an AI coding
-assistant (Claude Code, Anthropic), directed and reviewed by Team Hackthecore. The team is
+assistant (Claude Code, Anthropic), directed and reviewed by Team OhLLMa. The team is
 responsible for the result and can explain the architecture and decisions behind it.
 
 ## License attention

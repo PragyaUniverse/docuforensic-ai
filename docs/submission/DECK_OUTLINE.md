@@ -2,7 +2,7 @@
 
 Screenshots are in `docs/screenshots/`, the diagram is `docs/diagram.png`, and the dossier is `docs/sample_dossier.pdf`.
 
-1. **Title.** DocuForensic AI. "OCR reads a document. This examines whether to believe it." Team Hackthecore.
+1. **Title.** DocuForensic AI. "OCR reads a document. This examines whether to believe it." Team OhLLMa.
 2. **The problem.** A salary slip passes OCR and field validation, yet its net pay was altered. Extraction doesn't establish authenticity, consistency or reliability.
 3. **The gap in OCR-only systems.** What they miss: visual edits, conflicts visible only across documents, PDFs whose text differs from their pixels. What they lack: evidence and traceability.
 4. **Our solution and flow.** The 10 stages. Every finding is an evidence object: status, document, page, region, evidence, benign explanations, verification steps. (`10_pipeline.png`)

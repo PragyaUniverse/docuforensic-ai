@@ -3,7 +3,7 @@
 **OCR reads an altered salary slip perfectly. DocuForensic AI asks whether it should be believed.**
 
 An evidence-driven document investigation engine, built for the DataOps Innovation Hackathon 2026 by
-Team Hackthecore. It examines scanned and digital documents for signs of alteration, correlates
+Team OhLLMa (Unnati Joshi and Pragya Sumbly). It examines scanned and digital documents for signs of alteration, correlates
 information across all the documents in an application, and produces a traceable dossier in which
 every finding links back to a region of an original document. It reports observations,
 inconsistencies and hypotheses for a human reviewer, and never a verdict. Detection runs entirely on
